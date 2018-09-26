@@ -2,7 +2,14 @@ var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
 var db = require('./db');
+const mongoose = require("mongoose");
 
+//Configure mongoose's promise to global promise
+mongoose.promise = global.Promise;
+
+//Configure Mongoose
+mongoose.connect('mongodb://localhost/passport-tutorial');
+mongoose.set('debug', true);
 
 // Configure the local strategy for use by Passport.
 //
