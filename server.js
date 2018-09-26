@@ -63,7 +63,7 @@ app.use(passport.session());
 
 // Define routes.
 app.get('/',
-require('connect-ensure-login').ensureLoggedIn(),
+  require('connect-ensure-login').ensureLoggedIn(),
   function(req, res) {
     res.render('home', { user: req.user });
   });
@@ -72,11 +72,21 @@ app.get('/login',
   function(req, res){
     res.render('login');
   });
+
+app.get('/admin',
+  require('connect-ensure-login').ensureLoggedIn(),
+  function(req, res){
+    res.render('admin', {user: req.user});
+  });
   
 app.post('/login', 
   passport.authenticate('local', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    if (req.user.role === 'admin') {
+      res.redirect('/admin');
+    } else {
+      res.redirect('/');
+    }
   });
   
 app.get('/logout',
