@@ -1,4 +1,4 @@
-const mongooser = require('mongoose')
+const mongoose = require('mongoose')
  
 var records = [
     { id: 1, username: 'jack', password: 'secret', displayName: 'Jack', emails: [ { value: 'jack@example.com' } ], role: 'admin' }
@@ -27,7 +27,20 @@ exports.findByUsername = function(username, cb) {
     return cb(null, null);
   });
 
+//new stuff
+var Schema = mongoose.Schema;
+
+const UserSchema = new Schema({
+  name: String,
+  email: String,
+  age: Number,
+});
+
+var dbconnect = mongoose.connect('mongodb://localhost/passport-tutorial');
+
+  var User = mongoose.model('User',UserSchema);
 
 
+module.exports = User;
 
 }

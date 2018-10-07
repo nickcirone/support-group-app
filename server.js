@@ -1,15 +1,31 @@
 var express = require('express');
 var passport = require('passport');
 var Strategy = require('passport-local').Strategy;
-var db = require('./db');
+//var db = require('./db');
+
 const mongoose = require("mongoose");
 
 //Configure mongoose's promise to global promise
 mongoose.promise = global.Promise;
 
 //Configure Mongoose
-mongoose.connect('mongodb://localhost/passport-tutorial');
-mongoose.set('debug', true);
+// mongoose.connect('mongodb://localhost/passport-tutorial');
+// mongoose.set('debug', true);
+let User = require('./db/users.js');
+
+let person = new User({
+  name: 'Tom',
+  email: 'Tom@tom.com',
+  age: 21,
+})
+
+person.save()
+  .then(doc=>{
+    console.log(doc)
+  })
+  .catch(err=>{
+    console.error(err)
+  })
 
 // Configure the local strategy for use by Passport.
 //
