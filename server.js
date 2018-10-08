@@ -5,11 +5,9 @@ var Strategy = require('passport-local').Strategy;
 
 const mongoose = require("mongoose");
 
-//Configure mongoose's promise to global promise
-mongoose.promise = global.Promise;
 
 //Configure Mongoose
-// mongoose.connect('mongodb://localhost/passport-tutorial');
+mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test');
 // mongoose.set('debug', true);
 let User = require('./db/users.js');
 
