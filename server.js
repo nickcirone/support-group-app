@@ -7,23 +7,43 @@ const mongoose = require("mongoose");
 
 
 //Configure Mongoose
-mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test');
+mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test',{useNewUrlParser: true},(err)=>{
+  console.log('mongo db connection',err);
+});
+// mongoose.Promise = global.Promise;
+// let db = mongoose.connection;
+
+
 // mongoose.set('debug', true);
 let User = require('./db/users.js');
 
-let person = new User({
-  name: 'Tom',
-  email: 'Tom@tom.com',
-  age: 21,
+let newUser = new User({
+  name:'Harold',
+  email:'h@live.unc.edu',
+  newMatches: ['Uriel','Kevin','Ricardo'],
+  pendingMatches: ['Jose','Jesus']
 })
 
-person.save()
-  .then(doc=>{
-    console.log(doc)
-  })
-  .catch(err=>{
-    console.error(err)
-  })
+// newUser.save(function(err){
+//   if (err){
+//     return console.log(err)
+//   }
+//   return console.log("user added")
+// })
+
+// let person = new User({
+//   name: 'Tom',
+//   email: 'Tom@tom.com',
+//   age: 21,
+// })
+
+// person.save()
+//   .then(doc=>{
+//     console.log(doc)
+//   })
+//   .catch(err=>{
+//     console.error(err)
+//   })
 
 // Configure the local strategy for use by Passport.
 //
@@ -61,14 +81,14 @@ passport.deserializeUser(function(id, cb) {
 });
 
 
-
-
 // Create a new Express application.
 var app = express();
-
+var cons = require('consolidate');
 // Configure view engine to render EJS templates.
+//app.engine('html',cons.swig)
 app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.set('view engine', 'jade');
+//app.set('view engine', 'html');
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -100,15 +120,15 @@ app.get('/admin',
     res.render('admin', {user: req.user});
   });
   
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    if (req.user.role === 'admin') {
-      res.redirect('/admin');
-    } else {
-      res.redirect('/');
-    }
-  });
+// app.post('/login', 
+//   passport.authenticate('local', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     if (req.user.role === 'admin') {
+//       res.redirect('/admin');
+//     } else {
+//       res.redirect('/');
+//     }
+//   });
   
 app.get('/logout',
   function(req, res){
@@ -121,6 +141,16 @@ app.get('/profile',
   function(req, res){
     res.render('profile', { user: req.user });
   });
+
+//app.use(express.static(__dirname))
+app.get('/matches', function(req,res){
+      User.findById('5bbd55ca065bd921e86392ef',function(err,user){
+        //res.send(product)
+        //console.log(user.name)
+        res.render('matches1',{user:user})
+      })
+    })
+    
 
 app.listen(3001, function(){
   console.log("Express Server Listening on Port 3001")
