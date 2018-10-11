@@ -15,7 +15,6 @@ app.set('view engine', 'ejs');
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
-app.use(express.logger());
 app.use(require('morgan')('combined'));
 app.use(require('cookie-parser')());
 app.use(require('body-parser').urlencoded({ extended: true }));
@@ -25,7 +24,7 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 // session.
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(app.router);
+//app.use(app.router);
 
 // Configure the local strategy for use by Passport.
 var User = require('./models/users');
@@ -34,7 +33,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo
-mongoose.connect("mongodb://ncirone:W!!!ngnu+++970@ds143678.mlab.com:43678/support_group_dev");
+mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 
 // Configure Passport authenticated session persistence.
 
