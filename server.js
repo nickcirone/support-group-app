@@ -33,8 +33,10 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo
-mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
-
+//mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test',{useNewUrlParser: true},(err)=>{
+  console.log('mongo db connection',err);
+});
 // Configure Passport authenticated session persistence.
 
 /*
