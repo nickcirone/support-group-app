@@ -1,9 +1,8 @@
 var path = require('path');
 var express = require('express');
-var http = require('http');
 var mongoose = require('mongoose');
 var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
 // Create a new Express application.
 var app = express();
@@ -28,72 +27,36 @@ app.use(passport.session());
 
 // Configure the local strategy for use by Passport.
 var User = require('./models/users');
-passport.use(new Strategy(User.authenticate()));
+passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Connect to mongo
+// Connect to mongo !!!! USES MY mLAB info, so replace URI with your own development db. 
 mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 
-// Configure Passport authenticated session persistence.
+// Create a dummy admin user with username 'john'
+var john = new User(
+  {
+    username: 'john',
+    email: 'jack@secret.com',
+    role: 'admin',
+    parentId: null,
+    childId: null,
+    profileId: null,
+  }
+);
 
-/*
-passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
-});
+// Register john with password 'secret'
+User.register(john, 'secret', function(err) {
+  if (err) {
+    console.log('error while user register!', err);
 
-passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
-    if (err) { return cb(err); }
-    cb(null, user);
-  });
+  } else {
+    console.log('user registered!');
+  }
 });
-*/
 
 require('./routes')(app);
-
-// Define routes.
-/*
-app.get('/',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res) {
-    res.render('home', { user: req.user });
-  });
-
-app.get('/login',
-  function(req, res){
-    res.render('login');
-  });
-
-app.get('/admin',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('admin', {user: req.user});
-  });
-  
-app.post('/login', 
-  passport.authenticate('local', { failureRedirect: '/login' }),
-  function(req, res) {
-    if (req.user.role === 'admin') {
-      res.redirect('/admin');
-    } else {
-      res.redirect('/');
-    }
-  });
-  
-app.get('/logout',
-  function(req, res){
-    req.logout();
-    res.redirect('/');
-  });
-
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
-  });
-
-*/
 
 app.listen(app.get('port'), function(){
   console.log("Express Server Listening on Port " + app.get('port'))

@@ -29,6 +29,7 @@ module.exports = function(app) {
     app.post('/login', 
         passport.authenticate('local', { failureRedirect: '/login' }),
         function(req, res) {
+            console.log("made it here!");
             if (req.user.role === 'admin') {
                 res.redirect('/admin');
             } else {
