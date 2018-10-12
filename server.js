@@ -1,89 +1,13 @@
+var path = require('path');
 var express = require('express');
+var mongoose = require('mongoose');
 var passport = require('passport');
-var Strategy = require('passport-local').Strategy;
-//var db = require('./db');
-
-const mongoose = require("mongoose");
-
-
-//Configure Mongoose
-mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test',{useNewUrlParser: true},(err)=>{
-  console.log('mongo db connection',err);
-});
-// mongoose.Promise = global.Promise;
-// let db = mongoose.connection;
-
-
-// mongoose.set('debug', true);
-let User = require('./db/users.js');
-
-let newUser = new User({
-  name:'Harold',
-  email:'h@live.unc.edu',
-  newMatches: ['Uriel','Kevin','Ricardo'],
-  pendingMatches: ['Jose','Jesus']
-})
-
-// newUser.save(function(err){
-//   if (err){
-//     return console.log(err)
-//   }
-//   return console.log("user added")
-// })
-
-// let person = new User({
-//   name: 'Tom',
-//   email: 'Tom@tom.com',
-//   age: 21,
-// })
-
-// person.save()
-//   .then(doc=>{
-//     console.log(doc)
-//   })
-//   .catch(err=>{
-//     console.error(err)
-//   })
-
-// Configure the local strategy for use by Passport.
-//
-// The local strategy require a `verify` function which receives the credentials
-// (`username` and `password`) submitted by the user.  The function must verify
-// that the password is correct and then invoke `cb` with a user object, which
-// will be set at `req.user` in route handlers after authentication.
-passport.use(new Strategy(
-  function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
-    });
-  }));
-
-
-// Configure Passport authenticated session persistence.
-//
-// In order to restore authentication state across HTTP requests, Passport needs
-// to serialize users into and deserialize users out of the session.  The
-// typical implementation of this is as simple as supplying the user ID when
-// serializing, and querying the user record by ID from the database when
-// deserializing.
-passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
-});
-
-passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
-    if (err) { return cb(err); }
-    cb(null, user);
-  });
-});
-
+var LocalStrategy = require('passport-local').Strategy;
 
 // Create a new Express application.
 var app = express();
-var cons = require('consolidate');
+app.set('port', process.env.PORT || 3001);
+
 // Configure view engine to render EJS templates.
 //app.engine('html',cons.swig)
 app.set('views', __dirname + '/views');
@@ -102,56 +26,201 @@ app.use(require('express-session')({ secret: 'keyboard cat', resave: false, save
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Define routes.
-app.get('/',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res) {
-    res.render('home', { user: req.user });
-  });
+// Configure the local strategy for use by Passport.
+var User = require('./models/users.js');
+var Profile = require('./models/profile.js');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-app.get('/login',
-  function(req, res){
-    res.render('login');
-  });
+// Connect to mongo
+ mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test',{useNewUrlParser: true},(err)=>{
+   console.log('mongo db connection',err);
+ });
 
-app.get('/admin',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('admin', {user: req.user});
-  });
+// Configure Passport authenticated session persistence.
+
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  db.users.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
   
-// app.post('/login', 
-//   passport.authenticate('local', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     if (req.user.role === 'admin') {
-//       res.redirect('/admin');
-//     } else {
-//       res.redirect('/');
-//     }
-//   });
-  
-app.get('/logout',
-  function(req, res){
-    req.logout();
-    res.redirect('/');
   });
+})
+// Connect to mongo !!!! USES MY mLAB info, so replace URI with your own development db. 
+//mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 
-app.get('/profile',
-  require('connect-ensure-login').ensureLoggedIn(),
-  function(req, res){
-    res.render('profile', { user: req.user });
+
+var profileOneId = mongoose.Types.ObjectId();
+var profileTwoId = mongoose.Types.ObjectId();
+var profileThreeId = mongoose.Types.ObjectId();
+var profileFourId = mongoose.Types.ObjectId();
+var profileFiveId = mongoose.Types.ObjectId();
+
+var userOneId = mongoose.Types.ObjectId();
+var userTwoId = mongoose.Types.ObjectId();
+var userThreeId = mongoose.Types.ObjectId();
+var userFourId = mongoose.Types.ObjectId();
+var userFiveId = mongoose.Types.ObjectId();
+
+// Helper function for registering Users 
+function registerUser(user, pass) {
+  User.register(user, pass, function(err) {
+    if (err) {
+      console.log('error while user ' + user.username + ' register!', err);
+    } else {
+      console.log('user ' + user.username + ' registered!');
+    }
   });
+}
 
-//app.use(express.static(__dirname))
-app.get('/matches', function(req,res){
-      User.findById('5bbd55ca065bd921e86392ef',function(err,user){
-        //res.send(product)
-        //console.log(user.name)
-        res.render('matches1',{user:user})
-      })
-    })
-    
+function registerProfile(profile) {
+  profile.save(function(err, newProfile) {
+    if (err) {
+      console.log('Error saving profile');
+    } else {
+      console.log('profile saved');
+    }
+  })
+}
 
-app.listen(3001, function(){
-  console.log("Express Server Listening on Port 3001")
+// Dummy Profiles
+
+var profileOne = new Profile(
+  {
+    _id: profileOneId,
+    age: 13,
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: 'sports',
+    services: 'Burns',
+    friendIds: [userTwoId, userFourId],
+    matchIds: [userThreeId],
+    sentPendingFriendIds: [userFiveId],
+  }
+);
+
+var profileTwo = new Profile(
+  {
+    _id: profileTwoId,
+    age: 12,
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: 'sports',
+    services: 'Surgery',
+    friendIds: [userOneId, userThreeId, userFourId],
+    matchIds: [userTwoId],
+  }
+);
+
+var profileThree = new Profile(
+  {
+    _id: profileThreeId,
+    age: 14,
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: 'sports',
+    services: 'GI',
+    friendIds: [userTwoId, userFourId],
+    matchIds: [userThreeId],
+    sentPendingFriendIds: [userFiveId],
+    recvPendingFriendIds: [userOneId],
+  }
+);
+
+var profileFour = new Profile(
+  {
+    _id: profileFourId,
+    age: 13,
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: 'fishing',
+    services: 'Cardiology',
+    friendIds: [userOneId, userTwoId, userThreeId, userFourId],
+  }
+);
+
+var profileFive = new Profile(
+  {
+    _id: profileFiveId,
+    age: 11,
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: 'fishing',
+    services: 'Neurosurgery',
+    friendIds: [userFourId],
+  }
+);
+
+
+var apple_one = new User(
+  {
+    _id: userOneId,
+    username: 'apple one',
+    email: 'apple@email.com',
+    role: 'patient',
+    profileId: profileOneId,
+  }
+);
+
+var banana_two = new User(
+  {
+    _id: userTwoId,
+    username: 'banana two',
+    email: 'banana@email.com',
+    role: 'patient',
+    profileId: profileTwoId,
+  }
+);
+
+var coconut_three = new User(
+  {
+    _id: userThreeId,
+    username: 'coconut three',
+    email: 'coconut@email.com',
+    role: 'patient',
+    profileId: profileThreeId,
+  }
+);
+
+var durian_four = new User(
+  {
+    _id: userFourId,
+    username: 'durian four',
+    email: 'durian@email.com',
+    role: 'patient',
+    profileId: profileFourId,
+  }
+);
+
+var endive_five = new User(
+  {
+    _id: userFiveId,
+    username: 'endive five',
+    email: 'endive@email.com',
+    role: 'patient',
+    profileId: profileFiveId,
+  }
+);
+
+
+// Save dummy profiles to Mongo
+// registerProfile(profileOne);
+// registerProfile(profileTwo);
+// registerProfile(profileThree);
+// registerProfile(profileFour);
+// registerProfile(profileFive);
+
+// // Register users in Mongo
+// registerUser(apple_one, 'apple_one');
+// registerUser(banana_two, 'banana_two');
+// registerUser(coconut_three, 'coconut_three');
+// registerUser(durian_four, 'durian_four');
+// registerUser(endive_five, 'endive_five');
+
+
+require('./routes')(app);
+
+app.listen(app.get('port'), function(){
+  console.log("Express Server Listening on Port " + app.get('port'))
 });

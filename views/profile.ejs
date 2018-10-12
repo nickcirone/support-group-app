@@ -1,9 +1,13 @@
-<p>
-ID: <%= user.id %><br/>
+<h3>
 Username: <%= user.username %><br/>
-Name: <%= user.displayName %><br/>
-<% if (user.emails) { %>
-Email: <%= user.emails[0].value %><br/>
-<% } %>
-</p>
+Email: <%= user.email %><br/>
+Age: <%= profile.age %><br/>
+Bio: <%= profile.bio %><br/>
+Interests: <%= profile.interests %><br/>
+Medical Services: <%= profile.services %><br/>
+Friends: <% for (var i = 0; i < friends.length; i++) { %>
+            <%= friends[i].username %><br/>
+         <% } %>
+</h3>
+<a href='/matches'>View Matches</a>
 <a href="/logout">Log out</a>
