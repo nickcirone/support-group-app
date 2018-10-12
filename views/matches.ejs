@@ -1,23 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<body>
-<main>
-    <div >
-        <h1>Matches</h1>
-        <p><%= profile.friends %></p>
-    </div>
-    <div>
-        <h1>Sent Requests</h1>
-        <p><%= profile.sentPendingFriendIds %></p>
-    </div>
-    <div>
-        <h1>Pending Response</h1>
-        <p><%= profile.recvPendingFriendIds %></p>
-    </div>
-</main>
-
-<footer>
-</footer>
-
-</body>
-</html>
+<h3>
+    Matches for <%= user.username %><br/>
+    Matches: <% for (var i = 0; i < matches.length; i++) { %>
+                <%= matches[i].username %><br/>
+             <% } %>
+    <% if (sent) { %>
+    Sent:    <% for (var i = 0; i < sent.length; i++) { %>
+                <%= sent[i].username %><br/>
+             <% } %>
+    <% } %>
+    <% if (received) { %>
+    Received:    <% for (var i = 0; i < received.length; i++) { %>
+                    <%= received[i].username %><br/>
+                 <% } %>
+    <% } %>
+    </h3>
+    <a href="/profile">View Profile</a>
+    <a href="/logout">Log out</a>

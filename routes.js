@@ -2,31 +2,31 @@ var passport = require('passport');
 var User = require('./models/users');
 var Profile = require('./models/profile');
 
-//profile 
-let johnProfile = new Profile({
-    //age should be birthday
-    age: "14",
-    ageHidden: false,
-    devAge: 14,
-    devAgeHidden: true,
-    genderId: "Male",
-    genderHidden: false,
-    friendIds: ["5bc002e43b04853024ca66aa"],
-    sentPendingFriendIds: ["5bc002e43b04853024ca66ab","5bc002e43b04853024ca66ae"],
-    recvPendingFriendIds: ["5bc002e43b04853024ca66ac","5bc002e43b04853024ca66ad"],
-})
+async function asyncFindProfileById(id) {
+    var currProfile;
+    Profile.findById(id, function (err, currentProfile) {
+        if (err) {
+            console.log('error finding profile');
+        } else {
+            currProfile = currentProfile;
+            return currProfile;
+        }
+    });
+}
 
-johnProfile.save(function(err){
-    if (err){
-        return console.log(err)
-    }
-    return console.log("Profile added")
-})
+async function asyncGetFriend(id) {
+    
+}
 
-
-
-
-
+async function asyncGetFriends(iDs) {
+    var currFriends = [];
+    for (var i = 0; i < iDs.length; i++) {
+        User.findById(fIds[i], function(err, currentUser) {
+            currFriends[i] = currentUser;
+        });
+    }   
+    return currFriends;
+}
 
 module.exports = function(app) {
     app.get('/',
@@ -55,7 +55,6 @@ module.exports = function(app) {
     app.post('/login', 
         passport.authenticate('local', { failureRedirect: '/login' }),
         function(req, res) {
-            console.log("made it here!");
             if (req.user.role === 'admin') {
                 res.redirect('/admin');
             } else {
@@ -70,17 +69,82 @@ module.exports = function(app) {
     });
 
     // matches route
-    app.get('/matches',require('connect-ensure-login').ensureLoggedIn(), function(req,res){
-        Profile.findById('5bbfff70e72be4286090bc83',function(err,profile){
-            res.render('matches',{profile:profile})
-          })
+    // app.get('/matches',require('connect-ensure-login').ensureLoggedIn(), function(req,res){
+    //     Profile.findById('5bbfff70e72be4286090bc83',function(err,profile){
+    //         res.render('matches',{profile:profile})
+    //       })
         
-    })
+    // })
 
     app.get('/profile',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res){
-            res.render('profile', { user: req.user });
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                if (req.user.profileId !== null) {
+                    var profile;
+                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                        if (err) {
+                            console.log('error finding profile');
+                        } else {
+                            var friends = [];
+                            profile = currentProfile;
+                            User.find({
+                                '_id': { $in: profile.friendIds }
+                            }, function(err, users) {
+                                friends = users;
+                                res.render('profile', { user: req.user, profile: profile, friends: friends });
+                            });
+                        }
+                    }); 
+                } else {
+                    console.log('Profile not found.');
+                    res.redirect('/');
+                }
+            } else {
+                console.log("Not a user or a parent");
+                res.redirect('/');
+            }
     });
 
+    app.get('/matches',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                if (req.user.profileId !== null) {
+                    var profile;
+                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                        if (err) {
+                            console.log('error finding profile');
+                        } else {
+                            var matches = [];
+                            var sent = [];
+                            var received = [];
+                            profile = currentProfile;
+                            User.find({
+                                '_id': { $in: profile.matchIds }
+                            }, function(err, users) {
+                                matches = users;
+                                User.find({
+                                    '_id': { $in: profile.sentPendingFriendIds}
+                                }, function(err, sentPending) {
+                                    sent = sentPending;
+                                    User.find({
+                                        '_id': { $in: profile.recvPendingFriendIds}
+                                    }, function(err, recvPending) {
+                                        received = recvPending;
+                                        res.render('matches', { user: req.user, profile: profile, matches: matches, sent: sent, received: received });
+                                    });
+                                });
+                            });
+                        }
+                    }); 
+                } else {
+                    console.log('Profile not found.');
+                    res.redirect('/');
+                }
+            } else {
+                console.log("Not a user or a parent");
+                res.redirect('/');
+            }
+    });
 };
