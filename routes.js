@@ -98,6 +98,12 @@ module.exports = function(app) {
             }
     });
 
+    app.get('/messages',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            res.render('messages');
+    });
+
     app.get('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
