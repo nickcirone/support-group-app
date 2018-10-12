@@ -4,7 +4,7 @@ var mongoose = require('mongoose'),
     // passportLocalMongoose = require('passport-local-mongoose');
 
 var ProfileSchema = new Schema({
-    age: {type: String, required: false},
+    age: {type: Number, required: false},
     ageHidden: {type: Boolean, required: false},
     devAge: {type: Number, required: false},
     devAgeHidden: {type: Number, required: false},
@@ -49,6 +49,7 @@ var ProfileSchema = new Schema({
     ], required: false},
     interestsHidden: {type: Boolean, required: false},
     friendIds: {type: [ObjectId], required: false},
+    matchIds: {type: [ObjectId], required: false},
     sentPendingFriendIds: {type: [ObjectId], required: false},
     recvPendingFriendIds: {type: [ObjectId], required: false},
 });
