@@ -4,9 +4,7 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose');
 
 // Schema for USER
-var UserSchema = new Schema ({
-  username: String,
-  password: String,
+var User = new Schema ({
   email: String,
   role: String,
   parentId: {type: ObjectId, required: false},
@@ -14,9 +12,9 @@ var UserSchema = new Schema ({
   profileId: {type: ObjectId, required: false},
 });
 
-UserSchema.plugin(passportLocalMongoose);
+User.plugin(passportLocalMongoose);
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', User);
 
 // Connect to DB using URI
 //mongoose.connect("mongodb://ncirone:W!!!ngnu+++970@ds143678.mlab.com:43678/support_group_dev");

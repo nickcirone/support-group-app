@@ -2,25 +2,29 @@ var passport = require('passport');
 var User = require('./models/users');
 var Profile = require('./models/profile');
 
-let newUser = new User({
-    username: 'cheesyPizza',
-    passord: 'pass',
-    email:'c@live.edu',
-    role: 'child',
-    //profileID: 
+//profile 
+let johnProfile = new Profile({
+    //age should be birthday
+    age: "14",
+    ageHidden: false,
+    devAge: 14,
+    devAgeHidden: true,
+    genderId: "Male",
+    genderHidden: false,
+    friendIds: ["5bc002e43b04853024ca66aa"],
+    sentPendingFriendIds: ["5bc002e43b04853024ca66ab","5bc002e43b04853024ca66ae"],
+    recvPendingFriendIds: ["5bc002e43b04853024ca66ac","5bc002e43b04853024ca66ad"],
 })
-// let newProfile = new Profile({
-//     //age should be birthday
-//     age: "14",
-//     ageHidden: false,
-//     devAge: 14,
-//     devAgeHidden: true,
-//     genderId: "Male",
-//     genderHidden: false,
-//     friendIds: {type: [ObjectId], required: false},
-//     sentPendingFriendIds: {type: [ObjectId], required: false},
-//     recvPendingFriendIds: {type: [ObjectId], required: false},
-// })
+
+johnProfile.save(function(err){
+    if (err){
+        return console.log(err)
+    }
+    return console.log("Profile added")
+})
+
+
+
 
 
 
@@ -51,6 +55,7 @@ module.exports = function(app) {
     app.post('/login', 
         passport.authenticate('local', { failureRedirect: '/login' }),
         function(req, res) {
+            console.log("made it here!");
             if (req.user.role === 'admin') {
                 res.redirect('/admin');
             } else {
@@ -65,12 +70,11 @@ module.exports = function(app) {
     });
 
     // matches route
-    app.get('matches',function(req,res){
-        // User.findById('5bbd55ca065bd921e86392ef',function(err,user){
-        //     //res.send(product)
-        //     //console.log(user.name)
-        //     res.render('matches',{user:user})
-        //   })
+    app.get('/matches',require('connect-ensure-login').ensureLoggedIn(), function(req,res){
+        Profile.findById('5bbfff70e72be4286090bc83',function(err,profile){
+            res.render('matches',{profile:profile})
+          })
+        
     })
 
     app.get('/profile',
