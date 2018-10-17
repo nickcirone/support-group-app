@@ -1,4 +1,3 @@
-var path = require('path');
 var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -34,12 +33,13 @@ passport.deserializeUser(User.deserializeUser());
 // Connect to mongo !!!! USES MY mLAB info, so replace URI with your own development db. 
 mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 
+// Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
 var profileTwoId = mongoose.Types.ObjectId();
 var profileThreeId = mongoose.Types.ObjectId();
 var profileFourId = mongoose.Types.ObjectId();
 var profileFiveId = mongoose.Types.ObjectId();
-
+// Randomly generate ObjectIds for Users
 var userOneId = mongoose.Types.ObjectId();
 var userTwoId = mongoose.Types.ObjectId();
 var userThreeId = mongoose.Types.ObjectId();
