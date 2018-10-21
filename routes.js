@@ -2,32 +2,6 @@ var passport = require('passport');
 var User = require('./models/users');
 var Profile = require('./models/profile');
 
-async function asyncFindProfileById(id) {
-    var currProfile;
-    Profile.findById(id, function (err, currentProfile) {
-        if (err) {
-            console.log('error finding profile');
-        } else {
-            currProfile = currentProfile;
-            return currProfile;
-        }
-    });
-}
-
-async function asyncGetFriend(id) {
-    
-}
-
-async function asyncGetFriends(iDs) {
-    var currFriends = [];
-    for (var i = 0; i < iDs.length; i++) {
-        User.findById(fIds[i], function(err, currentUser) {
-            currFriends[i] = currentUser;
-        });
-    }   
-    return currFriends;
-}
-
 module.exports = function(app) {
     app.get('/',
         require('connect-ensure-login').ensureLoggedIn(),
@@ -40,12 +14,6 @@ module.exports = function(app) {
         function(req, res){
             res.render('admin', {user: req.user});
     });
-
-    /*
-    app.post('/register', function (req, res) {
-        User.register
-    });
-    */
 
     app.get('/login',
         function(req, res) {
@@ -67,14 +35,6 @@ module.exports = function(app) {
             req.logout();
             res.redirect('/');
     });
-
-    // matches route
-    // app.get('/matches',require('connect-ensure-login').ensureLoggedIn(), function(req,res){
-    //     Profile.findById('5bbfff70e72be4286090bc83',function(err,profile){
-    //         res.render('matches',{profile:profile})
-    //       })
-        
-    // })
 
     app.get('/profile',
         require('connect-ensure-login').ensureLoggedIn(),
@@ -104,6 +64,12 @@ module.exports = function(app) {
                 console.log("Not a user or a parent");
                 res.redirect('/');
             }
+    });
+
+    app.get('/messages',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            res.render('messages');
     });
 
     app.get('/matches',

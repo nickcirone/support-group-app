@@ -1,13 +1,28 @@
-<h3>
-Username: <%= user.username %><br/>
-Email: <%= user.email %><br/>
-Age: <%= profile.age %><br/>
-Bio: <%= profile.bio %><br/>
-Interests: <%= profile.interests %><br/>
-Medical Services: <%= profile.services %><br/>
-Friends: <% for (var i = 0; i < friends.length; i++) { %>
-            <%= friends[i].username %><br/>
-         <% } %>
-</h3>
-<a href='/matches'>View Matches</a>
-<a href="/logout">Log out</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %> 
+</head>
+<body>
+<% include partials/navbar %>
+    <div class="container">
+        <h2><%= user.username %>'s Profile</h2>
+        <br/>
+        <h3>
+                Email: <%= user.email %><br/>
+                Age: <%= profile.age %><br/>
+                Bio: <%= profile.bio %><br/>
+                Interests: <%= profile.interests %><br/>
+                Medical Services: <%= profile.services %><br/>
+                Friends:
+                    <h3 class="text-primary">
+                        <% for (var i = 0; i < friends.length; i++) { %>
+                            <%= friends[i].username %><br/>
+                        <% } %>
+                    </h3> 
+        </h3>
+    </div>
+
+</body>
+<% include partials/script %>
+</html>
