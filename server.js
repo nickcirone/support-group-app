@@ -1,4 +1,3 @@
-var path = require('path');
 var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -31,35 +30,16 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Connect to mongo
- mongoose.connect('mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test',{useNewUrlParser: true},(err)=>{
-   console.log('mongo db connection',err);
- });
-
-// Configure Passport authenticated session persistence.
-
-
-passport.serializeUser(function(user, cb) {
-  cb(null, user.id);
-});
-
-passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
-    if (err) { return cb(err); }
-    cb(null, user);
-  
-  });
-})
 // Connect to mongo !!!! USES MY mLAB info, so replace URI with your own development db. 
-//mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 
-
+// Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
 var profileTwoId = mongoose.Types.ObjectId();
 var profileThreeId = mongoose.Types.ObjectId();
 var profileFourId = mongoose.Types.ObjectId();
 var profileFiveId = mongoose.Types.ObjectId();
-
+// Randomly generate ObjectIds for Users
 var userOneId = mongoose.Types.ObjectId();
 var userTwoId = mongoose.Types.ObjectId();
 var userThreeId = mongoose.Types.ObjectId();
@@ -150,6 +130,17 @@ var profileFive = new Profile(
   }
 );
 
+// Dummy Users
+var admin = new User(
+  {
+    username: 'admin',
+    email: 'admin@admin.com',
+    role: 'admin',
+    parentId: null,
+    childId: null,
+    profileId: null,
+  }
+);
 
 var apple_one = new User(
   {
@@ -201,21 +192,20 @@ var endive_five = new User(
   }
 );
 
-
+/*
 // Save dummy profiles to Mongo
-// registerProfile(profileOne);
-// registerProfile(profileTwo);
-// registerProfile(profileThree);
-// registerProfile(profileFour);
-// registerProfile(profileFive);
-
-// // Register users in Mongo
-// registerUser(apple_one, 'apple_one');
-// registerUser(banana_two, 'banana_two');
-// registerUser(coconut_three, 'coconut_three');
-// registerUser(durian_four, 'durian_four');
-// registerUser(endive_five, 'endive_five');
-
+registerProfile(profileOne);
+registerProfile(profileTwo);
+registerProfile(profileThree);
+registerProfile(profileFour);
+registerProfile(profileFive);
+// Register users in Mongo
+registerUser(apple_one, 'apple_one');
+registerUser(banana_two, 'banana_two');
+registerUser(coconut_three, 'coconut_three');
+registerUser(durian_four, 'durian_four');
+registerUser(endive_five, 'endive_five');
+*/
 
 require('./routes')(app);
 
