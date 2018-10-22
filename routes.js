@@ -85,31 +85,41 @@ module.exports = function(app) {
                             var matches = [];
                             var matchProfileIds=[];
                             var matchProfiles = [];
-                            var sent = [];
                             var received = [];
+                            var receivedPIds =[];
+                            var receivedProfiles=[];
+                            var sent = [];
+                            var sentPIds = [];
+                            var sentProfiles=[];
                             profile = currentProfile;
-                            //console.log(profile)
                             User.find({
                                 '_id': { $in: profile.matchIds }
                             }, function(err, users) {
                                 matches = users;
-                                matchProfileIds = matches.map((match)=>{return match.profileId});
+                                matchProfileIds = matches.map((account)=>{return account.profileId});
                                 //console.log(matches[0])
                                 //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
                                     sent = sentPending;
+                                    sentPIds = sent.map((account)=>{return account.profileId})
                                     User.find({
                                         '_id': { $in: profile.recvPendingFriendIds}
                                     }, function(err, recvPending) {
                                         received = recvPending;
-                                        Profile.find({
-                                            '_id':{$in: matchProfileIds}
-                                        }, function(err,match_Profiles){
+                                        receivedPIds = received.map((account)=>{return account.profileId});
+                                        Profile.find({'_id':{$in: matchProfileIds}}, function(err,match_Profiles){
                                             matchProfiles = match_Profiles;
-                                            //console.log(matchProfiles)
-                                            res.render('matches', { user: req.user, profile: profile, matches: matches, sent: sent, received: received, matchProfiles: matchProfiles});
+                                            Profile.find({'_id':{$in: receivedPIds}},function(err,recProfiles){
+                                                receivedProfiles = recProfiles;
+                                                Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
+                                                    sentProfiles = sent_Profiles;
+                                                    res.render('matches', { user: req.user, profile: profile, matches: matches,
+                                                        sent: sent, received: received, matchProfiles: matchProfiles, 
+                                                        receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
+                                                });
+                                            });
                                         });
                                     });
                                 });
