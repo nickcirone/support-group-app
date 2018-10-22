@@ -83,13 +83,19 @@ module.exports = function(app) {
                             console.log('error finding profile');
                         } else {
                             var matches = [];
+                            var matchProfileIds=[];
+                            var matchProfiles = [];
                             var sent = [];
                             var received = [];
                             profile = currentProfile;
+                            //console.log(profile)
                             User.find({
                                 '_id': { $in: profile.matchIds }
                             }, function(err, users) {
                                 matches = users;
+                                matchProfileIds = matches.map((match)=>{return match.profileId});
+                                //console.log(matches[0])
+                                //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -98,7 +104,13 @@ module.exports = function(app) {
                                         '_id': { $in: profile.recvPendingFriendIds}
                                     }, function(err, recvPending) {
                                         received = recvPending;
-                                        res.render('matches', { user: req.user, profile: profile, matches: matches, sent: sent, received: received });
+                                        Profile.find({
+                                            '_id':{$in: matchProfileIds}
+                                        }, function(err,match_Profiles){
+                                            matchProfiles = match_Profiles;
+                                            //console.log(matchProfiles)
+                                            res.render('matches', { user: req.user, profile: profile, matches: matches, sent: sent, received: received, matchProfiles: matchProfiles});
+                                        });
                                     });
                                 });
                             });
