@@ -8,8 +8,10 @@ var app = express();
 app.set('port', process.env.PORT || 3001);
 
 // Configure view engine to render EJS templates.
+//app.engine('html',cons.swig)
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+//app.set('view engine', 'html');
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -32,6 +34,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo !!!! USES MY (Nick's) mLAB info, so replace URI with your own development db. 
 mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+//mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
 
 // Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
@@ -76,8 +79,8 @@ var profileOne = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: 'sports',
     services: 'Burns',
-    friendIds: [userTwoId, userFourId],
-    matchIds: [userThreeId],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userFourId],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -90,7 +93,7 @@ var profileTwo = new Profile(
     interests: 'sports',
     services: 'Surgery',
     friendIds: [userOneId, userThreeId, userFourId],
-    matchIds: [userTwoId],
+    matchIds: [userFiveId],
   }
 );
 
@@ -199,7 +202,6 @@ registerProfile(profileTwo);
 registerProfile(profileThree);
 registerProfile(profileFour);
 registerProfile(profileFive);
-
 // Register users in Mongo
 registerUser(apple_one, 'apple_one');
 registerUser(banana_two, 'banana_two');

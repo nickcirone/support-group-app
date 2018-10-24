@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+
+<div class='container'>
+    <br>
+    <div>
+        <h1>Matches</h1>
+    </div>
+    <div id="matches">
+    <tr>
+        <th>Name</th>
+    </tr>
+    
+    </div>
+    <br>
+    <h1>Pending</h1>
+    <div id="pending">
+        <tr>
+            <th>Name</th>
+        </tr>
+        </div>
+</div>
+</html>
+<script>
+    $(()=>{
+        getMatch();
+    })
+
+    function addMatch(user){
+        $('#matches').append(`<tr><th>${user.name}</th></tr>`)
+    }
+
+    function getMatch(){
+        $.get('http://localhost:3000/matches',(user)=>{
+           alert("data: "+user)
+            //user.forEach(addMatch);
+           //console.log(user)
+        })
+    }
+</script>
