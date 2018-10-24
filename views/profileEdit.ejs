@@ -6,26 +6,40 @@
 <body>
 <% include partials/navbar %>
     <div class="container">
-        <h2>Edit <%= user.username %>'s Profile</h2>
+        <h2>Edit your profile</h2>
         <br/>
         <form method="POST" action="">
-            <h5>
-                <ul class="list-group">
-                    <li class="list-group-item">Avatar:
-                        <select name="avatar">
+                    <div class="form-group">
+                        <label for="avatar">Avatar </label>
+                        <select class="form-control" id="avatar" name="avatar">
                             <option value="baseball">Baseball</option>
                             <option value="soccerball">Soccer Ball</option>
                             <option value="basketball">Basketball</option>
-                        </select><br/>
-                    </li>
-                    <li class="list-group-item">Age: <input type="text" name="age" value="<%= profile.age %>"></li>
-                    <li class="list-group-item">Birthdate: <input type="date" name="birthdate"></li>
-                    <li class="list-group-item">Developmental Age: <input type="text" name="devAge"></li>
-                    <li class="list-group-item">Gender Identity: <input type="text" name="genderId" value="<%= profile.genderId %>"></li>
-                    <li class="list-group-item">Bio: <br/><br/>
-                        <textarea name="bio" rows="10" cols="30" value="<%= profile.bio %>"></textarea></li>
-                    <li class="list-group-item">Medical Services: <br/><br/>
-                        <select name="services" size="16" multiple>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age </label>
+                        <input class="form-control" type="text" id="age" name="age" value="<%= profile.age %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="birthdate">Birthdate </label>
+                        <input class="form-control" id="birthdate" type="date" name="birthdate">
+                    </div>
+                    <div class="form-group">
+                        <label for="devAge">Developmental Age </label>
+                        <input class="form-control" id="devAge" type="text" name="devAge">
+                    </div>
+                    <div class="form-group">
+                        <label for="genderId">Gender Identity </label>
+                        <input class="form-control" id="genderId" type="text" name="genderId" value="<%= profile.genderId %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Bio </label>
+                        <textarea class="form-control" id="bio" name="bio" rows="10" cols="30" value="<%= profile.bio %>"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="services">Medical Services </label>
+                        <select class="form-control" id="services" name="services" size="16" multiple>
                             <option value="Surgery">Surgery</option>
                             <option value="Neurosurgery">Neurosurgery</option>
                             <option value="ENT Surgery">ENT Surgery</option>
@@ -42,31 +56,76 @@
                             <option value="Neurology">Neurology</option>
                             <option value="Pulmonology">Pulmonology</option>
                             <option value="Bone Marrow Transplant">Bone Marrow Transplant</option>
-                        </select><br/></li>
-                    <li class="list-group-item">Interests: <br/><br/>
-                        <select name="interests" size="14" multiple>
-                            <option value="video games">Video Games</option>
-                            <option value="cooking">Cooking</option>
-                            <option value="arts & crafts">Arts & Crafts</option>
-                            <option value="legos">Legos</option>
-                            <option value="building">Building</option>
-                            <option value="writing">Writing</option>
-                            <option value="reading">Reading</option>
-                            <option value="tv">Television</option>
-                            <option value="movies">Movies</option>
-                            <option value="board/card games">Board and Card Games</option>
-                            <option value="sports">Sports</option>
-                            <option value="swimming">Swimming</option>
-                            <option value="boating">Boating</option>
-                            <option value="fishing">Fishing</option>
-                        </select><br/></li>
-                    <li class="list-group-item"><input class="btn btn-primary" type="submit">  <a class="btn btn-danger" href='/profile' style="float: right">Discard Changes</a></li>
-                </ul>
-                <br/>
-            </h5>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Interests </label> 
+                        <div class="form-check">
+                            <label for="video games" class="form-check-label">Video Games: </label>
+                            <input class="form-check-input" type="checkbox" id="video games" value="video games">
+                        </div>
+                        <div class="form-check">
+                            <label for="cooking" class="form-check-label">Cooking: </label>
+                            <input class="form-check-input" type="checkbox" id="cooking" value="cooking">
+                        </div>
+                        <div class="form-check">
+                                <label for="arts&crafts" class="form-check-label">Arts & Crafts: </label>
+                                <input class="form-check-input" type="checkbox" id="arts&crafts" value="arts & crafts">
+                        </div>
+                        <div class="form-check">
+                                <label for="legos" class="form-check-label">Legos: </label>
+                                <input class="form-check-input" type="checkbox" id="legos" value="legos">
+                        </div>
+                        <div class="form-check">
+                                <label for="building" class="form-check-label">Building: </label>
+                                <input class="form-check-input" type="checkbox" id="building" value="building">
+                        </div>
+                        <div class="form-check">
+                                <label for="writing" class="form-check-label">Writing: </label>
+                                <input class="form-check-input" type="checkbox" id="writing" value="writing">
+                        </div>
+                        <div class="form-check">
+                                <label for="reading" class="form-check-label">Reading: </label>
+                                <input class="form-check-input" type="checkbox" id="reading" value="reading">
+                        </div>
+                        <div class="form-check">
+                                <label for="tv" class="form-check-label">Television: </label>
+                                <input class="form-check-input" type="checkbox" id="tv" value="tv">
+                        </div>
+                        <div class="form-check">
+                                <label for="movies" class="form-check-label">Movies: </label>
+                                <input class="form-check-input" type="checkbox" id="movies" value="movies">
+                        </div>
+                        <div class="form-check">
+                                <label for="boardgames" class="form-check-label">Board and Card Games: </label>
+                                <input class="form-check-input" type="checkbox" id="boardgames" value="board/card games">
+                        </div>
+                        <div class="form-check">
+                                <label for="sports" class="form-check-label">Sports: </label>
+                                <input class="form-check-input" type="checkbox" id="sports" value="sports">
+                        </div>
+                        <div class="form-check">
+                                <label for="swimming" class="form-check-label">Swimming: </label>
+                                <input class="form-check-input" type="checkbox" id="swimming" value="swimming">
+                        </div>
+                        <div class="form-check">
+                                <label for="boating" class="form-check-label">Boating: </label>
+                                <input class="form-check-input" type="checkbox" id="boating" value="boating">
+                        </div>
+                        <div class="form-check">
+                                <label for="fishing" class="form-check-label">Fishing: </label>
+                                <input class="form-check-input" type="checkbox" id="fishing" value="fishing">
+                        </div>
+
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                            <input class="btn btn-primary" type="submit">
+                            <a class="btn btn-danger" href='/profile' style="float:right">Discard Changes</a>
+                    </div>  
         </form>
     </div>
-
+    <br/>
 </body>
 <% include partials/script %>
 </html>
