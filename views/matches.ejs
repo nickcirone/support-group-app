@@ -18,7 +18,7 @@
                     </h3>
                     <div class="card-text">
                         <h4 >Age: <%= matchProfiles[i].age %> </h4>
-                        <% for (var j = 0; j < 1; j++) { %>
+                        <% for (var j = 0; j < matchProfiles[i].interests.length; j++) { %>
                         <h4> Interest: <%= matchProfiles[i].interests[j] %> </h4>
                         <% } %>
                         <h4> Services: <%= matchProfiles[i].services %> </h4>
@@ -38,7 +38,7 @@
                                     </h3>
                                     <div class="card-text">
                                         <h4 >Age: <%= receivedProfiles[i].age %> </h4>
-                                        <% for (var j = 0; j < 1; j++) { %>
+                                        <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
                                             <h4> Interest: <%= receivedProfiles[i].interests[j] %> </h4>
                                         <% } %>
                                         <h4> Services: <%= receivedProfiles[i].services %> </h4>
@@ -57,7 +57,7 @@
                                     </h3>
                                     <div class="card-text">
                                         <h4 >Age: <%= sentProfiles[i].age %> </h4>
-                                        <% for (var j = 0; j < 1; j++) { %>
+                                        <% for (var j = 0; j < sentProfiles[i].interests; j++) { %>
                                             <h4> Interest: <%= sentProfiles[i].interests[j] %> </h4>
                                         <% } %>
                                         <h4> Services: <%= sentProfiles[i].services %> </h4>

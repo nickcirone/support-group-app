@@ -3,17 +3,24 @@ var User = require('./models/users');
 var Profile = require('./models/profile');
 
 module.exports = function(app) {
+
+    // homepage route (after logging in)
+
     app.get('/',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             res.render('home', { user: req.user });
     });
 
+    // admin routes
+
     app.get('/admin',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res){
             res.render('admin', {user: req.user});
     });
+
+    // login routes
 
     app.get('/login',
         function(req, res) {
@@ -29,12 +36,16 @@ module.exports = function(app) {
                 res.redirect('/');
             }
     });
+
+    // logout route
   
     app.get('/logout',
         function(req, res){
             req.logout();
             res.redirect('/');
     });
+
+    // profile route
 
     app.get('/profile',
         require('connect-ensure-login').ensureLoggedIn(),
@@ -65,6 +76,8 @@ module.exports = function(app) {
                 res.redirect('/');
             }
     });
+
+    // profile edit routes
 
     app.get('/profileEdit',
         require('connect-ensure-login').ensureLoggedIn(),
@@ -97,11 +110,22 @@ module.exports = function(app) {
         }
     );
 
+    app.post('/profileEdit',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            
+        }
+    )
+
+    // messaging routes
+
     app.get('/messages',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             res.render('messages');
     });
+
+    // matches routes
 
     app.get('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
