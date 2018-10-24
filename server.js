@@ -76,9 +76,10 @@ var profileOne = new Profile(
   {
     _id: profileOneId,
     age: 13,
+    genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'Burns',
+    interests: ['sports', 'cooking', 'video games'],
+    services: ['Burns'],
     friendIds: [userTwoId],
     matchIds: [userThreeId, userFourId],
     sentPendingFriendIds: [userFiveId],
@@ -89,9 +90,10 @@ var profileTwo = new Profile(
   {
     _id: profileTwoId,
     age: 12,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'Surgery',
+    interests: ['sports'],
+    services: ['Surgery'],
     friendIds: [userOneId, userThreeId, userFourId],
     matchIds: [userFiveId],
   }
@@ -101,9 +103,10 @@ var profileThree = new Profile(
   {
     _id: profileThreeId,
     age: 14,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'GI',
+    interests: ['sports'],
+    services: ['GI'],
     friendIds: [userTwoId, userFourId],
     matchIds: [userThreeId],
     sentPendingFriendIds: [userFiveId],
@@ -115,9 +118,10 @@ var profileFour = new Profile(
   {
     _id: profileFourId,
     age: 13,
+    genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'fishing',
-    services: 'Cardiology',
+    interests: ['fishing'],
+    services: ['Cardiology'],
     friendIds: [userOneId, userTwoId, userThreeId, userFourId],
   }
 );
@@ -126,9 +130,10 @@ var profileFive = new Profile(
   {
     _id: profileFiveId,
     age: 11,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'fishing',
-    services: 'Neurosurgery',
+    interests: ['fishing'],
+    services: ['Neurosurgery'],
     friendIds: [userFourId],
   }
 );
@@ -195,7 +200,6 @@ var endive_five = new User(
   }
 );
 
-/*
 // Save dummy profiles to Mongo
 registerProfile(profileOne);
 registerProfile(profileTwo);
@@ -208,7 +212,7 @@ registerUser(banana_two, 'banana_two');
 registerUser(coconut_three, 'coconut_three');
 registerUser(durian_four, 'durian_four');
 registerUser(endive_five, 'endive_five');
-*/
+
 
 require('./routes')(app);
 

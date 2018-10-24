@@ -12,7 +12,37 @@ var ProfileSchema = new Schema({
     genderHidden: {type: Boolean, required: false},
     bio: {type: String, required: false},
     bioHidden: {type: Boolean, required: false},
-    services: {type: String, enum: [
+    services: {type: [String], required: false},
+    servicesHidden: {type: Boolean, required: false},
+    interests: {type: [String], required: false},
+    interestsHidden: {type: Boolean, required: false},
+    friendIds: {type: [ObjectId], required: false},
+    matchIds: {type: [ObjectId], required: false},
+    sentPendingFriendIds: {type: [ObjectId], required: false},
+    recvPendingFriendIds: {type: [ObjectId], required: false},
+});
+
+module.exports = mongoose.model('Profile', ProfileSchema);
+
+/*
+var interests = [
+      'video games',
+      'cooking',
+      'arts & crafts',
+      'legos',
+      'building',
+      'writing',
+      'reading',
+      'tv',
+      'movies',
+      'board/card games',
+      'sports',
+      'swimming',
+      'boating',
+      'fishing'
+    ];
+
+var services = [
       'Surgery',
       'Neurosurgery',
       'ENT Surgery',
@@ -29,29 +59,6 @@ var ProfileSchema = new Schema({
       'Neurology',
       'Pulmonology',
       'Bone Marrow Transplant'
-    ], required: false},
-    servicesHidden: {type: Boolean, required: false},
-    interests: {type: String, enum: [
-      'video games',
-      'cooking',
-      'arts & crafts',
-      'legos',
-      'building',
-      'writing',
-      'reading',
-      'tv',
-      'movies',
-      'board/card games',
-      'sports',
-      'swimming',
-      'boating',
-      'fishing'
-    ], required: false},
-    interestsHidden: {type: Boolean, required: false},
-    friendIds: {type: [ObjectId], required: false},
-    matchIds: {type: [ObjectId], required: false},
-    sentPendingFriendIds: {type: [ObjectId], required: false},
-    recvPendingFriendIds: {type: [ObjectId], required: false},
-});
+    ];
 
-module.exports = mongoose.model('Profile', ProfileSchema);
+*/
