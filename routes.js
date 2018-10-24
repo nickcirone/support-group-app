@@ -128,8 +128,6 @@ module.exports = function(app) {
                             }, function(err, users) {
                                 matches = users;
                                 matchProfileIds = matches.map((account)=>{return account.profileId});
-                                //console.log(matches[0])
-                                //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
