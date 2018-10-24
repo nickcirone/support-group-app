@@ -66,6 +66,37 @@ module.exports = function(app) {
             }
     });
 
+    app.get('/profileEdit',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient') {
+                if (req.user.profileId !== null) {
+                    var profile;
+                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                        if (err) {
+                            console.log('error finding profile');
+                        } else {
+                            var friends = [];
+                            profile = currentProfile;
+                            User.find({
+                                '_id': { $in: profile.friendIds }
+                            }, function(err, users) {
+                                friends = users;
+                                res.render('profileEdit', { user: req.user, profile: profile, friends: friends });
+                            });
+                        }
+                    }); 
+                } else {
+                    console.log('Profile not found.');
+                    res.redirect('/');
+                }
+            } else {
+                console.log("Not a patient");
+                res.redirect('/');
+            }
+        }
+    );
+
     app.get('/messages',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {

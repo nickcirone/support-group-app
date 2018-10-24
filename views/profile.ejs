@@ -15,12 +15,14 @@
                 Interests: <%= profile.interests %><br/>
                 Medical Services: <%= profile.services %><br/>
                 Friends:
-                    <h3 class="text-primary">
+                    <h3 class="text-success">
                         <% for (var i = 0; i < friends.length; i++) { %>
                             <%= friends[i].username %><br/>
                         <% } %>
                     </h3> 
         </h3>
+        </br>
+        <h4><a class="btn btn-primary" href='/profileEdit'>Edit Profile</a></h4>
     </div>
 
 </body>

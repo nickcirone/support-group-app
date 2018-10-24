@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %> 
+</head>
+<body>
+<% include partials/navbar %>
+    <div class="container">
+        <h2>Edit <%= user.username %>'s Profile</h2>
+        <br/>
+        <form method="POST" action="">
+            <h5>
+                <ul class="list-group">
+                    <li class="list-group-item">Avatar:
+                        <select name="avatar">
+                            <option value="baseball">Baseball</option>
+                            <option value="soccerball">Soccer Ball</option>
+                            <option value="basketball">Basketball</option>
+                        </select><br/>
+                    </li>
+                    <li class="list-group-item">Age: <input type="text" name="age" value="<%= profile.age %>"></li>
+                    <li class="list-group-item">Birthdate: <input type="date" name="birthdate"></li>
+                    <li class="list-group-item">Developmental Age: <input type="text" name="devAge"></li>
+                    <li class="list-group-item">Gender Identity: <input type="text" name="genderId" value="<%= profile.genderId %>"></li>
+                    <li class="list-group-item">Bio: <br/><br/>
+                        <textarea name="bio" rows="10" cols="30" value="<%= profile.bio %>"></textarea></li>
+                    <li class="list-group-item">Medical Services: <br/><br/>
+                        <select name="services" size="16" multiple>
+                            <option value="Surgery">Surgery</option>
+                            <option value="Neurosurgery">Neurosurgery</option>
+                            <option value="ENT Surgery">ENT Surgery</option>
+                            <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+                            <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
+                            <option value="Urology Surgery">Urology Surgery</option>
+                            <option value="Burns">Burns</option>
+                            <option value="General Medicine">General Medicine</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Endocrinology">Endocrinology</option>
+                            <option value="GI">GI</option>
+                            <option value="Hematology and Oncology">Hematology and Oncology</option>
+                            <option value="Nephrology">Nephrology</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Pulmonology">Pulmonology</option>
+                            <option value="Bone Marrow Transplant">Bone Marrow Transplant</option>
+                        </select><br/></li>
+                    <li class="list-group-item">Interests: <br/><br/>
+                        <select name="interests" size="14" multiple>
+                            <option value="video games">Video Games</option>
+                            <option value="cooking">Cooking</option>
+                            <option value="arts & crafts">Arts & Crafts</option>
+                            <option value="legos">Legos</option>
+                            <option value="building">Building</option>
+                            <option value="writing">Writing</option>
+                            <option value="reading">Reading</option>
+                            <option value="tv">Television</option>
+                            <option value="movies">Movies</option>
+                            <option value="board/card games">Board and Card Games</option>
+                            <option value="sports">Sports</option>
+                            <option value="swimming">Swimming</option>
+                            <option value="boating">Boating</option>
+                            <option value="fishing">Fishing</option>
+                        </select><br/></li>
+                    <li class="list-group-item"><input class="btn btn-primary" type="submit">  <a class="btn btn-danger" href='/profile' style="float: right">Discard Changes</a></li>
+                </ul>
+                <br/>
+            </h5>
+        </form>
+    </div>
+
+</body>
+<% include partials/script %>
+</html>

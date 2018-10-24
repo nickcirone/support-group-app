@@ -14,6 +14,10 @@
     align-items: center;
 }
 
+.profile-form > li {
+    padding: 10px;
+}
+
 .navbar {
     padding-top: 15px;
     padding-bottom: 15px;
