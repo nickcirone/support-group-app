@@ -23,51 +23,63 @@
                         <% } %>
                         <h4> Services: <%= matchProfiles[i].services %> </h4>
                     </div>
-                    <a class= "btn-sm btn-primary btn-block">Match!</a>
+                    <form action="/matches" method="post">
+                        <input type ="hidden" name="postType" value= "match" />
+                        <input type ="hidden" name="userId" value= "<%= matches[i]._id %>" />
+                        <input type ="hidden" name="userProfileId" value= "<%= matchProfiles[i]._id %>" />
+                        <button type="submit" value ="accept" class= "btn-sm btn-primary btn-block">Match!</button>
+                    </form>
                 </div>
             </div>
         <% } %>
                 
         <h3>Pending: </h3><br/>
-                <% if (received) { %>
-                    <% for (var i = 0; i < receivedProfiles.length; i++) { %>
-                        <div class="card" style="width: 15rem;">
-                                <div class="card-body text-center">
-                                    <h3 class="card-header">
-                                        <%= received[i].username %><br/>
-                                    </h3>
-                                    <div class="card-text">
-                                        <h4 >Age: <%= receivedProfiles[i].age %> </h4>
-                                        <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
-                                            <h4> Interest: <%= receivedProfiles[i].interests[j] %> </h4>
-                                        <% } %>
-                                        <h4> Services: <%= receivedProfiles[i].services %> </h4>
-                                    </div>
-                                    <a class= "btn-sm btn-success btn-block">Accept</a>
+            <% if (received) { %>
+                <% for (var i = 0; i < receivedProfiles.length; i++) { %>
+                    <div class="card" style="width: 15rem;">
+                            <div class="card-body text-center">
+                                <h3 class="card-header">
+                                    <%= received[i].username %><br/>
+                                </h3>
+                                <div class="card-text">
+                                    <h4 >Age: <%= receivedProfiles[i].age %> </h4>
+                                    <h4> Interest:</h4>
+                                    <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
+                                        <h5> <%= receivedProfiles[i].interests[j] %></h5>
+                                    <% } %>
+                                    <h4> Services: <%= receivedProfiles[i].services %> </h4>
                                 </div>
+                                <form action="/matches" method="post">
+                                    <input type ="hidden" name="postType" value= "accepted" />
+                                    <input type ="hidden" name="userId" value= "<%= received[i]._id %>" />
+                                    <input type ="hidden" name="userProfileId" value= "<%= receivedProfiles[i]._id %>" />
+                                    <button type="submit" value ="accept" class= "btn-sm btn-success btn-block">Accept</button>
+                                </form>
                             </div>
-                    <% } %>
+                        </div>
                 <% } %>
-                <% if (sent) { %>
-                    <% for (var i = 0; i < sentProfiles.length; i++) { %>
-                        <div class="card" style="width: 15rem;">
-                                <div class="card-body text-center">
-                                    <h3 class="card-header">
-                                        <%= sent[i].username %><br/>
-                                    </h3>
-                                    <div class="card-text">
-                                        <h4 >Age: <%= sentProfiles[i].age %> </h4>
-                                        <% for (var j = 0; j < sentProfiles[i].interests; j++) { %>
-                                            <h4> Interest: <%= sentProfiles[i].interests[j] %> </h4>
-                                        <% } %>
-                                        <h4> Services: <%= sentProfiles[i].services %> </h4>
-                                    </div>
-                                    <a class= "btn-sm btn-danger btn-block">Waiting</a>
+            <% } %>
+            <% if (sent) { %>
+                <% for (var i = 0; i < sentProfiles.length; i++) { %>
+                    <div class="card" style="width: 15rem;">
+                            <div class="card-body text-center">
+                                <h3 class="card-header">
+                                    <%= sent[i].username %><br/>
+                                </h3>
+                                <div class="card-text">
+                                    <h4 >Age: <%= sentProfiles[i].age %> </h4>
+                                    <h4> Interest: </h4>
+                                    <% for (var j = 0; j < sentProfiles[i].interests; j++) { %>
+                                        <h5> <%= sentProfiles[i].interests[j] %> </h5>
+                                    <% } %>
+                                    <h4> Services: <%= sentProfiles[i].services %> </h4>
                                 </div>
+                                <button class= "btn-sm btn-danger btn-block">Waiting</button>
                             </div>
-                    <% } %>
+                        </div>
+                <% } %>
 
-                <% } %>
+            <% } %>
         
     </div>
 

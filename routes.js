@@ -188,4 +188,34 @@ module.exports = function(app) {
                 res.redirect('/');
             }
     });
+
+    app.post('/matches',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            //add req.body to logged in users Profile 
+            //console.log(req.body)
+            newUserId = req.body.userId;
+            if(req.body.postType=="match"){
+                //matched user is added to logged in users recvPendingFreindsIds
+                var matches=[];
+                var removedMatch = [];
+                var addrecvFriendIds =[];
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
+                    matches = currentProfile.matchIds;
+                    removedMatch = matches.filter((id)=>{return id != req.body.userId});
+                    addrecvFriendIds = currentProfile.recvPendingFriendIds;
+                    addrecvFriendIds.push(req.body.userId)
+                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, recvPendingFriendIds: addrecvFriendIds}},
+                    function(err,res){ if(err){throw err;
+                    }else{ 
+                        //TODO: respond somehow - tell front end to update - socket.io?
+                        console.log("Send match request")};
+                    });
+                });
+            }else if(req.body.postType=="accepted"){
+                //accepted user is added to loggedin users friendsIds
+                //same user is deleted from sentPendingFriendIds
+            }
+
+        });
 };
