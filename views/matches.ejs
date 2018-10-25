@@ -69,8 +69,8 @@
                                 <div class="card-text">
                                     <h4 >Age: <%= sentProfiles[i].age %> </h4>
                                     <h4> Interest: </h4>
-                                    <% for (var j = 0; j < sentProfiles[i].interests; j++) { %>
-                                        <h5> <%= sentProfiles[i].interests[j] %> </h5>
+                                    <% for (var j = 0; j < sentProfiles[i].interests.length; j++) { %>
+                                        <h4> <%= sentProfiles[i].interests[j] %> </h4>
                                     <% } %>
                                     <h4> Services: <%= sentProfiles[i].services %> </h4>
                                 </div>

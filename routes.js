@@ -192,29 +192,53 @@ module.exports = function(app) {
     app.post('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            //add req.body to logged in users Profile 
-            //console.log(req.body)
-            newUserId = req.body.userId;
+             var selectedUserId = req.body.userId;
             if(req.body.postType=="match"){
-                //matched user is added to logged in users recvPendingFreindsIds
+                //matched user is added to logged in users sentPendingFriendsIds
                 var matches=[];
                 var removedMatch = [];
-                var addrecvFriendIds =[];
+                var addsentFriendIds =[];
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
+
+                    //remove selected user from matches array
                     matches = currentProfile.matchIds;
-                    removedMatch = matches.filter((id)=>{return id != req.body.userId});
-                    addrecvFriendIds = currentProfile.recvPendingFriendIds;
-                    addrecvFriendIds.push(req.body.userId)
-                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, recvPendingFriendIds: addrecvFriendIds}},
+                    removedMatch = matches.filter((id)=>{return id != selectedUserId});
+
+                    //add selected user to sentPendginFriendsIds array
+                    addsentFriendIds = currentProfile.sentPendingFriendIds;
+                    addsentFriendIds.push(selectedUserId)
+
+                    //update db
+                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
                     function(err,res){ if(err){throw err;
                     }else{ 
                         //TODO: respond somehow - tell front end to update - socket.io?
-                        console.log("Send match request")};
+                        console.log("Sent match request")};
+                    });
+                    });
+            }else if(req.body.postType=="accepted"){
+                //pending user is added to friends 
+                var pendingFreindsIds = [];
+                var removedPendingFriend = [];
+                var newFriendIds =[];
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
+
+                    //remove selected user from recvPendingFriendIds array
+                    pendingFreindsIds = currentProfile.recvPendingFriendIds;
+                    removedPendingFriend = pendingFreindsIds.filter((id)=>{return id != selectedUserId});
+
+                    //add selected user to recvPendingFriendIds array
+                    newfriendIds = currentProfile.friendIds;
+                    newfriendIds.push(selectedUserId)
+
+                    //update db
+                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
+                    function(err,res){ if(err){throw err;
+                    }else{ 
+                        //TODO: respond somehow - tell front end to update - socket.io?
+                        console.log("Added new Friend!")};
                     });
                 });
-            }else if(req.body.postType=="accepted"){
-                //accepted user is added to loggedin users friendsIds
-                //same user is deleted from sentPendingFriendIds
             }
 
         });
