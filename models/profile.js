@@ -5,6 +5,7 @@ var mongoose = require('mongoose'),
 
 var ProfileSchema = new Schema({
     avatar: {type: String, required: false},
+    birthdate: {type: Date, required: false},
     age: {type: Number, required: false},
     ageHidden: {type: Boolean, required: false},
     devAge: {type: Number, required: false},

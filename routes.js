@@ -123,9 +123,15 @@ module.exports = function(app) {
         function(req, res) {
             res.render('login');
     });
+
+    app.get('/loginFail',
+        function(req, res) {
+            res.render('loginFail');
+        }
+    )
   
     app.post('/login', 
-        passport.authenticate('local', { failureRedirect: '/login' }),
+        passport.authenticate('local', { failureRedirect: '/loginFail' }),
         function(req, res) {
             if (req.user.role === 'admin') {
                 res.redirect('/admin');
@@ -218,6 +224,7 @@ module.exports = function(app) {
                     var servicesArr = checkServices(req.body);
                     var interestsArr = checkInterests(req.body);
                     profile.set({ avatar: req.body.avatar });
+                    profile.set({ birthdate: req.body.birthdate });
                     profile.set({ age: req.body.age });
                     profile.set({ devAge: req.body.devAge });
                     profile.set({ genderId: req.body.genderId });
