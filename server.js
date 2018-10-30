@@ -200,6 +200,7 @@ var endive_five = new User(
   }
 );
 
+/*
 // Save dummy profiles to Mongo
 registerProfile(profileOne);
 registerProfile(profileTwo);
@@ -212,7 +213,7 @@ registerUser(banana_two, 'banana_two');
 registerUser(coconut_three, 'coconut_three');
 registerUser(durian_four, 'durian_four');
 registerUser(endive_five, 'endive_five');
-
+*/
 
 require('./routes')(app);
 

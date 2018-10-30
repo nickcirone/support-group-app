@@ -23,11 +23,11 @@
                     </div>
                     <div class="form-group">
                         <label for="birthdate">Birthdate </label>
-                        <input class="form-control" id="birthdate" type="date" name="birthdate">
+                        <input class="form-control" id="birthdate" type="date" name="birthdate" value="<%= profile.birthdate %>">
                     </div>
                     <div class="form-group">
                         <label for="devAge">Developmental Age </label>
-                        <input class="form-control" id="devAge" type="text" name="devAge">
+                        <input class="form-control" id="devAge" type="text" name="devAge" value="<%= profile.devAge %>">
                     </div>
                     <div class="form-group">
                         <label for="genderId">Gender Identity </label>
@@ -35,92 +35,163 @@
                     </div>
                     <div class="form-group">
                         <label for="bio">Bio </label>
-                        <textarea class="form-control" id="bio" name="bio" rows="10" cols="30" value="<%= profile.bio %>"></textarea>
+                        <textarea class="form-control" id="bio" name="bio" rows="10" cols="30"><%= profile.bio %></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="services">Medical Services </label>
-                        <select class="form-control" id="services" name="services" size="16" multiple>
-                            <option value="Surgery">Surgery</option>
-                            <option value="Neurosurgery">Neurosurgery</option>
-                            <option value="ENT Surgery">ENT Surgery</option>
-                            <option value="Orthopedic Surgery">Orthopedic Surgery</option>
-                            <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
-                            <option value="Urology Surgery">Urology Surgery</option>
-                            <option value="Burns">Burns</option>
-                            <option value="General Medicine">General Medicine</option>
-                            <option value="Cardiology">Cardiology</option>
-                            <option value="Endocrinology">Endocrinology</option>
-                            <option value="GI">GI</option>
-                            <option value="Hematology and Oncology">Hematology and Oncology</option>
-                            <option value="Nephrology">Nephrology</option>
-                            <option value="Neurology">Neurology</option>
-                            <option value="Pulmonology">Pulmonology</option>
-                            <option value="Bone Marrow Transplant">Bone Marrow Transplant</option>
-                        </select>
+                    <div class="form-group" name="services">
+                        <label>Medical Services</label> 
+                        <div class="form-check">
+                            <label for="surgery" class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="surgery" name="Surgery" value="Surgery" <% if (profile.services.includes('Surgery')) { %> checked <% } %>>
+                             Surgery</label>
+                        </div>
+                        <div class="form-check">
+                            <label for="neurosurgery" class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="neurosurgery" name="Neurosurgery" value="Neurosurgery" <% if (profile.services.includes('Neurosurgery')) { %> checked <% } %>>
+                             Neurosurgery</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="entSurgery" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="entSurgery" name="ENTSurgery" value="ENT Surgery" <% if (profile.services.includes('ENT Surgery')) { %> checked <% } %>>
+                                 ENT Surgery</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="orthSurgery" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="orthSurgery" name="OrthopedicSurgery" value="Orthopedic Surgery" <% if (profile.services.includes('Orthopedic Surgery')) { %> checked <% } %>>
+                                 Orthopedic Surgery</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="cardSurgery" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="cardSurgery" name="CardiothoracicSurgery" value="Cardiothoracic Surgery" <% if (profile.services.includes('Cardiothoracic Surgery')) { %> checked <% } %>>
+                                 Cardiothoracic Surgery</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="uroSurgery" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="uroSurgery" name="UrologySurgery" value="Urology Surgery" <% if (profile.services.includes('Urology Surgery')) { %> checked <% } %>>
+                                 Urology Surgery</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="burns" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="burns" name="Burns" value="Burns" <% if (profile.services.includes('Burns')) { %> checked <% } %>>
+                                 Burns</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="genMed" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="genMed" name="GeneralMedicine" value="General Medicine" <% if (profile.services.includes('General Medicine')) { %> checked <% } %>>
+                                 General Medicine</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="cardS" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="cardS" name="Cardiology" value="Cardiology" <% if (profile.services.includes('Cardiology')) { %> checked <% } %>>
+                                 Cardiology</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="endo" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="endo" name="Endocrinology" value="Endocrinology" <% if (profile.services.includes('Endocrinology')) { %> checked <% } %>>
+                                 Endocrinology</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="GI" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="gi" name="GI" value="GI" <% if (profile.services.includes('GI')) { %> checked <% } %>>
+                                 GI</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="hema" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="hema" name="HematologyOncology" value="Hematology and Oncology" <% if (profile.services.includes('Hematology and Oncology')) { %> checked <% } %>>
+                                 Hematology and Oncology</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="neph" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="neph" name="Nephrology" value="Nephrology" <% if (profile.services.includes('Nephrology')) { %> checked <% } %>>
+                                 Nephrology</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="pulmo" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="pulmo" name="Pulmonology" value="Pulmonology" <% if (profile.services.includes('Pulmonology')) { %> checked <% } %>>
+                                 Pulmonology</label>
+                        </div>
+                        <div class="form-check">
+                                <label for="bone" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="bone" name="BoneMarrowTransplant" value="Bone Marrow Transplant" <% if (profile.services.includes('Bone Marrow Transplant')) { %> checked <% } %>>
+                                 Bone Marrow Transplant</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Interests </label> 
                         <div class="form-check">
-                            <label for="video games" class="form-check-label">Video Games: </label>
-                            <input class="form-check-input" type="checkbox" id="video games" value="video games" <% if (profile.interests.includes('video games')) { %> checked <% } %>>
+                            <label for="video games" class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="video games" name="videoGames" value="video games" <% if (profile.interests.includes('video games')) { %> checked <% } %>>
+                             Video Games</label>
                         </div>
                         <div class="form-check">
-                            <label for="cooking" class="form-check-label">Cooking: </label>
-                            <input class="form-check-input" type="checkbox" id="cooking" value="cooking" <% if (profile.interests.includes('cooking')) { %> checked <% } %>>
+                            <label for="cooking" class="form-check-label">
+                            <input class="form-check-input" type="checkbox" id="cooking" name="cooking" value="cooking" <% if (profile.interests.includes('cooking')) { %> checked <% } %>>
+                             Cooking</label>
                         </div>
                         <div class="form-check">
-                                <label for="arts&crafts" class="form-check-label">Arts & Crafts: </label>
-                                <input class="form-check-input" type="checkbox" id="arts&crafts" value="arts & crafts" <% if (profile.interests.includes('arts & crafts')) { %> checked <% } %>>
+                                <label for="arts&crafts" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="arts&crafts" name="artsCrafts" value="arts & crafts" <% if (profile.interests.includes('arts & crafts')) { %> checked <% } %>>
+                                 Arts & Crafts</label>
                         </div>
                         <div class="form-check">
-                                <label for="legos" class="form-check-label">Legos: </label>
-                                <input class="form-check-input" type="checkbox" id="legos" value="legos" <% if (profile.interests.includes('legos')) { %> checked <% } %>>
+                                <label for="legos" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="legos" name="legos" value="legos" <% if (profile.interests.includes('legos')) { %> checked <% } %>>
+                                 Legos</label>
                         </div>
                         <div class="form-check">
-                                <label for="building" class="form-check-label">Building: </label>
-                                <input class="form-check-input" type="checkbox" id="building" value="building" <% if (profile.interests.includes('building')) { %> checked <% } %>>
+                                <label for="building" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="building" name="building" value="building" <% if (profile.interests.includes('building')) { %> checked <% } %>>
+                                 Building</label>
                         </div>
                         <div class="form-check">
-                                <label for="writing" class="form-check-label">Writing: </label>
-                                <input class="form-check-input" type="checkbox" id="writing" value="writing" <% if (profile.interests.includes('writing')) { %> checked <% } %>>
+                                <label for="writing" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="writing" name="writing" value="writing" <% if (profile.interests.includes('writing')) { %> checked <% } %>>
+                                 Writing</label>
                         </div>
                         <div class="form-check">
-                                <label for="reading" class="form-check-label">Reading: </label>
-                                <input class="form-check-input" type="checkbox" id="reading" value="reading" <% if (profile.interests.includes('reading')) { %> checked <% } %>>
+                                <label for="reading" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="reading" name="reading" value="reading" <% if (profile.interests.includes('reading')) { %> checked <% } %>>
+                                 Reading</label>
                         </div>
                         <div class="form-check">
-                                <label for="tv" class="form-check-label">Television: </label>
-                                <input class="form-check-input" type="checkbox" id="tv" value="tv" <% if (profile.interests.includes('tv')) { %> checked <% } %>>
+                                <label for="tv" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="tv" name="tv" value="tv" <% if (profile.interests.includes('tv')) { %> checked <% } %>>
+                                 Television</label>
                         </div>
                         <div class="form-check">
-                                <label for="movies" class="form-check-label">Movies: </label>
-                                <input class="form-check-input" type="checkbox" id="movies" value="movies" <% if (profile.interests.includes('movies')) { %> checked <% } %>>
+                                <label for="movies" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="movies" name="movies" value="movies" <% if (profile.interests.includes('movies')) { %> checked <% } %>>
+                                 Movies</label>
                         </div>
                         <div class="form-check">
-                                <label for="boardgames" class="form-check-label">Board and Card Games: </label>
-                                <input class="form-check-input" type="checkbox" id="boardgames" value="board/card games" <% if (profile.interests.includes('board/card games')) { %> checked <% } %>>
+                                <label for="boardgames" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="boardgames" name="boardCardGames" value="board/card games" <% if (profile.interests.includes('board/card games')) { %> checked <% } %>>
+                                 Board and Card Games</label>
                         </div>
                         <div class="form-check">
-                                <label for="sports" class="form-check-label">Sports: </label>
-                                <input class="form-check-input" type="checkbox" id="sports" value="sports" <% if (profile.interests.includes('sports')) { %> checked <% } %>>
+                                <label for="sports" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="sports" name="sports" value="sports" <% if (profile.interests.includes('sports')) { %> checked <% } %>>
+                                 Sports</label>
                         </div>
                         <div class="form-check">
-                                <label for="swimming" class="form-check-label">Swimming: </label>
-                                <input class="form-check-input" type="checkbox" id="swimming" value="swimming" <% if (profile.interests.includes('swimming')) { %> checked <% } %>>
+                                <label for="swimming" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="swimming" name="swimming" value="swimming" <% if (profile.interests.includes('swimming')) { %> checked <% } %>>
+                                 Swimming</label>
                         </div>
                         <div class="form-check">
-                                <label for="boating" class="form-check-label">Boating: </label>
-                                <input class="form-check-input" type="checkbox" id="boating" value="boating" <% if (profile.interests.includes('boating')) { %> checked <% } %>>
+                                <label for="boating" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="boating" name="boating" value="boating" <% if (profile.interests.includes('boating')) { %> checked <% } %>>
+                                 Boating</label>
                         </div>
                         <div class="form-check">
-                                <label for="fishing" class="form-check-label">Fishing: </label>
-                                <input class="form-check-input" type="checkbox" id="fishing" value="fishing" <% if (profile.interests.includes('fishing')) { %> checked <% } %>>
+                                <label for="fishing" class="form-check-label">
+                                <input class="form-check-input" type="checkbox" id="fishing" name="fishing" value="fishing" <% if (profile.interests.includes('fishing')) { %> checked <% } %>>
+                                 Fishing</label>
                         </div>
 
                     </div>
                     <br/>
                     <div class="form-group">
-                            <input class="btn btn-primary" type="submit">
+                            <input class="btn btn-primary" type="submit" value="Submit">
                             <a class="btn btn-danger" href='/profile' style="float:right">Discard Changes</a>
                     </div>  
         </form>
