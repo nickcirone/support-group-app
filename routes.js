@@ -193,11 +193,15 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
              var selectedUserId = req.body.userId;
+             var selectedUserProfile = req.body.userProfileId;
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
                 var matches=[];
                 var removedMatch = [];
                 var addsentFriendIds =[];
+                var selectedUserMatches=[];
+                var selectedUserRemovedMatch = [];
+                var selectedUserRecvPending =[];
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
 
                     //remove selected user from matches array
@@ -208,14 +212,56 @@ module.exports = function(app) {
                     addsentFriendIds = currentProfile.sentPendingFriendIds;
                     addsentFriendIds.push(selectedUserId)
 
-                    //update db
-                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
-                    function(err,res){ if(err){throw err;
-                    }else{ 
-                        //TODO: respond somehow - tell front end to update - socket.io?
-                        console.log("Sent match request")};
-                    });
-                    });
+                            
+                            console.log("found user")
+                            //update match db
+                            Profile.findById(selectedUserProfile, function (err, matchProfile) {
+                                //remove selected user from matches array
+                                console.log("match begining")
+                                console.log(matchProfile)
+                               // if(matchProfile.matchIds.length>0){
+                                    console.log("bruh")
+                                selectedUserMatches = matchProfile.matchIds;
+                                selectedUserRemovedMatch = selectedUserMatches.filter((id)=>{return id != req.user._id});
+                               // }
+                                console.log("bruh2")
+                                // else{
+                                //  selectedUserRemovedMatch = selectedUserMatches;
+                                // }
+                                //add selected user to sentPendginFriendsIds array
+                                console.log("match end")
+                                //if(matchProfile.recvPendingFriendIds.length>0){
+                                selectedUserRecvPending = matchProfile.recvPendingFriendIds;
+                                selectedUserRecvPending.push(req.user._id)
+                                // }else{
+                                // selectedUserRecvPending.push(req.user.profileId)
+                                // }
+                                console.log("found match")
+                                    Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{matchIds: selectedUserRemovedMatch, recvPendingFriendIds: selectedUserRecvPending}},
+                                    function(err,res){ 
+                                        if(err){throw err;
+                                        }else{ 
+                                            //TODO: respond somehow - tell front end to update - socket.io?
+                                            console.log("Recieved match!")};
+                                        
+                                        //update user db
+                                        Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
+                                        function(err,res){ 
+                                            if(err){throw err;
+                                            }else{ 
+                                                //TODO: respond somehow - tell front end to update - socket.io?
+                                                console.log("Sent match request")};
+                                            });
+
+                                    });
+                            
+            
+                            });
+
+                       // });
+
+                });
+                
             }else if(req.body.postType=="accepted"){
                 //pending user is added to friends 
                 var pendingFreindsIds = [];
