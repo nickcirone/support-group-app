@@ -197,18 +197,20 @@ module.exports = function(app) {
 
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
-                var matches=[];
+               // var matches=[];
                 var removedMatch = [];
                 var addsentFriendIds =[];
-                var selectedUserMatches=[];
+               // var selectedUserMatches=[];
                 var selectedUserRemovedMatch = [];
                 var selectedUserRecvPending =[];
                 //find user profile
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
-
+                    console.log(selectedUserId)
+                    console.log(currentProfile.matchIds)
                     //remove selected user from matches array
-                    matches = currentProfile.matchIds;
-                    removedMatch = matches.filter((id)=>{return id != selectedUserId});
+                    removedMatch = currentProfile.matchIds.filter((id)=>{return id != selectedUserId});
+                    console.log(removedMatch)
+
 
                     //add selected user to sentPendginFriendsIds array
                     addsentFriendIds = currentProfile.sentPendingFriendIds;
@@ -216,8 +218,11 @@ module.exports = function(app) {
 
                         //find match profile
                         Profile.findById(selectedUserProfile, function (err, matchProfile) {
-                            selectedUserMatches = matchProfile.matchIds;
-                            selectedUserRemovedMatch = selectedUserMatches.filter((id)=>{return id != req.user._id});
+                            console.log(req.user._id)
+                            console.log(matchProfile.matchIds)
+                            selectedUserRemovedMatch = matchProfile.matchIds.filter((id)=>{return id != req.user._id});
+                            console.log(selectedUserRemovedMatch)
+                            
                             selectedUserRecvPending = matchProfile.recvPendingFriendIds;
                             selectedUserRecvPending.push(req.user._id)
 
@@ -244,31 +249,26 @@ module.exports = function(app) {
                 
             }else if(req.body.postType=="accepted"){
                 
-                var pendingFreindsIds = [];
                 var removedPendingFriend = [];
                 var newfriendIds =[];
-                var acceptedSentIds = [];
+                var sentIds=[];
                 var removedAcceptedSentIds = [];
                 var acceptedSentFriends = [];
-                Profile.findById(req.user.profileId, function (err, currentProfile) {
-
-                    //remove selected user from recvPendingFriendIds array
-                    pendingFreindsIds = currentProfile.recvPendingFriendIds;
-                    removedPendingFriend = pendingFreindsIds.filter((id)=>{return id != selectedUserId});
-
-                    //add selected user to recvPendingFriendIds array
+                Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
+                    removedPendingFriend = currentProfile.recvPendingFriendIds.filter((id)=>{return id != selectedUserId});
                     newfriendIds = currentProfile.friendIds;
-                    newfriendIds.push(selectedUserId)
+                    newfriendIds.push(selectedUserId);
 
                     //find friend Profile
-                    Profile.findById(selectedUserProfile, function (err, friendProfile) {
-                        acceptedSentIds = friendProfile.sentPendingFriendIds;
-                        removedAcceptedSentIds = acceptedSentIds.filter((id)=>{return id != req.user._id});
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
+                        console.log(req.user._id);
+                        console.log(friendProfile.sentPendingFriendIds);
+                        sentIds = friendProfile.sentPendingFriendIds;
+                        removedAcceptedSentIds = sentIds.filter((id)=>{return id != req.user._id});
+                        console.log(removedAcceptedSentIds);
+
                         acceptedSentFriends = friendProfile.friendIds;
-                        console.log(acceptedSentFriends)
-                        console.log(req.user._id)
-                        acceptedSentFriends.push(req.user._id)
-                        console.log(acceptedSentFriends)
+                        acceptedSentFriends.push(req.user._id);
 
                         //update db
                         Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: removedAcceptedSentIds, friendIds: acceptedSentFriends}},
@@ -279,7 +279,6 @@ module.exports = function(app) {
                             Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
                             function(err,res){ if(err){throw err;
                             }else{ 
-                                //TODO: respond somehow - tell front end to update - socket.io?
                                 console.log("Added new Friend!")};
                             });
                         });

@@ -122,7 +122,7 @@ var profileFour = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Cardiology'],
-    friendIds: [userOneId, userTwoId, userThreeId, userFourId],
+    friendIds: [userTwoId, userThreeId],
   }
 );
 
@@ -201,17 +201,17 @@ var endive_five = new User(
 );
 
 //Save dummy profiles to Mongo
-// registerProfile(profileOne);
-// registerProfile(profileTwo);
-// registerProfile(profileThree);
-// registerProfile(profileFour);
-// registerProfile(profileFive);
+registerProfile(profileOne);
+registerProfile(profileTwo);
+registerProfile(profileThree);
+registerProfile(profileFour);
+registerProfile(profileFive);
 //Register users in Mongo
-// registerUser(apple_one, 'apple_one');
-// registerUser(banana_two, 'banana_two');
-// registerUser(coconut_three, 'coconut_three');
-// registerUser(durian_four, 'durian_four');
-// registerUser(endive_five, 'endive_five');
+registerUser(apple_one, 'apple_one');
+registerUser(banana_two, 'banana_two');
+registerUser(coconut_three, 'coconut_three');
+registerUser(durian_four, 'durian_four');
+registerUser(endive_five, 'endive_five');
 
 
 require('./routes')(app);
