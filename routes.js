@@ -264,14 +264,16 @@ module.exports = function(app) {
                         console.log(req.user._id);
                         console.log(friendProfile.sentPendingFriendIds);
                         sentIds = friendProfile.sentPendingFriendIds;
-                        removedAcceptedSentIds = sentIds.filter((id)=>{return id != req.user._id});
+                        sentIds.splice(sentIds.indexOf(req.user._id),1)
+                        
+                        console.log(sentIds);
                         console.log(removedAcceptedSentIds);
 
                         acceptedSentFriends = friendProfile.friendIds;
                         acceptedSentFriends.push(req.user._id);
 
                         //update db
-                        Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: removedAcceptedSentIds, friendIds: acceptedSentFriends}},
+                        Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: sentIds, friendIds: acceptedSentFriends}},
                         function(err,res){ if(err){throw err;
                         }else{ console.log("Friend Accepted!")};
                         
