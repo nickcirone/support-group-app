@@ -1,7 +1,7 @@
 {
   "name": "UNC Pediatric Support Group App (Working Title)",
-  "version": "0.0.2",
-  "description": "First demo build of peer matching web application",
+  "version": "0.0.4",
+  "description": "Second sprint build of peer matching web application",
   "keywords": [
     "express",
     "passport"
