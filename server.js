@@ -1,4 +1,3 @@
-var path = require('path');
 var express = require('express');
 var mongoose = require('mongoose');
 var passport = require('passport');
@@ -9,8 +8,10 @@ var app = express();
 app.set('port', process.env.PORT || 3001);
 
 // Configure view engine to render EJS templates.
+//app.engine('html',cons.swig)
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+//app.set('view engine', 'html');
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.
@@ -31,15 +32,22 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Connect to mongo !!!! USES MY mLAB info, so replace URI with your own development db. 
+// Connect to mongo !!!! USES MY (Nick's) mLAB info, so replace URI with your own development db. 
 mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+//mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
 
+var makeName = require('./helpers/nameGen.js');
+
+console.log(makeName());
+console.log(makeName());
+
+// Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
 var profileTwoId = mongoose.Types.ObjectId();
 var profileThreeId = mongoose.Types.ObjectId();
 var profileFourId = mongoose.Types.ObjectId();
 var profileFiveId = mongoose.Types.ObjectId();
-
+// Randomly generate ObjectIds for Users
 var userOneId = mongoose.Types.ObjectId();
 var userTwoId = mongoose.Types.ObjectId();
 var userThreeId = mongoose.Types.ObjectId();
@@ -50,7 +58,7 @@ var userFiveId = mongoose.Types.ObjectId();
 function registerUser(user, pass) {
   User.register(user, pass, function(err) {
     if (err) {
-      console.log('error while user ' + user.username + ' register!', err);
+      console.log('error while registering user: ' + user.username, err);
     } else {
       console.log('user ' + user.username + ' registered!');
     }
@@ -73,11 +81,12 @@ var profileOne = new Profile(
   {
     _id: profileOneId,
     age: 13,
+    genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'Burns',
-    friendIds: [userTwoId, userFourId],
-    matchIds: [userThreeId],
+    interests: ['sports', 'cooking', 'video games'],
+    services: ['Burns'],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userFourId],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -86,11 +95,12 @@ var profileTwo = new Profile(
   {
     _id: profileTwoId,
     age: 12,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'Surgery',
+    interests: ['sports'],
+    services: ['Surgery'],
     friendIds: [userOneId, userThreeId, userFourId],
-    matchIds: [userTwoId],
+    matchIds: [userFiveId],
   }
 );
 
@@ -98,9 +108,10 @@ var profileThree = new Profile(
   {
     _id: profileThreeId,
     age: 14,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'sports',
-    services: 'GI',
+    interests: ['sports'],
+    services: ['GI'],
     friendIds: [userTwoId, userFourId],
     matchIds: [userThreeId],
     sentPendingFriendIds: [userFiveId],
@@ -112,10 +123,11 @@ var profileFour = new Profile(
   {
     _id: profileFourId,
     age: 13,
+    genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'fishing',
-    services: 'Cardiology',
-    friendIds: [userOneId, userTwoId, userThreeId, userFourId],
+    interests: ['fishing'],
+    services: ['Cardiology'],
+    friendIds: [userTwoId, userThreeId],
   }
 );
 
@@ -123,9 +135,10 @@ var profileFive = new Profile(
   {
     _id: profileFiveId,
     age: 11,
+    genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
-    interests: 'fishing',
-    services: 'Neurosurgery',
+    interests: ['fishing'],
+    services: ['Neurosurgery'],
     friendIds: [userFourId],
   }
 );
@@ -199,7 +212,6 @@ registerProfile(profileTwo);
 registerProfile(profileThree);
 registerProfile(profileFour);
 registerProfile(profileFive);
-
 // Register users in Mongo
 registerUser(apple_one, 'apple_one');
 registerUser(banana_two, 'banana_two');
