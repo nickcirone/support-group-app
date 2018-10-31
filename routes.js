@@ -192,8 +192,9 @@ module.exports = function(app) {
     app.post('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-             var selectedUserId = req.body.userId;
-             var selectedUserProfile = req.body.userProfileId;
+        var selectedUserId = req.body.userId;
+        var selectedUserProfile = req.body.userProfileId;
+
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
                 var matches=[];
@@ -202,6 +203,7 @@ module.exports = function(app) {
                 var selectedUserMatches=[];
                 var selectedUserRemovedMatch = [];
                 var selectedUserRecvPending =[];
+                //find user profile
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
 
                     //remove selected user from matches array
@@ -212,61 +214,42 @@ module.exports = function(app) {
                     addsentFriendIds = currentProfile.sentPendingFriendIds;
                     addsentFriendIds.push(selectedUserId)
 
-                            
-                            console.log("found user")
-                            //update match db
-                            Profile.findById(selectedUserProfile, function (err, matchProfile) {
-                                //remove selected user from matches array
-                                console.log("match begining")
-                                console.log(matchProfile)
-                               // if(matchProfile.matchIds.length>0){
-                                    console.log("bruh")
-                                selectedUserMatches = matchProfile.matchIds;
-                                selectedUserRemovedMatch = selectedUserMatches.filter((id)=>{return id != req.user._id});
-                               // }
-                                console.log("bruh2")
-                                // else{
-                                //  selectedUserRemovedMatch = selectedUserMatches;
-                                // }
-                                //add selected user to sentPendginFriendsIds array
-                                console.log("match end")
-                                //if(matchProfile.recvPendingFriendIds.length>0){
-                                selectedUserRecvPending = matchProfile.recvPendingFriendIds;
-                                selectedUserRecvPending.push(req.user._id)
-                                // }else{
-                                // selectedUserRecvPending.push(req.user.profileId)
-                                // }
-                                console.log("found match")
-                                    Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{matchIds: selectedUserRemovedMatch, recvPendingFriendIds: selectedUserRecvPending}},
+                        //find match profile
+                        Profile.findById(selectedUserProfile, function (err, matchProfile) {
+                            selectedUserMatches = matchProfile.matchIds;
+                            selectedUserRemovedMatch = selectedUserMatches.filter((id)=>{return id != req.user._id});
+                            selectedUserRecvPending = matchProfile.recvPendingFriendIds;
+                            selectedUserRecvPending.push(req.user._id)
+
+                                //update match db
+                                Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{matchIds: selectedUserRemovedMatch, recvPendingFriendIds: selectedUserRecvPending}},
+                                function(err,res){ 
+                                    if(err){throw err;
+                                    }else{ console.log("Recieved match!")};
+                                    
+                                    //update user db
+                                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
                                     function(err,res){ 
                                         if(err){throw err;
-                                        }else{ 
-                                            //TODO: respond somehow - tell front end to update - socket.io?
-                                            console.log("Recieved match!")};
-                                        
-                                        //update user db
-                                        Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
-                                        function(err,res){ 
-                                            if(err){throw err;
-                                            }else{ 
-                                                //TODO: respond somehow - tell front end to update - socket.io?
-                                                console.log("Sent match request")};
-                                            });
-
+                                        }else{ console.log("Sent match request")};
                                     });
-                            
-            
-                            });
 
-                       // });
+                                });
+                        
+        
+                        });
+
 
                 });
                 
             }else if(req.body.postType=="accepted"){
-                //pending user is added to friends 
+                
                 var pendingFreindsIds = [];
                 var removedPendingFriend = [];
-                var newFriendIds =[];
+                var newfriendIds =[];
+                var acceptedSentIds = [];
+                var removedAcceptedSentIds = [];
+                var acceptedSentFriends = [];
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
 
                     //remove selected user from recvPendingFriendIds array
@@ -277,12 +260,29 @@ module.exports = function(app) {
                     newfriendIds = currentProfile.friendIds;
                     newfriendIds.push(selectedUserId)
 
-                    //update db
-                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
-                    function(err,res){ if(err){throw err;
-                    }else{ 
-                        //TODO: respond somehow - tell front end to update - socket.io?
-                        console.log("Added new Friend!")};
+                    //find friend Profile
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {
+                        acceptedSentIds = friendProfile.sentPendingFriendIds;
+                        removedAcceptedSentIds = acceptedSentIds.filter((id)=>{return id != req.user._id});
+                        acceptedSentFriends = friendProfile.friendIds;
+                        console.log(acceptedSentFriends)
+                        console.log(req.user._id)
+                        acceptedSentFriends.push(req.user._id)
+                        console.log(acceptedSentFriends)
+
+                        //update db
+                        Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: removedAcceptedSentIds, friendIds: acceptedSentFriends}},
+                        function(err,res){ if(err){throw err;
+                        }else{ console.log("Friend Accepted!")};
+                        
+                            //update db
+                            Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
+                            function(err,res){ if(err){throw err;
+                            }else{ 
+                                //TODO: respond somehow - tell front end to update - socket.io?
+                                console.log("Added new Friend!")};
+                            });
+                        });
                     });
                 });
             }
