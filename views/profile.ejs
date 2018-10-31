@@ -11,7 +11,8 @@
         <ul class="list-group">
                 <li class="list-group-item"> Email: <%= user.email %></li>
                 <li class="list-group-item">Age: <%= profile.age %></li>
-                <li class="list-group-item">Birthdate: <%= profile.birthdate.toDateString() %></li>
+
+                <li class="list-group-item">Birthdate: <% if (profile.birthdate) { %><%= profile.birthdate.toDateString() %><% } %></li>
                 <li class="list-group-item">Gender Identity: <%= profile.genderId %></li>
                 <li class="list-group-item">Bio: <%= profile.bio %></li>
                 <li class="list-group-item">Interests: <br/>

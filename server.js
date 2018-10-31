@@ -127,7 +127,7 @@ var profileFour = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Cardiology'],
-    friendIds: [userOneId, userTwoId, userThreeId, userFourId],
+    friendIds: [userTwoId, userThreeId],
   }
 );
 

@@ -280,8 +280,6 @@ module.exports = function(app) {
                             }, function(err, users) {
                                 matches = users;
                                 matchProfileIds = matches.map((account)=>{return account.profileId});
-                                //console.log(matches[0])
-                                //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -318,4 +316,103 @@ module.exports = function(app) {
                 res.redirect('/');
             }
     });
+
+    app.post('/matches',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+        var selectedUserId = req.body.userId;
+        var selectedUserProfile = req.body.userProfileId;
+
+            if(req.body.postType=="match"){
+                //matched user is added to logged in users sentPendingFriendsIds
+               // var matches=[];
+                var removedMatch = [];
+                var addsentFriendIds =[];
+               // var selectedUserMatches=[];
+                var selectedUserRemovedMatch = [];
+                var selectedUserRecvPending =[];
+                //find user profile
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
+                    console.log(selectedUserId)
+                    console.log(currentProfile.matchIds)
+                    //remove selected user from matches array
+                    removedMatch = currentProfile.matchIds.filter((id)=>{return id != selectedUserId});
+                    console.log(removedMatch)
+
+
+                    //add selected user to sentPendginFriendsIds array
+                    addsentFriendIds = currentProfile.sentPendingFriendIds;
+                    addsentFriendIds.push(selectedUserId)
+
+                        //find match profile
+                        Profile.findById(selectedUserProfile, function (err, matchProfile) {
+                            console.log(req.user._id)
+                            console.log(matchProfile.matchIds)
+                            selectedUserRemovedMatch = matchProfile.matchIds.filter((id)=>{return id != req.user._id});
+                            console.log(selectedUserRemovedMatch)
+                            
+                            selectedUserRecvPending = matchProfile.recvPendingFriendIds;
+                            selectedUserRecvPending.push(req.user._id)
+
+                                //update match db
+                                Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{matchIds: selectedUserRemovedMatch, recvPendingFriendIds: selectedUserRecvPending}},
+                                function(err,res){ 
+                                    if(err){throw err;
+                                    }else{ console.log("Recieved match!")};
+                                    
+                                    //update user db
+                                    Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
+                                    function(err,res){ 
+                                        if(err){throw err;
+                                        }else{ console.log("Sent match request")};
+                                    });
+
+                                });
+                        
+        
+                        });
+
+
+                });
+                
+            }else if(req.body.postType=="accepted"){
+                
+                var removedPendingFriend = [];
+                var newfriendIds =[];
+                var sentIds=[];
+                var removedAcceptedSentIds = [];
+                var acceptedSentFriends = [];
+                Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
+                    removedPendingFriend = currentProfile.recvPendingFriendIds.filter((id)=>{return id != selectedUserId});
+                    newfriendIds = currentProfile.friendIds;
+                    newfriendIds.push(selectedUserId);
+
+                    //find friend Profile
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
+                        console.log(req.user._id);
+                        console.log(friendProfile.sentPendingFriendIds);
+                        sentIds = friendProfile.sentPendingFriendIds;
+                        removedAcceptedSentIds = sentIds.filter((id)=>{return id != req.user._id});
+                        console.log(removedAcceptedSentIds);
+
+                        acceptedSentFriends = friendProfile.friendIds;
+                        acceptedSentFriends.push(req.user._id);
+
+                        //update db
+                        Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: removedAcceptedSentIds, friendIds: acceptedSentFriends}},
+                        function(err,res){ if(err){throw err;
+                        }else{ console.log("Friend Accepted!")};
+                        
+                            //update db
+                            Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
+                            function(err,res){ if(err){throw err;
+                            }else{ 
+                                console.log("Added new Friend!")};
+                            });
+                        });
+                    });
+                });
+            }
+
+        });
 };
