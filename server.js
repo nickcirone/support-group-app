@@ -36,6 +36,11 @@ passport.deserializeUser(User.deserializeUser());
 mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
 //mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
 
+var makeName = require('./helpers/nameGen.js');
+
+console.log(makeName());
+console.log(makeName());
+
 // Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
 var profileTwoId = mongoose.Types.ObjectId();
