@@ -379,7 +379,6 @@ module.exports = function(app) {
                 
                 var removedPendingFriend = [];
                 var newfriendIds =[];
-                var sentIds=[];
                 var removedAcceptedSentIds = [];
                 var acceptedSentFriends = [];
                 Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
@@ -391,8 +390,9 @@ module.exports = function(app) {
                     Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
                         console.log(req.user._id);
                         console.log(friendProfile.sentPendingFriendIds);
-                        sentIds = friendProfile.sentPendingFriendIds;
-                        removedAcceptedSentIds = sentIds.filter((id)=>{return id != req.user._id});
+                        removedAcceptedSentIds = friendProfile.sentPendingFriendIds;
+                        removedAcceptedSentIds.splice(removedAcceptedSentIds.indexOf(req.user._id),1)
+                        
                         console.log(removedAcceptedSentIds);
 
                         acceptedSentFriends = friendProfile.friendIds;
