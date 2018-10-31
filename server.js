@@ -33,8 +33,8 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo !!!! USES MY (Nick's) mLAB info, so replace URI with your own development db. 
-mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
-//mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
+//mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
 
 var makeName = require('./helpers/nameGen.js');
 
@@ -115,7 +115,7 @@ var profileThree = new Profile(
     friendIds: [userTwoId, userFourId],
     matchIds: [userThreeId],
     sentPendingFriendIds: [userFiveId],
-    recvPendingFriendIds: [userOneId],
+    recvPendingFriendIds: [],
   }
 );
 
