@@ -9,8 +9,9 @@ var app = express();
 app.set('port', process.env.PORT || 3001);
 
 // Configure view engine to render EJS templates.
-app.set('views', __dirname + '/views');
+//app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/views'));
 
 // Use application-level middleware for common functionality, including
 // logging, parsing, and session handling.

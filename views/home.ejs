@@ -1,21 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <% include partials/head %> 
+  <% include partials/head %> 
 </head>
 <body>
-<% include partials/navbar %>
-<div class="container">
-	<h3>
-		<% if (!user) { %>
-			<p>Welcome! Please <a href="/login">log in</a>.</p>
-		<% } else { %>
-			<p>Hello, <%= user.username %>. View your <a href="/profile">profile</a>.</p>
-		<% } %>
-	</h3>
-</div>
+  <% include partials/navbar %>
+    <!-- Header -->
+    <header class="masthead bg-primary text-white text-center">
+    	<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+						<div class="container">
+	        				<img class="img-fluid mb-5 d-block mx-auto" src="img/profile.png" alt="">
+	        				<h1 class="text-uppercase mb-0">Welcome!</h1>
+	       	 				<hr class="star-light">
+	        				<h2 class="font-weight-light mb-0">to Pediatric Peer to Peer Support</h2>
+                  <h3>
+    <% if (!user) { %>
+      <p>Welcome! Please <a href="/login">log in</a>.</p>
+    <% } else { %>
+      <p>Hello, <%= user.username %>. View your <a style="color: yellow;" href="/profile">profile</a>.</p>
+    <% } %>
+  </h3>
+      					</div>
+					</div>
+					
+				</div>
+      
+    </header>
 
+    
 
-</body>
+    
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h4 class="text-uppercase mb-4">Feedback</h4>
+            <p class="lead mb-0">Let us know anything we need to improve!
+              </p>
+          </div>
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h4 class="text-uppercase mb-4">Around the Web</h4>
+            
+          </div>
+          <div class="col-md-4">
+            <h4 class="text-uppercase mb-4">About PedSupport</h4>
+            <p class="lead mb-0">PedSupport is a free to use app developed by COMP 523 Students
+              
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small>Copyright &copy; Your Website 2018</small>
+      </div>
+    </div>
 <% include partials/script %>
 </html>
+
