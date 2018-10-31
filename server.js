@@ -9,8 +9,9 @@ app.set('port', process.env.PORT || 3001);
 
 // Configure view engine to render EJS templates.
 //app.engine('html',cons.swig)
-app.set('views', __dirname + '/views');
+//app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/views'));
 //app.set('view engine', 'html');
 
 // Use application-level middleware for common functionality, including
