@@ -48,13 +48,23 @@ var profileTwoId = mongoose.Types.ObjectId();
 var profileThreeId = mongoose.Types.ObjectId();
 var profileFourId = mongoose.Types.ObjectId();
 var profileFiveId = mongoose.Types.ObjectId();
+var profileSixId = mongoose.Types.ObjectId();
+var profileSevenId = mongoose.Types.ObjectId();
+var profileEightId = mongoose.Types.ObjectId();
+var profileNineId = mongoose.Types.ObjectId();
+var profileTenId = mongoose.Types.ObjectId();
+
 // Randomly generate ObjectIds for Users
 var userOneId = mongoose.Types.ObjectId();
 var userTwoId = mongoose.Types.ObjectId();
 var userThreeId = mongoose.Types.ObjectId();
 var userFourId = mongoose.Types.ObjectId();
 var userFiveId = mongoose.Types.ObjectId();
-
+var userSixId = mongoose.Types.ObjectId();
+var userSevenId = mongoose.Types.ObjectId();
+var userEightId = mongoose.Types.ObjectId();
+var userNineId = mongoose.Types.ObjectId();
+var userTenId = mongoose.Types.ObjectId();
 // Helper function for registering Users 
 function registerUser(user, pass) {
   User.register(user, pass, function(err) {
@@ -86,9 +96,10 @@ var profileOne = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports', 'cooking', 'video games'],
     services: ['Burns'],
-    friendIds: [userTwoId],
-    matchIds: [userThreeId, userFourId],
-    sentPendingFriendIds: [userFiveId],
+    friendIds: [],
+    matchIds: [userThreeId, userFourId,userSixId, userSevenId],
+    sentPendingFriendIds: [userFiveId, userEightId, userTwoId],
+    recvPendingFriendIds: [userNineId, userTenId],
   }
 );
 
@@ -100,8 +111,10 @@ var profileTwo = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Surgery'],
-    friendIds: [userOneId, userThreeId, userFourId],
+    friendIds: [userOneId],
     matchIds: [userFiveId],
+    sentPendingFriendIds: [userThreeId, userFourId, userEightId, userNineId, userSevenId, userTenId, userSixId],
+    
   }
 );
 
@@ -116,7 +129,7 @@ var profileThree = new Profile(
     friendIds: [userTwoId, userFourId],
     matchIds: [userThreeId],
     sentPendingFriendIds: [userFiveId],
-    recvPendingFriendIds: [],
+    recvPendingFriendIds: [userSixId],
   }
 );
 
@@ -129,6 +142,9 @@ var profileFour = new Profile(
     interests: ['fishing'],
     services: ['Cardiology'],
     friendIds: [userTwoId, userThreeId],
+    matchIds: [userSevenId],
+    sentPendingFriendIds: [userFiveId],
+    recvPendingFriendIds: [userSixId],
   }
 );
 
@@ -141,6 +157,75 @@ var profileFive = new Profile(
     interests: ['fishing'],
     services: ['Neurosurgery'],
     friendIds: [userFourId],
+  }
+);
+var profileSix = new Profile(
+  {
+    _id: profileSixId,
+    age: 11,
+    genderId: 'female',
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: ['fishing'],
+    services: ['Neurosurgery'],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userFourId, userSevenId],
+    sentPendingFriendIds: [userFiveId],
+  }
+);
+
+var profileSeven = new Profile(
+  {
+    _id: profileSevenId,
+    age: 11,
+    genderId: 'female',
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: ['sports'],
+    services: ['Neurosurgery'],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userSixId],
+    sentPendingFriendIds: [userFiveId],
+  }
+);
+
+var profileEight = new Profile(
+  {
+    _id: profileEightId,
+    age: 11,
+    genderId: 'female',
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: ['sports'],
+    services: ['Neurosurgery'],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userSixId],
+    sentPendingFriendIds: [userFiveId],
+  }
+);
+
+var profileNine = new Profile(
+  {
+    _id: profileNineId,
+    age: 11,
+    genderId: 'female',
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: ['sports'],
+    services: ['Neurosurgery'],
+    friendIds: [userTwoId],
+    matchIds: [userThreeId, userSixId],
+    sentPendingFriendIds: [userFiveId],
+  }
+);
+
+var profileTen = new Profile(
+  {
+    _id: profileTenId,
+    age: 11,
+    genderId: 'female',
+    bio: 'placeholder bio! thanks 4 reading',
+    interests: ['sports'],
+    services: ['Neurosurgery'],
+    friendIds: [userSevenId],
+    matchIds: [userEightId, userNineId],
+    sentPendingFriendIds: [userFiveId],
   }
 );
 
@@ -206,6 +291,57 @@ var endive_five = new User(
   }
 );
 
+var mango_six = new User(
+  {
+    _id: userSixId,
+    username: 'mango six',
+    email: 'mango@email.com',
+    role: 'patient',
+    profileId: profileSixId,
+  }
+);
+
+var banana_seven = new User(
+  {
+    _id: userSevenId,
+    username: 'banana seven',
+    email: 'banana@email.com',
+    role: 'patient',
+    profileId: profileSevenId,
+  }
+);
+
+var pear_eight = new User(
+  {
+    _id: userEightId,
+    username: 'pear eight',
+    email: 'pear@email.com',
+    role: 'patient',
+    profileId: profileEightId,
+  }
+);
+
+var tomato_nine = new User(
+  {
+    _id: userNineId,
+    username: 'tomato nine',
+    email: 'tomato@email.com',
+    role: 'patient',
+    profileId: profileNineId,
+  }
+);
+
+var peach_ten = new User(
+  {
+    _id: userTenId,
+    username: 'peach ten',
+    email: 'peach@email.com',
+    role: 'patient',
+    profileId: profileTenId,
+  }
+);
+
+
 /*
 // Save dummy profiles to Mongo
 registerProfile(profileOne);
@@ -213,12 +349,22 @@ registerProfile(profileTwo);
 registerProfile(profileThree);
 registerProfile(profileFour);
 registerProfile(profileFive);
+registerProfile(profileSix);
+registerProfile(profileSeven);
+registerProfile(profileEight);
+registerProfile(profileNine);
+registerProfile(profileTen);
 // Register users in Mongo
 registerUser(apple_one, 'apple_one');
 registerUser(banana_two, 'banana_two');
 registerUser(coconut_three, 'coconut_three');
 registerUser(durian_four, 'durian_four');
 registerUser(endive_five, 'endive_five');
+registerUser(mango_six, 'mango_six');
+registerUser(banana_seven, 'banana_seven');
+registerUser(pear_eight, 'pear_eight');
+registerUser(tomato_nine, 'tomato_nine');
+registerUser(peach_ten, 'peach_ten');
 */
 
 require('./routes')(app);
