@@ -91,6 +91,7 @@ function registerProfile(profile) {
 var profileOne = new Profile(
   {
     _id: profileOneId,
+    avatar: 'apple_one.jpg',
     age: 13,
     genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
@@ -106,13 +107,14 @@ var profileOne = new Profile(
 var profileTwo = new Profile(
   {
     _id: profileTwoId,
+    avatar: 'banana-two.jpg',
     age: 12,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Surgery'],
-    friendIds: [userOneId],
-    matchIds: [userFiveId],
+    friendIds: [userFiveId],
+    matchIds: [userOneId],
     sentPendingFriendIds: [userThreeId, userFourId, userEightId, userNineId, userSevenId, userTenId, userSixId],
     
   }
@@ -121,6 +123,7 @@ var profileTwo = new Profile(
 var profileThree = new Profile(
   {
     _id: profileThreeId,
+    avatar: 'cake.png',
     age: 14,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -136,6 +139,7 @@ var profileThree = new Profile(
 var profileFour = new Profile(
   {
     _id: profileFourId,
+    avatar: 'circus.png',
     age: 13,
     genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
@@ -151,6 +155,7 @@ var profileFour = new Profile(
 var profileFive = new Profile(
   {
     _id: profileFiveId,
+    avatar: 'game.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -162,6 +167,7 @@ var profileFive = new Profile(
 var profileSix = new Profile(
   {
     _id: profileSixId,
+    avatar: 'safe.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -176,6 +182,7 @@ var profileSix = new Profile(
 var profileSeven = new Profile(
   {
     _id: profileSevenId,
+    avatar: 'submarine.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -190,6 +197,7 @@ var profileSeven = new Profile(
 var profileEight = new Profile(
   {
     _id: profileEightId,
+    avatar: 'pear.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -204,6 +212,7 @@ var profileEight = new Profile(
 var profileNine = new Profile(
   {
     _id: profileNineId,
+    avatar: 'tomato.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -218,6 +227,7 @@ var profileNine = new Profile(
 var profileTen = new Profile(
   {
     _id: profileTenId,
+    avatar: 'peach.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
