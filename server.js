@@ -107,7 +107,7 @@ var profileOne = new Profile(
 var profileTwo = new Profile(
   {
     _id: profileTwoId,
-    avatar: 'banana-two.jpg',
+    avatar: 'banana_two.jpg',
     age: 12,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',

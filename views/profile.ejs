@@ -29,7 +29,15 @@
                 Friends:
                     <h5 class="text-success">
                         <% for (var i = 0; i < friends.length; i++) { %>
-                            <%= friends[i].username %><br/>
+                            <div class="card" style="width: 15rem;">
+                                    <div class="card-body text-center">
+                                        <h3 class="card-header">
+                                            <img class="logo" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
+                                            <%= friends[i].username %><br/>
+                                        </h3>
+                                        <button class= "btn-sm btn-info btn-block">Message</button>
+                                    </div>
+                                </div>
                         <% } %>
                     </h5>
                 </li>
