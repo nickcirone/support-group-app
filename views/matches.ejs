@@ -14,7 +14,9 @@
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
             <div class="card" style="width: 15rem;">
                 <div class="card-body text-center">
-                    <h3 class="card-header">
+                    <h3 class="card-header"> 
+                            <!-- <img class="logo" src="/img/apple_one.jpg"> -->
+                        <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
                             <%= matches[i].username %> <br/>
                     </h3>
                     <div class="card-text">
@@ -40,6 +42,7 @@
                     <div class="card" style="width: 15rem;">
                             <div class="card-body text-center">
                                 <h3 class="card-header">
+                                    <img class="logo" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
                                     <%= received[i].username %><br/>
                                 </h3>
                                 <div class="card-text">
@@ -65,6 +68,7 @@
                     <div class="card" style="width: 15rem;">
                             <div class="card-body text-center">
                                 <h3 class="card-header">
+                                    <img class="logo" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
                                     <%= sent[i].username %><br/>
                                 </h3>
                                 <div class="card-text">
@@ -86,3 +90,8 @@
 </body>
 <% include partials/script %>
 </html>
+<script>
+    // $(()=>{
+
+    // })
+</script>

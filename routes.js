@@ -166,7 +166,14 @@ module.exports = function(app) {
                                 '_id': { $in: profile.friendIds }
                             }, function(err, users) {
                                 friends = users;
-                                res.render('profile', { user: req.user, profile: profile, friends: friends });
+                                var FIDs = friends.map((account)=>{return account.profileId});
+                                var friendProfiles;
+                                Profile.find({
+                                    '_id': { $in: FIDs }
+                                }, function(err, friend_profiles) {
+                                    friendProfiles = friend_profiles
+                                res.render('profile', { user: req.user, profile: profile, friends: friends, friendProfiles: friendProfiles });
+                                });
                             });
                         }
                     }); 
@@ -325,20 +332,16 @@ module.exports = function(app) {
 
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
-               // var matches=[];
+               
                 var removedMatch = [];
                 var addsentFriendIds =[];
-               // var selectedUserMatches=[];
+               
                 var selectedUserRemovedMatch = [];
                 var selectedUserRecvPending =[];
                 //find user profile
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
-                    console.log(selectedUserId)
-                    console.log(currentProfile.matchIds)
                     //remove selected user from matches array
                     removedMatch = currentProfile.matchIds.filter((id)=>{return id != selectedUserId});
-                    console.log(removedMatch)
-
 
                     //add selected user to sentPendginFriendsIds array
                     addsentFriendIds = currentProfile.sentPendingFriendIds;
@@ -346,10 +349,7 @@ module.exports = function(app) {
 
                         //find match profile
                         Profile.findById(selectedUserProfile, function (err, matchProfile) {
-                            console.log(req.user._id)
-                            console.log(matchProfile.matchIds)
                             selectedUserRemovedMatch = matchProfile.matchIds.filter((id)=>{return id != req.user._id});
-                            console.log(selectedUserRemovedMatch)
                             
                             selectedUserRecvPending = matchProfile.recvPendingFriendIds;
                             selectedUserRecvPending.push(req.user._id)
@@ -388,12 +388,8 @@ module.exports = function(app) {
 
                     //find friend Profile
                     Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
-                        console.log(req.user._id);
-                        console.log(friendProfile.sentPendingFriendIds);
                         removedAcceptedSentIds = friendProfile.sentPendingFriendIds;
                         removedAcceptedSentIds.splice(removedAcceptedSentIds.indexOf(req.user._id),1)
-                        
-                        console.log(removedAcceptedSentIds);
 
                         acceptedSentFriends = friendProfile.friendIds;
                         acceptedSentFriends.push(req.user._id);
