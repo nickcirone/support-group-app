@@ -326,7 +326,7 @@ module.exports = function(app) {
 
     app.post('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
-        function(req, res) {
+        function(req, response) {
         var selectedUserId = req.body.userId;
         var selectedUserProfile = req.body.userProfileId;
 
@@ -364,7 +364,9 @@ module.exports = function(app) {
                                     Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
                                     function(err,res){ 
                                         if(err){throw err;
-                                        }else{ console.log("Sent match request")};
+                                        }else{ console.log("Sent match request");
+                                        response.status(200)
+                                        };
                                     });
 
                                 });

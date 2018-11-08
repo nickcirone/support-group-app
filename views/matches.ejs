@@ -9,21 +9,25 @@
         <h2>Matches for <%= user.username %></h2>
         <br/>
         <h3>Matches:</h3>
-
+        <% var buttonIds = ["btn1", "btn2", "btn3", "btn4","btn5","btn6","btn7","btn8","btn9"]  %>
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
-            <div class="card" style="width: 15rem;">
+            <div class="card" id="<%= buttonIds[i] %>" style="width: 15rem;">
                 <div class="card-body text-center">
                     <h3 class="card-header"> 
-                            <!-- <img class="logo" src="/img/apple_one.jpg"> -->
                         <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
                             <%= matches[i].username %> <br/>
                     </h3>
-                    <div class="card-text">
-                        <h4 >Age: <%= matchProfiles[i].age %> </h4>
-                        <% for (var j = 0; j < matchProfiles[i].interests.length; j++) { %>
-                        <h4> Interest: <%= matchProfiles[i].interests[j] %> </h4>
-                        <% } %>
-                        <h4> Services: <%= matchProfiles[i].services %> </h4>
+                    <div class="dropdown">
+                        <button class="dropbtn">info</button> <br/>
+                        <div class="dropdown-content">
+                            <div class="card-text">
+                                <h4 >Age: <%= matchProfiles[i].age %> </h4>
+                                <% for (var j = 0; j < matchProfiles[i].interests.length; j++) { %>
+                                <h4> Interest: <%= matchProfiles[i].interests[j] %> </h4>
+                                <% } %>
+                                <h4> Services: <%= matchProfiles[i].services %> </h4>
+                            </div>
+                        </div>
                     </div>
                     <form action="/matches" method="post">
                         <input type ="hidden" name="postType" value= "match" />
@@ -44,15 +48,20 @@
                                     <img class="logo" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
                                     <%= received[i].username %><br/>
                                 </h3>
-                                <div class="card-text">
-                                    <h4 >Age: <%= receivedProfiles[i].age %> </h4>
-                                    <h4> Interest:</h4>
-                                    <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
-                                        <h5> <%= receivedProfiles[i].interests[j] %></h5>
-                                    <% } %>
-                                    <h4> Services: <%= receivedProfiles[i].services %> </h4>
+                                <div class="dropdown">
+                                        <button class="dropbtn">info</button> <br/>
+                                        <div class="dropdown-content">
+                                            <div class="card-text">
+                                                <h4 >Age: <%= receivedProfiles[i].age %> </h4>
+                                                <h4> Interest:</h4>
+                                                <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
+                                                    <h5> <%= receivedProfiles[i].interests[j] %></h5>
+                                                <% } %>
+                                                <h4> Services: <%= receivedProfiles[i].services %> </h4>
+                                            </div>
+                                    </div>
                                 </div>
-                                <form action="/matches" method="post">
+                                <form method="post">
                                     <input type ="hidden" name="postType" value= "accepted" />
                                     <input type ="hidden" name="userId" value= "<%= received[i]._id %>" />
                                     <input type ="hidden" name="userProfileId" value= "<%= receivedProfiles[i]._id %>" />
@@ -89,8 +98,40 @@
 </body>
 <% include partials/script %>
 </html>
-<script>
-    // $(()=>{
 
+<script>
+    $(document).ready(function(){
+                $('[data-toggle="popover"]').popover();   
+            });
+    // $(()=>{
+    //     //$("#toggle1").click(()=>{
+    //     $('[data-toggle="popover"]').popover();
+    //     //})
+       
+
+    //     $('#btn1').click(()=>{
+    //         $.ajax({
+    //             type:"POST",
+    //             url:"/matches",
+    //             dataType: json,
+    //             data:{
+    //                 //id: $(this).val(), // < note use of 'this' here
+    //                 postType: $("#postType").val(),
+    //                 userId: $("#userId").val(),
+    //                 userProfileId: $("#userProfileId").val(),
+    //             },
+    //             success: function(res){
+    //                 alert('ok')
+    //             },
+    //             error: function(result){
+    //                 alert("error "+ result)
+    //             }
+    //         })
+    //         console.log('clicked! btn1')
+    //     })
+    //     $('#btn2').click(()=>{
+    //         console.log('clicked! btn2' + new Date())
+    //     })
+        
     // })
 </script>
