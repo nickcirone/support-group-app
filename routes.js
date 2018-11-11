@@ -365,7 +365,8 @@ module.exports = function(app) {
                                     function(err,res){ 
                                         if(err){throw err;
                                         }else{ console.log("Sent match request");
-                                        response.status(200)
+                                        //selectedUserRecvPending
+                                        response.json(removedMatch);
                                         };
                                     });
 
@@ -413,4 +414,10 @@ module.exports = function(app) {
             }
 
         });
+
+    app.post('/updateMatches', function(req, res) {
+            console.log(req.body)
+            res.json({"yes":"boi"})
+
+    })
 };

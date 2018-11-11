@@ -5,19 +5,23 @@
 </head>
 <body>
 <% include partials/navbar %>
-    </br>
+    <!-- </br> -->
     <div class="container" style="padding-top: 10%; padding-bottom: 10%">
         <h2>Matches for <%= user.username %></h2>
         <br/>
         <h3>Matches:</h3>
-        <% var buttonIds = ["btn1", "btn2", "btn3", "btn4","btn5","btn6","btn7","btn8","btn9"]  %>
+        <% var matchbtnIds=[]; %>
+        <%  for(var j=1;j < 7;j++){ %>
+        <%  matchbtnIds[j-1] = "btn"+j; %>
+        <% } %>
+        
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
-            <div class="card" id="<%= buttonIds[i] %>" style="width: 15rem;">
+            <div class="card" style="width: 15rem;">
                 <div class="card-body text-center">
                     <h3 class="card-header"> 
                             <div class="dropdown">
                                 <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
-                                    <%= matches[i].username %> <br/>
+        
                                 <div class="dropdown-content">
                                     <div class="card-text">
                                             <h4 >Age: <%= matchProfiles[i].age %> </h4>
@@ -28,24 +32,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <%= matches[i].username %> <br/>
                     </h3>
-                    <!-- <div class="dropdown">
-                        <div class="dropdown-content"> -->
-                            
-                        <!-- </div>
-                    </div> -->
-                    <form action="/matches" method="post">
-                        <input type ="hidden" name="postType" value= "match" />
-                        <input type ="hidden" name="userId" value= "<%= matches[i]._id %>" />
-                        <input type ="hidden" name="userProfileId" value= "<%= matchProfiles[i]._id %>" />
-                        <button type="submit" value ="accept" class= "btn-sm btn-primary btn-block">Match!</button>
-                    </form>
+                    <button id ="<%= matchbtnIds[i] %>" class= "btn-sm btn-primary btn-block" data-all ='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}' >Match!</button>
                 </div>
             </div>
         <% } %>
                 
         <h3>Pending: </h3><br/>
         <% if (received) { %>
+            <% var pending_btnIds=[]; %>
+            <%  for(var j=1;j < 13;j++){ %>
+            <%  pending_btnIds[j-1] = "pending_btn"+j; %>
+            <% } %>
         <% for (var i = 0; i < receivedProfiles.length; i++) { %>
                 <div class="card" style="width: 15rem;">
                     <div class="card-body text-center">
@@ -65,12 +64,7 @@
                                 </div>
                             </div> 
                         </h3>
-                        <form method="post">
-                            <input type ="hidden" name="postType" value= "accepted" />
-                            <input type ="hidden" name="userId" value= "<%= received[i]._id %>" />
-                            <input type ="hidden" name="userProfileId" value= "<%= receivedProfiles[i]._id %>" />
-                            <button type="submit" value ="accept" class= "btn-sm btn-success btn-block">Accept</button>
-                        </form>
+                        <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
                     </div>
                 </div>
             <% } %>
@@ -108,38 +102,101 @@
 </html>
 
 <script>
-    $(document).ready(function(){
-                $('[data-toggle="popover"]').popover();   
-            });
-    // $(()=>{
-    //     //$("#toggle1").click(()=>{
-    //     $('[data-toggle="popover"]').popover();
-    //     //})
-       
+    $(()=>{
+        $('#btn1').click(()=>{
+            console.log('clicked! btn1')
+            sendAjax("#btn1");
+        })
+        $('#btn2').click(()=>{
+            console.log('clicked! btn2')
+            sendAjax("#btn2");
+        })
+        $('#btn3').click(()=>{
+            console.log('clicked! btn3')
+            sendAjax("#btn3");
+        })
+        $('#btn4').click(()=>{
+            console.log('clicked! btn4')
+            sendAjax("#btn4");
+        })
+        $('#btn5').click(()=>{
+            console.log('clicked! btn5')
+            sendAjax("#btn5");
+        })
+        $('#btn6').click(()=>{
+            console.log('clicked! btn6')
+            sendAjax("#btn6");
+        })
+        $('#pending_btn1').click(()=>{
+            console.log('clicked! pending_btn1')
+            sendAjax('#pending_btn1');
+        })
+        $('#pending_btn2').click(()=>{
+            console.log('clicked! pending_btn2')
+            sendAjax('#pending_btn2');
+        })
+        $('#pending_btn3').click(()=>{
+            console.log('clicked! pending_btn3')
+            sendAjax('#pending_btn3');
+        })
+        $('#pending_btn4').click(()=>{
+            console.log('clicked! pending_btn4')
+            sendAjax('#pending_btn4');
+        })
+        $('#pending_btn5').click(()=>{
+            console.log('clicked! pending_btn5')
+            sendAjax('#pending_btn5');
+        })
+        $('#pending_btn6').click(()=>{
+            console.log('clicked! pending_btn6')
+            sendAjax('#pending_btn6');
+        })
+        $('#pending_btn7').click(()=>{
+            console.log('clicked! pending_btn7')
+            sendAjax('#pending_btn7');
+        })
+        $('#pending_btn8').click(()=>{
+            console.log('clicked! pending_btn8')
+            sendAjax('#pending_btn8');
+        })
+        $('#pending_btn9').click(()=>{
+            console.log('clicked! pending_btn9')
+            sendAjax('#pending_btn9');
+        })
+        $('#pending_btn10').click(()=>{
+            console.log('clicked! pending_btn10')
+            sendAjax('#pending_btn10');
+        })
+        $('#pending_btn11').click(()=>{
+            console.log('clicked! pending_btn11')
+            sendAjax('#pending_btn11');
+        })
+        $('#pending_btn12').click(()=>{
+            console.log('clicked! pending_btn12')
+            sendAjax('#pending_btn12');
+        })
+    })
 
-    //     $('#btn1').click(()=>{
-    //         $.ajax({
-    //             type:"POST",
-    //             url:"/matches",
-    //             dataType: json,
-    //             data:{
-    //                 //id: $(this).val(), // < note use of 'this' here
-    //                 postType: $("#postType").val(),
-    //                 userId: $("#userId").val(),
-    //                 userProfileId: $("#userProfileId").val(),
-    //             },
-    //             success: function(res){
-    //                 alert('ok')
-    //             },
-    //             error: function(result){
-    //                 alert("error "+ result)
-    //             }
-    //         })
-    //         console.log('clicked! btn1')
-    //     })
-    //     $('#btn2').click(()=>{
-    //         console.log('clicked! btn2' + new Date())
-    //     })
-        
-    // })
+    function sendAjax(button){
+        $.ajax({
+                url:"/updateMatches",
+                type:"POST",
+                dataType: "json",
+                data:{
+                    postType: $(button).data("all").postType,
+                    userId: $(button).data("all").userId,
+                    userProfileId: $(button).data("all").userProfileId,
+                },
+                cache: false,
+                timeout: 10000,
+                success: function(res){
+                    console.log(res)
+                    console.log("yesss")
+                    
+                },
+                error: function(result){
+                    alert("error "+ result)
+                }
+            })
+    }
 </script>
