@@ -16,12 +16,11 @@
         <% } %>
         
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
-            <div class="card" style="width: 15rem;">
+            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem;">
                 <div class="card-body text-center">
                     <h3 class="card-header"> 
                             <div class="dropdown">
                                 <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
-        
                                 <div class="dropdown-content">
                                     <div class="card-text">
                                             <h4 >Age: <%= matchProfiles[i].age %> </h4>
@@ -45,8 +44,9 @@
             <%  for(var j=1;j < 13;j++){ %>
             <%  pending_btnIds[j-1] = "pending_btn"+j; %>
             <% } %>
+        <div>
         <% for (var i = 0; i < receivedProfiles.length; i++) { %>
-                <div class="card" style="width: 15rem;">
+                <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem;">
                     <div class="card-body text-center">
                         <h3 class="card-header">
                             <div class="dropdown">
@@ -68,6 +68,7 @@
                     </div>
                 </div>
             <% } %>
+        </div>
         <% } %>
         <% if (sent) { %>
         <% for (var i = 0; i < sentProfiles.length; i++) { %>
@@ -192,6 +193,20 @@
                 success: function(res){
                     console.log(res)
                     console.log("yesss")
+
+                    if($(button).data("all").postType=="match"){
+                        var card_id = "#matchCard_"+button.slice(4);
+                        console.log(card_id);
+                        $(card_id).remove();
+                        console.log(res)
+                    }else if($(button).data("all").postType=="accepted"){
+                        var card_id = "#pendingCard_"+button.slice(12);
+                        console.log(card_id);
+                        console.log(button);
+
+                        $(card_id).remove();
+                        console.log(res)
+                    }
                     
                 },
                 error: function(result){

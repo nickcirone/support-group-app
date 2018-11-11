@@ -366,7 +366,7 @@ module.exports = function(app) {
                                         if(err){throw err;
                                         }else{ console.log("Sent match request");
                                         //selectedUserRecvPending
-                                        response.json(removedMatch);
+                                       // response.json(matchProfile);
                                         };
                                     });
 
@@ -417,7 +417,10 @@ module.exports = function(app) {
 
     app.post('/updateMatches', function(req, res) {
             console.log(req.body)
-            res.json({"yes":"boi"})
+            matches = [{
+                "$oid": "5be4ee6d614f0f2fc8259f07"
+            }]
+            res.send(matches);
 
     })
 };
