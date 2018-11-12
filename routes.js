@@ -384,13 +384,13 @@ module.exports = function(app) {
                 var newfriendIds =[];
                 var removedAcceptedSentIds = [];
                 var acceptedSentFriends = [];
-                Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
                     removedPendingFriend = currentProfile.recvPendingFriendIds.filter((id)=>{return id != selectedUserId});
                     newfriendIds = currentProfile.friendIds;
                     newfriendIds.push(selectedUserId);
 
                     //find friend Profile
-                    Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {
                         removedAcceptedSentIds = friendProfile.sentPendingFriendIds;
                         removedAcceptedSentIds.splice(removedAcceptedSentIds.indexOf(req.user._id),1)
 
@@ -420,7 +420,18 @@ module.exports = function(app) {
             matches = [{
                 "$oid": "5be4ee6d614f0f2fc8259f07"
             }]
-            res.send(matches);
+            var userProfile;
+            Profile.findById(req.body.userProfileId, function (err, profile) {
+                userProfile = profile;
+                var myUser;
+                User.findById(req.body.userId,function(err, user){
+                    myUser = user;
+                    //var list = [userProfile,myUser];
+                    res.send({userProfile:userProfile, myUser:myUser})
+                    //res.send(list);
+                })
+            })
+            //res.send(matches);
 
     })
 };

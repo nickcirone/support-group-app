@@ -45,13 +45,13 @@
             <%  pending_btnIds[j-1] = "pending_btn"+j; %>
             <% } %>
         <div>
+       
         <% for (var i = 0; i < receivedProfiles.length; i++) { %>
                 <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem;">
                     <div class="card-body text-center">
                         <h3 class="card-header">
                             <div class="dropdown">
                                 <img class="logo" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
-                                    <%= received[i].username %><br/>
                                 <div class="dropdown-content"> 
                                     <div class="card-text">
                                             <h4 >Age: <%= receivedProfiles[i].age %> </h4>
@@ -63,6 +63,7 @@
                                     </div>
                                 </div>
                             </div> 
+                            <%= received[i].username %><br/>
                         </h3>
                         <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
                     </div>
@@ -70,6 +71,7 @@
             <% } %>
         </div>
         <% } %>
+        <div class = "sentCards">
         <% if (sent) { %>
         <% for (var i = 0; i < sentProfiles.length; i++) { %>
             <div class="card" style="width: 15rem;">
@@ -77,7 +79,6 @@
                     <h3 class="card-header">
                         <div class="dropdown">
                             <img class="logo" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
-                                <%= sent[i].username %><br/>
                             <div class="dropdown-content">
                                 <div class="card-text">
                                         <h4 >Age: <%= sentProfiles[i].age %> </h4>
@@ -89,12 +90,14 @@
                                 </div>
                             </div>
                         </div>
+                        <%= sent[i].username %><br/>
                     </h3>
                     <a class= "btn-sm btn-danger btn-block">Waiting</a>
                 </div>
             </div>
         <% } %>
         <% } %>
+    </div>
         
     </div>
 
@@ -192,13 +195,50 @@
                 timeout: 10000,
                 success: function(res){
                     console.log(res)
+                    //console.log(res.body.myUser)
                     console.log("yesss")
 
                     if($(button).data("all").postType=="match"){
+                        
                         var card_id = "#matchCard_"+button.slice(4);
-                        console.log(card_id);
                         $(card_id).remove();
-                        console.log(res)
+                        
+                        var user = res.myUser;
+                        var profile = res.userProfile;
+
+                        var interest_list='';
+                                profile.interests.forEach(function(interest){
+                                interest_list += '<h4>'+ interest +'</h4>';
+                            });
+                            var services_list='';
+                                profile.services.forEach(function(service){
+                                services_list += '<h4>'+ service +'</h4>';
+                            });
+                            console.log(interest_list)
+                        var newCard = $(
+                            '<div class= "card" style="width: 15rem;">' +
+                                '<div class ="card-body text-center">' +
+                                    '<h3 class="card-header">' +
+                                        '<div class="dropdown">' +
+                                            '<img class="logo" src="/img/portfolio/'+profile.avatar+'">' +
+                                            '<div class="dropdown-content">' + 
+                                                '<div class="card-text">' +
+                                                        '<h4 >Age: '+profile.age +'</h4>' +
+                                                        '<h4 id="interest"> Interest:</h4>' +
+                                                        interest_list+
+                                                        '<h4> Services:</h4>' +
+                                                        services_list+
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        ' '+user.username+' <br/> ' +
+                                    '</h3>' +
+                                    '<button class= "btn-sm btn-danger btn-block" >Waiting</button>' +
+                                '</div>' +
+                            '</div>');
+                            
+                         $(".sentCards").append(newCard)
+
                     }else if($(button).data("all").postType=="accepted"){
                         var card_id = "#pendingCard_"+button.slice(12);
                         console.log(card_id);
@@ -206,6 +246,7 @@
 
                         $(card_id).remove();
                         console.log(res)
+                        
                     }
                     
                 },
