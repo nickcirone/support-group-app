@@ -183,7 +183,7 @@
 
     function sendAjax(button){
         $.ajax({
-                url:"/updateMatches",
+                url:"/matches",
                 type:"POST",
                 dataType: "json",
                 data:{
@@ -199,12 +199,12 @@
                     console.log("yesss")
 
                     if($(button).data("all").postType=="match"){
-                        
+                        console.log(button);
                         var card_id = "#matchCard_"+button.slice(4);
                         $(card_id).remove();
                         
                         var user = res.myUser;
-                        var profile = res.userProfile;
+                        var profile = res.matchProfile;
 
                         var interest_list='';
                                 profile.interests.forEach(function(interest){

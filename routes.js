@@ -365,8 +365,14 @@ module.exports = function(app) {
                                     function(err,res){ 
                                         if(err){throw err;
                                         }else{ console.log("Sent match request");
-                                        //selectedUserRecvPending
-                                       // response.json(matchProfile);
+                                        
+                                        var myUser;
+                                        User.findById(selectedUserId,function(err, user){
+                                            myUser = user;
+                                            //var list = [userProfile,myUser];
+                                            response.send({matchProfile:matchProfile, myUser:myUser})
+                                            //res.send(list);
+                                        })
                                         };
                                     });
 
@@ -407,6 +413,7 @@ module.exports = function(app) {
                             function(err,res){ if(err){throw err;
                             }else{ 
                                 console.log("Added new Friend!")};
+                                response.send({selectedUserProfile:selectedUserProfile})
                             });
                         });
                     });

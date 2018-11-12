@@ -130,7 +130,7 @@ var profileThree = new Profile(
     interests: ['sports'],
     services: ['GI'],
     friendIds: [userTwoId, userFourId],
-    matchIds: [userThreeId],
+    matchIds: [userEightId],
     sentPendingFriendIds: [userFiveId],
     recvPendingFriendIds: [userSixId],
   }
