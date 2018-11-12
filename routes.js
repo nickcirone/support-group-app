@@ -369,9 +369,7 @@ module.exports = function(app) {
                                         var myUser;
                                         User.findById(selectedUserId,function(err, user){
                                             myUser = user;
-                                            //var list = [userProfile,myUser];
                                             response.send({matchProfile:matchProfile, myUser:myUser})
-                                            //res.send(list);
                                         })
                                         };
                                     });
@@ -421,24 +419,4 @@ module.exports = function(app) {
             }
 
         });
-
-    app.post('/updateMatches', function(req, res) {
-            console.log(req.body)
-            matches = [{
-                "$oid": "5be4ee6d614f0f2fc8259f07"
-            }]
-            var userProfile;
-            Profile.findById(req.body.userProfileId, function (err, profile) {
-                userProfile = profile;
-                var myUser;
-                User.findById(req.body.userId,function(err, user){
-                    myUser = user;
-                    //var list = [userProfile,myUser];
-                    res.send({userProfile:userProfile, myUser:myUser})
-                    //res.send(list);
-                })
-            })
-            //res.send(matches);
-
-    })
 };

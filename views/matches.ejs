@@ -5,7 +5,6 @@
 </head>
 <body>
 <% include partials/navbar %>
-    <!-- </br> -->
     <div class="container" style="padding-top: 10%; padding-bottom: 10%">
         <h2>Matches for <%= user.username %></h2>
         <br/>
@@ -108,75 +107,57 @@
 <script>
     $(()=>{
         $('#btn1').click(()=>{
-            console.log('clicked! btn1')
             sendAjax("#btn1");
         })
         $('#btn2').click(()=>{
-            console.log('clicked! btn2')
             sendAjax("#btn2");
         })
         $('#btn3').click(()=>{
-            console.log('clicked! btn3')
             sendAjax("#btn3");
         })
         $('#btn4').click(()=>{
-            console.log('clicked! btn4')
             sendAjax("#btn4");
         })
         $('#btn5').click(()=>{
-            console.log('clicked! btn5')
             sendAjax("#btn5");
         })
         $('#btn6').click(()=>{
-            console.log('clicked! btn6')
             sendAjax("#btn6");
         })
         $('#pending_btn1').click(()=>{
-            console.log('clicked! pending_btn1')
             sendAjax('#pending_btn1');
         })
         $('#pending_btn2').click(()=>{
-            console.log('clicked! pending_btn2')
             sendAjax('#pending_btn2');
         })
         $('#pending_btn3').click(()=>{
-            console.log('clicked! pending_btn3')
             sendAjax('#pending_btn3');
         })
         $('#pending_btn4').click(()=>{
-            console.log('clicked! pending_btn4')
             sendAjax('#pending_btn4');
         })
         $('#pending_btn5').click(()=>{
-            console.log('clicked! pending_btn5')
             sendAjax('#pending_btn5');
         })
         $('#pending_btn6').click(()=>{
-            console.log('clicked! pending_btn6')
             sendAjax('#pending_btn6');
         })
         $('#pending_btn7').click(()=>{
-            console.log('clicked! pending_btn7')
             sendAjax('#pending_btn7');
         })
         $('#pending_btn8').click(()=>{
-            console.log('clicked! pending_btn8')
             sendAjax('#pending_btn8');
         })
         $('#pending_btn9').click(()=>{
-            console.log('clicked! pending_btn9')
             sendAjax('#pending_btn9');
         })
         $('#pending_btn10').click(()=>{
-            console.log('clicked! pending_btn10')
             sendAjax('#pending_btn10');
         })
         $('#pending_btn11').click(()=>{
-            console.log('clicked! pending_btn11')
             sendAjax('#pending_btn11');
         })
         $('#pending_btn12').click(()=>{
-            console.log('clicked! pending_btn12')
             sendAjax('#pending_btn12');
         })
     })
@@ -194,12 +175,8 @@
                 cache: false,
                 timeout: 10000,
                 success: function(res){
-                    console.log(res)
-                    //console.log(res.body.myUser)
-                    console.log("yesss")
 
                     if($(button).data("all").postType=="match"){
-                        console.log(button);
                         var card_id = "#matchCard_"+button.slice(4);
                         $(card_id).remove();
                         
@@ -214,7 +191,6 @@
                                 profile.services.forEach(function(service){
                                 services_list += '<h4>'+ service +'</h4>';
                             });
-                            console.log(interest_list)
                         var newCard = $(
                             '<div class= "card" style="width: 15rem;">' +
                                 '<div class ="card-body text-center">' +
@@ -237,16 +213,11 @@
                                 '</div>' +
                             '</div>');
                             
-                         $(".sentCards").append(newCard)
+                    $(".sentCards").append(newCard)
 
                     }else if($(button).data("all").postType=="accepted"){
                         var card_id = "#pendingCard_"+button.slice(12);
-                        console.log(card_id);
-                        console.log(button);
-
-                        $(card_id).remove();
-                        console.log(res)
-                        
+                        $(card_id).remove();                        
                     }
                     
                 },
