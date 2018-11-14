@@ -353,7 +353,8 @@ module.exports = function(app) {
         //     console.log(result)
         //     //return keys;
         // });
-        //return keys
+       // return keys
+       return ["yo"];
       });
     }
 
@@ -380,8 +381,9 @@ module.exports = function(app) {
                             var sentPIds = [];
                             var sentProfiles=[];
                             profile = currentProfile;
-                           // matchingAlgorithm(currentProfile);
-                           //matchArray = matchingAlgorithm(currentProfile);
+                            //matchingAlgorithm(currentProfile);
+                           matchArray = matchingAlgorithm(currentProfile);
+                           console.log(matchArray+" yeee");
                             User.find({
                                 '_id': { $in: profile.matchIds }
                             }, function(err, users) {
