@@ -13,13 +13,14 @@
         <%  for(var j=1;j < 7;j++){ %>
         <%  matchbtnIds[j-1] = "btn"+j; %>
         <% } %>
-        
+        <div class="row">
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
-            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem;">
+            <div style ="padding-right: 3rem;">
+            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem; ">
                 <div class="card-body text-center">
                     <h3 class="card-header"> 
                             <div class="dropdown">
-                                <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
+                                <img class="logo"  src="/img/portfolio/<%= matchProfiles[i].avatar %>">
                                 <div class="dropdown-content">
                                     <div class="card-text">
                                             <h4 >Age: <%= matchProfiles[i].age %> </h4>
@@ -30,22 +31,25 @@
                                     </div>
                                 </div>
                             </div>
-                            <%= matches[i].username %> <br/>
+                         <div >  <%= matches[i].username %> </div>  <br/>
                     </h3>
                     <button id ="<%= matchbtnIds[i] %>" class= "btn-sm btn-primary btn-block" data-all ='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}' >Match!</button>
                 </div>
             </div>
+            </div>
         <% } %>
-                
-        <h3>Pending: </h3><br/>
+    </div>  
+    
+    <h3>Pending: </h3><br/>
         <% if (received) { %>
             <% var pending_btnIds=[]; %>
             <%  for(var j=1;j < 13;j++){ %>
             <%  pending_btnIds[j-1] = "pending_btn"+j; %>
             <% } %>
-        <div>
-       
+
+        <div class="row">
         <% for (var i = 0; i < receivedProfiles.length; i++) { %>
+            <div style = "padding: 2rem;">
                 <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem;">
                     <div class="card-body text-center">
                         <h3 class="card-header">
@@ -67,13 +71,18 @@
                         <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
                     </div>
                 </div>
+            </div>
             <% } %>
         </div>
         <% } %>
+    
         <div class = "sentCards">
         <% if (sent) { %>
+        
+        <div class="row">
         <% for (var i = 0; i < sentProfiles.length; i++) { %>
-            <div class="card" style="width: 15rem;">
+            <div style ="padding-right: 2rem;">
+                <div class="card" style="width: 15rem;">
                 <div class="card-body text-center">
                     <h3 class="card-header">
                         <div class="dropdown">
@@ -94,10 +103,13 @@
                     <a class= "btn-sm btn-danger btn-block">Waiting</a>
                 </div>
             </div>
+            </div>
         <% } %>
+        </div>
         <% } %>
-    </div>
+        </div>
         
+    
     </div>
 
 </body>
