@@ -34,13 +34,10 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo !!!! USES MY (Nick's) mLAB info, so replace URI with your own development db. 
-//mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
-mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
+mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
+//mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
 
 var makeName = require('./helpers/nameGen.js');
-
-console.log(makeName());
-console.log(makeName());
 
 // Randomly generate ObjectIds for Profiles
 var profileOneId = mongoose.Types.ObjectId();
@@ -65,26 +62,10 @@ var userSevenId = mongoose.Types.ObjectId();
 var userEightId = mongoose.Types.ObjectId();
 var userNineId = mongoose.Types.ObjectId();
 var userTenId = mongoose.Types.ObjectId();
-// Helper function for registering Users 
-function registerUser(user, pass) {
-  User.register(user, pass, function(err) {
-    if (err) {
-      console.log('error while registering user: ' + user.username, err);
-    } else {
-      console.log('user ' + user.username + ' registered!');
-    }
-  });
-}
 
-function registerProfile(profile) {
-  profile.save(function(err, newProfile) {
-    if (err) {
-      console.log('Error saving profile');
-    } else {
-      console.log('profile saved');
-    }
-  })
-}
+// Helper functions for registering Users 
+var registerUser = require('./helpers/registerUser');
+var registerProfile = require('./helpers/registerProfile');
 
 // Dummy Profiles
 
@@ -376,6 +357,8 @@ registerUser(pear_eight, 'pear_eight');
 registerUser(tomato_nine, 'tomato_nine');
 registerUser(peach_ten, 'peach_ten');
 */
+
+// registerUser(admin, 'admin');
 
 require('./routes')(app);
 

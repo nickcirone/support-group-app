@@ -1,6 +1,14 @@
 var passport = require('passport');
+const nodemailer = require('nodemailer');
+var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
+var registerUser = require('./helpers/registerUser');
+var registerProfile = require('./helpers/registerProfile');
+var nameGen = require('./helpers/nameGen');
+var passGen = require('./helpers/passGen');
+var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
+var transporter = nodemailer.createTransport(poolConfig);
 
 function checkServices(body) {
     var newServices = [];
@@ -106,7 +114,11 @@ module.exports = function(app) {
     app.get('/',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('home', { user: req.user });
+            if (req.user.role === 'admin') {
+                res.redirect('/admin');
+            } else {
+                res.render('home', { user: req.user });
+            }
     });
 
     // admin routes
@@ -114,7 +126,96 @@ module.exports = function(app) {
     app.get('/admin',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res){
-            res.render('admin', {user: req.user});
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('admin', {user: req.user});
+            }
+    });
+
+    app.get('/createUser',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('createUser', {user: req.user});
+            }
+    });
+
+    app.post('/createUser',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                if (!req.body.pEmail || !req.body.cEmail) {
+                    console.log('Email is required');
+                    res.render('createUser', {user: req.user});
+                } else {
+                    var patientProfileId = mongoose.Types.ObjectId();
+                    var parentName = nameGen();
+                    var patientName = nameGen();
+                    var parentPass = passGen();
+                    var patientPass = passGen();
+                    var servicesArr = checkServices(req.body);
+                    var patientProfile = new Profile(
+                        {
+                        _id: patientProfileId,
+                        avatar: 'apple_one.jpg',
+                        birthdate: req.body.birthdate,
+                        services: servicesArr,
+                        }
+                    );
+                    var parentUser = new User(
+                        {
+                        _id: mongoose.Types.ObjectId(),
+                        username: parentName,
+                        email: req.body.pEmail,
+                        role: 'parent',
+                        profileId: patientProfileId,
+                        }
+                    );
+                    var patientUser = new User(
+                        {
+                        _id: mongoose.Types.ObjectId(),
+                        username: patientName,
+                        email: req.body.cEmail,
+                        role: 'patient',
+                        profileId: patientProfileId,
+                        }
+                    );
+                    registerProfile(patientProfile);
+                    registerUser(parentUser, parentPass);
+                    registerUser(patientUser, patientPass);
+                    var parentMessage = {
+                        from: 'catdoge484848@gmail.com',
+                        to: req.body.pEmail,
+                        subject: 'Parent Account Info',
+                        html: '<h3>Thank you for signing up!</h3><br><p>Your username is: ' + parentName + '. Your password is: ' + parentPass + '</p>'
+                    };
+                    var patientMessage = {
+                        from: 'catdoge484848@gmail.com',
+                        to: req.body.cEmail,
+                        subject: 'Patient Account Info',
+                        html: '<h3>Thank you for signing up!</h3><br><p>Your username is: ' + patientName + '. Your password is: ' + patientPass + '</p>',
+                    };
+                    transporter.sendMail(parentMessage);
+                    transporter.sendMail(patientMessage);
+                    /* 
+                    console.log('Parent User Created: ');
+                    console.log('username: ' + parentName);
+                    console.log('password: ' + parentPass);
+                    console.log('Patient User Created: ');
+                    console.log('username: ' + patientName);
+                    console.log('password: ' + patientPass);
+                    */
+                    res.render('createSuccess', { parentName: parentName, patientName: patientName });
+                }
+            }
     });
 
     // login routes
