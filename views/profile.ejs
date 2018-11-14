@@ -29,15 +29,27 @@
                 </li>
                 <li class="list-group-item">
                 Friends:
-                    <h5 class="text-success">
+                    <!-- <h5 class="text-success"> -->
                         <div class = "row">
                         <% for (var i = 0; i < friends.length; i++) { %>
                             <div class="col-lg-3">
                             <div class="card" style="width: 15rem;">
                                     <div class="card-body text-center">
                                         <h3 class="card-header">
+                                            <div class="dropdown">
                                             <img class="logo" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
-                                            <div id="usernamesize">  <%= friends[i].username %><br/> </div>
+                                            <div class="dropdown-content">
+                                                <div class="card-text">
+                                                        <h4 >Age: <%= friendProfiles[i].age %> </h4>
+                                                        <h4> Interest: </h4>
+                                                        <% for (var j = 0; j < friendProfiles[i].interests.length; j++) { %>
+                                                            <h4> <%= friendProfiles[i].interests[j] %> </h4>
+                                                        <% } %>
+                                                        <h4> Services: <%= friendProfiles[i].services %> </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="usernamesize">  <%= friends[i].username %><br/> </div>
                                         </h3>
                                         <button class= "btn-sm btn-info btn-block">Message</button>
                                     </div>
@@ -45,7 +57,7 @@
                             </div>
                         <% } %>
                          </div>
-                    </h5>
+                    <!-- </h5> -->
                 </li>
         </ul>
         <br/>

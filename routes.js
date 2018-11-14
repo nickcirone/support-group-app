@@ -369,7 +369,7 @@ module.exports = function(app) {
       var totalCount = 0;
       var myMap = new Map();
 
-      Profile.find({'_id': { $nin: currentProfile._id }}, function(err, profiles) {
+      var answer = Profile.find({'_id': { $nin: currentProfile._id }}, function(err, profiles) {
         everyProfile = profiles;
         //console.log(currentProfile.friendIds);
       for (var i = 0; i < everyProfile.length; i++) {
