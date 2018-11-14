@@ -106,7 +106,11 @@ module.exports = function(app) {
     app.get('/',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('home', { user: req.user });
+            if (req.user.role === 'admin') {
+                res.redirect('/admin');
+            } else {
+                res.render('home', { user: req.user });
+            }
     });
 
     // admin routes
@@ -115,6 +119,10 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res){
             res.render('admin', {user: req.user});
+    });
+
+    app.get('admin',
+        require('connect-ensure-login').ensureLoggedIn
     });
 
     // login routes

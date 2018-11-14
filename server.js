@@ -65,6 +65,7 @@ var userSevenId = mongoose.Types.ObjectId();
 var userEightId = mongoose.Types.ObjectId();
 var userNineId = mongoose.Types.ObjectId();
 var userTenId = mongoose.Types.ObjectId();
+
 // Helper function for registering Users 
 function registerUser(user, pass) {
   User.register(user, pass, function(err) {
@@ -376,6 +377,8 @@ registerUser(pear_eight, 'pear_eight');
 registerUser(tomato_nine, 'tomato_nine');
 registerUser(peach_ten, 'peach_ten');
 */
+
+// registerUser(admin, 'admin');
 
 require('./routes')(app);
 
