@@ -363,7 +363,7 @@ module.exports = function(app) {
 
     //matches algorithm
 
-    function matchingAlgorithm(currentProfile)
+    async function matchingAlgorithm(currentProfile)
     {
       var everyProfile = [];
       var totalCount = 0;
@@ -455,7 +455,8 @@ module.exports = function(app) {
         //     //return keys;
         // });
        // return keys
-       return ["yo"];
+       var arr = ["yo"];
+       return arr;
       });
     }
 
@@ -467,7 +468,7 @@ module.exports = function(app) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
                 if (req.user.profileId !== null) {
                     var profile;
-                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                    Profile.findById(req.user.profileId,async function (err, currentProfile) {
                         if (err) {
                             console.log('error finding profile');
                         } else {
@@ -483,7 +484,7 @@ module.exports = function(app) {
                             var sentProfiles=[];
                             profile = currentProfile;
                             //matchingAlgorithm(currentProfile);
-                           matchArray = matchingAlgorithm(currentProfile);
+                           matchArray = await matchingAlgorithm(currentProfile);
                            console.log(matchArray+" yeee");
                             User.find({
                                 '_id': { $in: profile.matchIds }
