@@ -1,3 +1,5 @@
+var User = require('../models/users.js');
+
 module.exports = function (user, pass) {
     User.register(user, pass, function(err) {
       if (err) {
