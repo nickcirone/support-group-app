@@ -334,7 +334,7 @@ module.exports = function(app) {
 
     app.post('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
-        function(req, res) {
+        function(req, response) {
         var selectedUserId = req.body.userId;
         var selectedUserProfile = req.body.userProfileId;
 
@@ -372,7 +372,14 @@ module.exports = function(app) {
                                     Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
                                     function(err,res){ 
                                         if(err){throw err;
-                                        }else{ console.log("Sent match request")};
+                                        }else{ console.log("Sent match request");
+                                        
+                                        var myUser;
+                                        User.findById(selectedUserId,function(err, user){
+                                            myUser = user;
+                                            response.send({matchProfile:matchProfile, myUser:myUser})
+                                        })
+                                        };
                                     });
 
                                 });
@@ -389,13 +396,13 @@ module.exports = function(app) {
                 var newfriendIds =[];
                 var removedAcceptedSentIds = [];
                 var acceptedSentFriends = [];
-                Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
                     removedPendingFriend = currentProfile.recvPendingFriendIds.filter((id)=>{return id != selectedUserId});
                     newfriendIds = currentProfile.friendIds;
                     newfriendIds.push(selectedUserId);
 
                     //find friend Profile
-                    Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {
                         removedAcceptedSentIds = friendProfile.sentPendingFriendIds;
                         removedAcceptedSentIds.splice(removedAcceptedSentIds.indexOf(req.user._id),1)
 
@@ -412,6 +419,7 @@ module.exports = function(app) {
                             function(err,res){ if(err){throw err;
                             }else{ 
                                 console.log("Added new Friend!")};
+                                response.send({selectedUserProfile:selectedUserProfile})
                             });
                         });
                     });
