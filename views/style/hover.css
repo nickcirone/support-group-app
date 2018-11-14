@@ -44,3 +44,7 @@ img {
     height: 150px;
     width: 150px;
 }
+
+#usernamesize {
+    font-size: 18px;
+}

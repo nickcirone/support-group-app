@@ -29,17 +29,21 @@
                 <li class="list-group-item">
                 Friends:
                     <h5 class="text-success">
+                        <div class = "row">
                         <% for (var i = 0; i < friends.length; i++) { %>
+                            <div class="col-lg-3">
                             <div class="card" style="width: 15rem;">
                                     <div class="card-body text-center">
                                         <h3 class="card-header">
                                             <img class="logo" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
-                                            <%= friends[i].username %><br/>
+                                            <div id="usernamesize">  <%= friends[i].username %><br/> </div>
                                         </h3>
                                         <button class= "btn-sm btn-info btn-block">Message</button>
                                     </div>
                                 </div>
+                            </div>
                         <% } %>
+                         </div>
                     </h5>
                 </li>
         </ul>

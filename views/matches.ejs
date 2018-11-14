@@ -4,7 +4,8 @@
  <% include partials/head %> 
 </head>
 <body>
-<% include partials/navbar %>
+
+    <% include partials/navbar %>
     <div class="container" style="padding-top: 10%; padding-bottom: 10%">
         <h2>Matches for <%= user.username %></h2>
         <br/>
@@ -13,14 +14,14 @@
         <%  for(var j=1;j < 7;j++){ %>
         <%  matchbtnIds[j-1] = "btn"+j; %>
         <% } %>
-        <div class="row">
+        <div class = "row">
         <% for (var i = 0; i < matchProfiles.length; i++) { %>
-            <div style ="padding-right: 3rem;">
-            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem; ">
+           <div class="col-lg-3">
+            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
                 <div class="card-body text-center">
                     <h3 class="card-header"> 
                             <div class="dropdown">
-                                <img class="logo"  src="/img/portfolio/<%= matchProfiles[i].avatar %>">
+                                <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
                                 <div class="dropdown-content">
                                     <div class="card-text">
                                             <h4 >Age: <%= matchProfiles[i].age %> </h4>
@@ -31,26 +32,27 @@
                                     </div>
                                 </div>
                             </div>
-                         <div >  <%= matches[i].username %> </div>  <br/>
+                            <div id="usernamesize"> <%= matches[i].username %> <br/> </div>
                     </h3>
                     <button id ="<%= matchbtnIds[i] %>" class= "btn-sm btn-primary btn-block" data-all ='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}' >Match!</button>
                 </div>
             </div>
-            </div>
+        </div>
         <% } %>
-    </div>  
-    
-    <h3>Pending: </h3><br/>
+    </div>
+                
+        <h3>Pending: </h3><br/>
         <% if (received) { %>
             <% var pending_btnIds=[]; %>
             <%  for(var j=1;j < 13;j++){ %>
             <%  pending_btnIds[j-1] = "pending_btn"+j; %>
             <% } %>
-
-        <div class="row">
+        
+            <!-- <div class = "sentCard"></div> -->
+            <div class = "row"> 
         <% for (var i = 0; i < receivedProfiles.length; i++) { %>
-            <div style = "padding: 2rem;">
-                <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem;">
+            <div class="col-lg-3">
+                <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
                     <div class="card-body text-center">
                         <h3 class="card-header">
                             <div class="dropdown">
@@ -66,23 +68,21 @@
                                     </div>
                                 </div>
                             </div> 
-                            <%= received[i].username %><br/>
+                            <div id="usernamesize">  <%= received[i].username %><br/> </div>
                         </h3>
                         <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
                     </div>
                 </div>
             </div>
-            <% } %>
-        </div>
+            <% } %>  
         <% } %>
-    
-        <div class = "sentCards">
-        <% if (sent) { %>
         
-        <div class="row">
+       
+        <% if (sent) { %>
         <% for (var i = 0; i < sentProfiles.length; i++) { %>
-            <div style ="padding-right: 2rem;">
-                <div class="card" style="width: 15rem;">
+            <div id = "sent" class="col-lg-3">
+            <!-- <div class = "sentCard"> -->
+            <div class="card" style="width: 15rem; margin: 15px 0;">
                 <div class="card-body text-center">
                     <h3 class="card-header">
                         <div class="dropdown">
@@ -98,19 +98,19 @@
                                 </div>
                             </div>
                         </div>
-                        <%= sent[i].username %><br/>
+                        <div id="usernamesize"> <%= sent[i].username %><br/> </div>
                     </h3>
                     <a class= "btn-sm btn-danger btn-block">Waiting</a>
                 </div>
             </div>
-            </div>
-        <% } %>
+            <!-- </div> -->
         </div>
         <% } %>
-        </div>
-        
     
+        <% } %>
     </div>
+    <!-- </div> -->
+</div>
 
 </body>
 <% include partials/script %>
@@ -204,7 +204,7 @@
                                 services_list += '<h4>'+ service +'</h4>';
                             });
                         var newCard = $(
-                            '<div class= "card" style="width: 15rem;">' +
+                            '<div class= "card" style="width: 15rem; margin: 15px 0;">' +
                                 '<div class ="card-body text-center">' +
                                     '<h3 class="card-header">' +
                                         '<div class="dropdown">' +
@@ -219,13 +219,13 @@
                                                 '</div>' +
                                             '</div>' +
                                         '</div>' +
-                                        ' '+user.username+' <br/> ' +
+                                        '<div id="usernamesize">'+user.username+'</div>' +
                                     '</h3>' +
-                                    '<button class= "btn-sm btn-danger btn-block" >Waiting</button>' +
+                                    '<a class= "btn-sm btn-danger btn-block" >Waiting</a>' +
                                 '</div>' +
                             '</div>');
                             
-                    $(".sentCards").append(newCard)
+                    $("#sent").after(newCard)
 
                     }else if($(button).data("all").postType=="accepted"){
                         var card_id = "#pendingCard_"+button.slice(12);

@@ -260,6 +260,103 @@ module.exports = function(app) {
             res.render('messages');
     });
 
+    //matches algorithm
+
+    function matchingAlgorithm(currentProfile)
+    {
+      var everyProfile = [];
+      var totalCount = 0;
+      var myMap = new Map();
+
+      Profile.find({'_id': { $nin: currentProfile._id }}, function(err, profiles) {
+        everyProfile = profiles;
+        //console.log(currentProfile.friendIds);
+      for (var i = 0; i < everyProfile.length; i++) {
+        //console.log(everyProfile[i]._id);
+        if(currentProfile.friendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+        if(currentProfile.sentPendingFriendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+        if(currentProfile.recvPendingFriendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+      }
+      //console.log(everyProfile);
+      var myAge = currentProfile.age;
+      var agecheck = [];
+      age(myAge);
+      function age(myAge){
+
+        switch (true) {
+
+            case (myAge >= 10 && myAge <=12):
+                agecheck = everyProfile.filter((x)=>{return x.age >= 10 && x.age <=12});
+                //console.log("case 1");
+            break;
+            case myAge >= 13 && myAge <= 15:
+                agecheck = everyProfile.filter((x)=>{return x.age >= 13 && x.age <=15});
+                //console.log("case 2");
+                break;
+            case myAge >=16 && myAge <18:
+                agecheck = everyProfile.filter((x)=>{return x.age >= 16 && x.age <18});
+                //console.log("case 3");
+                break;
+            default:
+                //console.log("nothing hitting");
+            }
+      }
+      //console.log(agecheck);
+
+        for (var i = 0; i < agecheck.length; i++) {
+          myMap.set(agecheck[i]._id, totalCount);
+        }
+        for (var x = 0; x < agecheck.length; x++){
+          for (var i = 0; i < currentProfile.interests.length; i++) {
+            for (var j = 0; j < agecheck[x].interests.length; j++) {
+               if (currentProfile.interests[i] == agecheck[x].interests[j]) {
+                 var key = myMap.get(agecheck[x]._id);
+                 myMap.set(agecheck[x]._id, key + 1);
+               }
+            }
+          }
+        }
+        for (var x = 0; x < agecheck.length; x++){
+          for (var i = 0; i < currentProfile.services.length; i++) {
+            for (var j = 0; j < agecheck[x].services.length; j++) {
+               if (currentProfile.services[i] == agecheck[x].services[j]) {
+                 var key = myMap.get(agecheck[x]._id);
+                 myMap.set(agecheck[x]._id, key + 1);
+               }
+            }
+          }
+        }
+        const mapSort = new Map([...myMap.entries()].sort((a, b) => a[1] - b[1]));
+
+        let keys = Array.from( mapSort.keys() );
+        //console.log(mapSort);
+        console.log(keys);
+        //console.log(myMap);
+        //User.SomeValue.find({},'profileId');
+        // User.$where('this.profileId == 5beb0b13b368373240d8c877').exec(function (err, user) {
+        //     if (err) return handleError(err);
+        //     console.log(user);
+        //   })
+        //User.where('profileId').in(keys).exec(callback);
+        // User.find({'profileId':{ $in: keys}}, function(err,res){
+        //     console.log(res);
+        //     var result =[keys,res];
+        //     console.log(result)
+        //     //return keys;
+        // });
+        //return keys
+      });
+    }
+
     // matches routes
 
     app.get('/matches',
@@ -275,6 +372,7 @@ module.exports = function(app) {
                             var matches = [];
                             var matchProfileIds=[];
                             var matchProfiles = [];
+                            var matchArray =[];
                             var received = [];
                             var receivedPIds =[];
                             var receivedProfiles=[];
@@ -282,9 +380,19 @@ module.exports = function(app) {
                             var sentPIds = [];
                             var sentProfiles=[];
                             profile = currentProfile;
+                           // matchingAlgorithm(currentProfile);
+                           //matchArray = matchingAlgorithm(currentProfile);
                             User.find({
                                 '_id': { $in: profile.matchIds }
                             }, function(err, users) {
+                            //console.log(matchArray);
+                                // matchProfileIds = matchArray[0];
+                                // m_Profile = matchArray[1];
+                                //matchingAlgorithm(currentProfile);
+/*----------------crashs when matchesAlgorithm returns empty array  ---------------------  */
+                               // boi = matchingAlgorithm(currentProfile);
+                                //matches = m_Profile.map((account)=>{return account.profileId});
+                                //matchProfileIds = matchingAlgorithm(currentProfile);
                                 matches = users;
                                 matchProfileIds = matches.map((account)=>{return account.profileId});
                                 User.find({
