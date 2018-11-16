@@ -466,10 +466,8 @@ module.exports = function(app) {
       var totalCount = 0;
       var myMap = new Map();
 
-      var everyProfile = await Profile.find({'_id': { $nin: currentProfile._id }})//, function(err, profiles) {
-          //console.log(everyProfile.length + "--- 1")
-        //everyProfile = profiles;
-        //console.log(currentProfile.friendIds);
+      var everyProfile = await Profile.find({'_id': { $nin: currentProfile._id }})
+         
       for (var i = 0; i < everyProfile.length; i++) {
         //console.log(everyProfile[i]._id);
         if(currentProfile.friendIds.includes(everyProfile[i]._id)){
@@ -540,25 +538,14 @@ module.exports = function(app) {
         //console.log(mapSort);
         console.log(keys);
         //console.log(myMap);
-        //User.SomeValue.find({},'profileId');
-        // User.$where('this.profileId == 5beb0b13b368373240d8c877').exec(function (err, user) {
-        //     if (err) return handleError(err);
-        //     console.log(user);
-        //   })
-       // User.where('profileId').in(keys).exec(callback);
-        var userMatches = await User.find({'profileId':{ $in: keys}})//, function(err,res){
-            // console.log(res);
-            // var result =[keys,res];
-            // console.log(result)
-            //return keys;
-        //});
+    
+        var userMatches = await User.find({'profileId':{ $in: keys}})
+           
         //console.log(userMatches)
 
-       // return keys
-       //var userProfiles = await Profile.find({'_id':{$in:keys}});
        var arr = [userMatches,keys];
        return arr;
-      //});
+     
     }
     // matches routes
 
@@ -584,25 +571,11 @@ module.exports = function(app) {
                             var sentProfiles=[];
                             profile = currentProfile;
                             //matchingAlgorithm(currentProfile);
-                           matchArray = await matchingAlgorithm(currentProfile);
-                        ///console.log(matchArray[0]+" array");
-                            User.find({
-                                '_id': { $in: profile.matchIds }
-                            }, function(err, users) {
-                            //console.log(matchArray);
-                                // matchProfileIds = matchArray[0];
-                                // m_Profile = matchArray[1];
-                                //matchingAlgorithm(currentProfile);
-/*----------------crashs when matchesAlgorithm returns empty array  ---------------------  */
-                               // boi = matchingAlgorithm(currentProfile);
-                                //matches = m_Profile.map((account)=>{return account.profileId});
-                                //matchProfileIds = matchingAlgorithm(currentProfile);
-                                //matches = users;
+                                matchArray = await matchingAlgorithm(currentProfile);
                                 matches = matchArray[0];
-                                console.log(matches)
-                                //matchProfileIds = matches.map((account)=>{return account.profileId});
+                                //console.log(matches)
                                 matchProfileIds = matchArray[1];
-                                console.log(matchProfileIds)
+                                //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -627,7 +600,7 @@ module.exports = function(app) {
                                         });
                                     });
                                 });
-                            });
+                           // });
                         }
                     }); 
                 } else {
