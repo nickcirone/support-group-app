@@ -78,9 +78,9 @@ var profileOne = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports', 'cooking', 'video games'],
     services: ['Burns'],
-    friendIds: [],
-    matchIds: [userThreeId, userFourId,userSixId, userSevenId],
-    sentPendingFriendIds: [userFiveId, userEightId, userTwoId],
+    friendIds: [userFourId, userSevenId],
+    matchIds: [userThreeId,userSixId],
+    sentPendingFriendIds: [userFiveId, userEightId],
     recvPendingFriendIds: [userNineId, userTenId],
   }
 );
@@ -94,9 +94,9 @@ var profileTwo = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Surgery'],
-    friendIds: [userFiveId],
-    matchIds: [userOneId],
-    sentPendingFriendIds: [userThreeId, userFourId, userEightId, userNineId, userSevenId, userTenId, userSixId],
+    friendIds: [userThreeId, userFiveId, userSixId],
+    matchIds: [userFourId, userEightId],
+    sentPendingFriendIds: [userNineId, userSevenId, userTenId],
     
   }
 );
