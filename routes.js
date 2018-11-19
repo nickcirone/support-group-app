@@ -205,7 +205,7 @@ module.exports = function(app) {
                     };
                     transporter.sendMail(parentMessage);
                     transporter.sendMail(patientMessage);
-                    /* 
+                    /*
                     console.log('Parent User Created: ');
                     console.log('username: ' + parentName);
                     console.log('password: ' + parentPass);
@@ -230,8 +230,8 @@ module.exports = function(app) {
             res.render('loginFail');
         }
     )
-  
-    app.post('/login', 
+
+    app.post('/login',
         passport.authenticate('local', { failureRedirect: '/loginFail' }),
         function(req, res) {
             if (req.user.role === 'admin') {
@@ -242,7 +242,7 @@ module.exports = function(app) {
     });
 
     // logout route
-  
+
     app.get('/logout',
         function(req, res){
             req.logout();
@@ -277,7 +277,7 @@ module.exports = function(app) {
                                 });
                             });
                         }
-                    }); 
+                    });
                 } else {
                     console.log('Profile not found.');
                     res.redirect('/');
@@ -309,7 +309,7 @@ module.exports = function(app) {
                                 res.render('profileEdit', { user: req.user, profile: profile, friends: friends });
                             });
                         }
-                    }); 
+                    });
                 } else {
                     console.log('Profile not found.');
                     res.redirect('/');
@@ -348,7 +348,7 @@ module.exports = function(app) {
                       }
                     });
                 }
-                
+
             });
         }
     )
@@ -363,8 +363,6 @@ module.exports = function(app) {
 
     //matches algorithm
 
-   
-
     async function matchingAlgorithm(currentProfile)
     {
       var everyProfile = [];
@@ -372,23 +370,37 @@ module.exports = function(app) {
       var myMap = new Map();
 
       var everyProfile = await Profile.find({'_id': { $nin: currentProfile._id }})
-         
-      for (var i = 0; i < everyProfile.length; i++) {
-        //console.log(everyProfile[i]._id);
-        if(currentProfile.friendIds.includes(everyProfile[i]._id)){
-          everyProfile.splice(i, 0);
-          //console.log("hi");
-        }
-        if(currentProfile.sentPendingFriendIds.includes(everyProfile[i]._id)){
-          everyProfile.splice(i, 0);
-          //console.log("hi");
-        }
-        if(currentProfile.recvPendingFriendIds.includes(everyProfile[i]._id)){
-          everyProfile.splice(i, 0);
-          //console.log("hi");
+      var userFriends = await User.find({'_id': { $in: currentProfile.friendIds}})
+      var userSent = await User.find({'_id': { $in: currentProfile.sentPendingFriendIds}})
+      var userRecv = await User.find({'_id': { $in: currentProfile.recvPendingFriendIds}})
+      //console.log(userRecv);
+
+      for (var j = 0; j < userFriends.length; j++){
+        for (var i = 0; i < everyProfile.length; i++) {
+          if (userFriends[j].profileId.equals(everyProfile[i]._id)){
+            everyProfile.splice(i, 1);
+            //console.log(everyProfile.length);
+          }
         }
       }
-      //console.log(everyProfile);
+      for (var j = 0; j < userSent.length; j++){
+        for (var i = 0; i < everyProfile.length; i++) {
+          if(userSent[j].profileId.equals(everyProfile[i]._id)){
+            everyProfile.splice(i, 1);
+            //console.log("hi");
+          }
+        }
+      }
+      for (var j = 0; j < userRecv.length; j++){
+        for (var i = 0; i < everyProfile.length; i++) {
+          if(userRecv[j].profileId.equals(everyProfile[i]._id)){
+            everyProfile.splice(i, 1);
+            //console.log("hi");
+          }
+        }
+      }
+
+      console.log(everyProfile);
       var myAge = currentProfile.age;
       var agecheck = [];
       age(myAge);
@@ -404,15 +416,15 @@ module.exports = function(app) {
                 agecheck = everyProfile.filter((x)=>{return x.age >= 13 && x.age <=15});
                 //console.log("case 2");
                 break;
-            case myAge >=16 && myAge <18:
-                agecheck = everyProfile.filter((x)=>{return x.age >= 16 && x.age <18});
+            case myAge >=16 && myAge <=18:
+                agecheck = everyProfile.filter((x)=>{return x.age >= 16 && x.age <=18});
                 //console.log("case 3");
                 break;
             default:
                 //console.log("nothing hitting");
             }
       }
-      //console.log(agecheck);
+      console.log(agecheck);
 
         for (var i = 0; i < agecheck.length; i++) {
           myMap.set(agecheck[i]._id, totalCount);
@@ -441,16 +453,16 @@ module.exports = function(app) {
 
         let keys = Array.from( mapSort.keys() );
         //console.log(mapSort);
-        console.log(keys);
+        //console.log(keys);
         //console.log(myMap);
-    
+
         var userMatches = await User.find({'profileId':{ $in: keys}})
-           
+
         //console.log(userMatches)
 
        var arr = [userMatches,keys];
        return arr;
-     
+
     }
     // matches routes
 
@@ -498,7 +510,7 @@ module.exports = function(app) {
                                                 Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
                                                     sentProfiles = sent_Profiles;
                                                     res.render('matches', { user: req.user, profile: profile, matches: matches,
-                                                        sent: sent, received: received, matchProfiles: matchProfiles, 
+                                                        sent: sent, received: received, matchProfiles: matchProfiles,
                                                         receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
                                                 });
                                             });
@@ -507,7 +519,7 @@ module.exports = function(app) {
                                 });
                            // });
                         }
-                    }); 
+                    });
                 } else {
                     console.log('Profile not found.');
                     res.redirect('/');
@@ -526,10 +538,10 @@ module.exports = function(app) {
 
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
-               
+
                 var removedMatch = [];
                 var addsentFriendIds =[];
-               
+
                 var selectedUserRemovedMatch = [];
                 var selectedUserRecvPending =[];
                 //find user profile
@@ -544,22 +556,22 @@ module.exports = function(app) {
                         //find match profile
                         Profile.findById(selectedUserProfile, function (err, matchProfile) {
                             selectedUserRemovedMatch = matchProfile.matchIds.filter((id)=>{return id != req.user._id});
-                            
+
                             selectedUserRecvPending = matchProfile.recvPendingFriendIds;
                             selectedUserRecvPending.push(req.user._id)
 
                                 //update match db
                                 Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{matchIds: selectedUserRemovedMatch, recvPendingFriendIds: selectedUserRecvPending}},
-                                function(err,res){ 
+                                function(err,res){
                                     if(err){throw err;
                                     }else{ console.log("Recieved match!")};
-                                    
+
                                     //update user db
                                     Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
-                                    function(err,res){ 
+                                    function(err,res){
                                         if(err){throw err;
                                         }else{ console.log("Sent match request");
-                                        
+
                                         var myUser;
                                         User.findById(selectedUserId,function(err, user){
                                             myUser = user;
@@ -569,15 +581,15 @@ module.exports = function(app) {
                                     });
 
                                 });
-                        
-        
+
+
                         });
 
 
                 });
-                
+
             }else if(req.body.postType=="accepted"){
-                
+
                 var removedPendingFriend = [];
                 var newfriendIds =[];
                 var removedAcceptedSentIds = [];
@@ -599,11 +611,11 @@ module.exports = function(app) {
                         Profile.findOneAndUpdate({_id: selectedUserProfile},{"$set":{sentPendingFriendIds: removedAcceptedSentIds, friendIds: acceptedSentFriends}},
                         function(err,res){ if(err){throw err;
                         }else{ console.log("Friend Accepted!")};
-                        
+
                             //update db
                             Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{recvPendingFriendIds: removedPendingFriend, friendIds: newfriendIds}},
                             function(err,res){ if(err){throw err;
-                            }else{ 
+                            }else{
                                 console.log("Added new Friend!")};
                                 response.send({selectedUserProfile:selectedUserProfile})
                             });
