@@ -1,6 +1,14 @@
 var passport = require('passport');
+const nodemailer = require('nodemailer');
+var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
+var registerUser = require('./helpers/registerUser');
+var registerProfile = require('./helpers/registerProfile');
+var nameGen = require('./helpers/nameGen');
+var passGen = require('./helpers/passGen');
+var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
+var transporter = nodemailer.createTransport(poolConfig);
 
 function checkServices(body) {
     var newServices = [];
@@ -106,7 +114,11 @@ module.exports = function(app) {
     app.get('/',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('home', { user: req.user });
+            if (req.user.role === 'admin') {
+                res.redirect('/admin');
+            } else {
+                res.render('home', { user: req.user });
+            }
     });
 
     // admin routes
@@ -114,7 +126,96 @@ module.exports = function(app) {
     app.get('/admin',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res){
-            res.render('admin', {user: req.user});
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('admin', {user: req.user});
+            }
+    });
+
+    app.get('/createUser',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('createUser', {user: req.user});
+            }
+    });
+
+    app.post('/createUser',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                if (!req.body.pEmail || !req.body.cEmail) {
+                    console.log('Email is required');
+                    res.render('createUser', {user: req.user});
+                } else {
+                    var patientProfileId = mongoose.Types.ObjectId();
+                    var parentName = nameGen();
+                    var patientName = nameGen();
+                    var parentPass = passGen();
+                    var patientPass = passGen();
+                    var servicesArr = checkServices(req.body);
+                    var patientProfile = new Profile(
+                        {
+                        _id: patientProfileId,
+                        avatar: 'apple_one.jpg',
+                        birthdate: req.body.birthdate,
+                        services: servicesArr,
+                        }
+                    );
+                    var parentUser = new User(
+                        {
+                        _id: mongoose.Types.ObjectId(),
+                        username: parentName,
+                        email: req.body.pEmail,
+                        role: 'parent',
+                        profileId: patientProfileId,
+                        }
+                    );
+                    var patientUser = new User(
+                        {
+                        _id: mongoose.Types.ObjectId(),
+                        username: patientName,
+                        email: req.body.cEmail,
+                        role: 'patient',
+                        profileId: patientProfileId,
+                        }
+                    );
+                    registerProfile(patientProfile);
+                    registerUser(parentUser, parentPass);
+                    registerUser(patientUser, patientPass);
+                    var parentMessage = {
+                        from: 'catdoge484848@gmail.com',
+                        to: req.body.pEmail,
+                        subject: 'Parent Account Info',
+                        html: '<h3>Thank you for signing up!</h3><br><p>Your username is: ' + parentName + '. Your password is: ' + parentPass + '</p>'
+                    };
+                    var patientMessage = {
+                        from: 'catdoge484848@gmail.com',
+                        to: req.body.cEmail,
+                        subject: 'Patient Account Info',
+                        html: '<h3>Thank you for signing up!</h3><br><p>Your username is: ' + patientName + '. Your password is: ' + patientPass + '</p>',
+                    };
+                    transporter.sendMail(parentMessage);
+                    transporter.sendMail(patientMessage);
+                    /* 
+                    console.log('Parent User Created: ');
+                    console.log('username: ' + parentName);
+                    console.log('password: ' + parentPass);
+                    console.log('Patient User Created: ');
+                    console.log('username: ' + patientName);
+                    console.log('password: ' + patientPass);
+                    */
+                    res.render('createSuccess', { parentName: parentName, patientName: patientName });
+                }
+            }
     });
 
     // login routes
@@ -166,7 +267,14 @@ module.exports = function(app) {
                                 '_id': { $in: profile.friendIds }
                             }, function(err, users) {
                                 friends = users;
-                                res.render('profile', { user: req.user, profile: profile, friends: friends });
+                                var FIDs = friends.map((account)=>{return account.profileId});
+                                var friendProfiles;
+                                Profile.find({
+                                    '_id': { $in: FIDs }
+                                }, function(err, friend_profiles) {
+                                    friendProfiles = friend_profiles
+                                res.render('profile', { user: req.user, profile: profile, friends: friends, friendProfiles: friendProfiles });
+                                });
                             });
                         }
                     }); 
@@ -253,6 +361,192 @@ module.exports = function(app) {
             res.render('messages');
     });
 
+    //matches algorithm
+
+    // async function matchingAlgorithm(currentProfile)
+    // {
+    //   var everyProfile = [];
+    //   var totalCount = 0;
+    //   var myMap = new Map();
+
+    //   var answer = Profile.find({'_id': { $nin: currentProfile._id }}, function(err, profiles) {
+    //     everyProfile = profiles;
+    //     //console.log(currentProfile.friendIds);
+    //   for (var i = 0; i < everyProfile.length; i++) {
+    //     //console.log(everyProfile[i]._id);
+    //     if(currentProfile.friendIds.includes(everyProfile[i]._id)){
+    //       everyProfile.splice(i, 0);
+    //       //console.log("hi");
+    //     }
+    //     if(currentProfile.sentPendingFriendIds.includes(everyProfile[i]._id)){
+    //       everyProfile.splice(i, 0);
+    //       //console.log("hi");
+    //     }
+    //     if(currentProfile.recvPendingFriendIds.includes(everyProfile[i]._id)){
+    //       everyProfile.splice(i, 0);
+    //       //console.log("hi");
+    //     }
+    //   }
+    //   //console.log(everyProfile);
+    //   var myAge = currentProfile.age;
+    //   var agecheck = [];
+    //   age(myAge);
+    //   function age(myAge){
+
+    //     switch (true) {
+
+    //         case (myAge >= 10 && myAge <=12):
+    //             agecheck = everyProfile.filter((x)=>{return x.age >= 10 && x.age <=12});
+    //             //console.log("case 1");
+    //         break;
+    //         case myAge >= 13 && myAge <= 15:
+    //             agecheck = everyProfile.filter((x)=>{return x.age >= 13 && x.age <=15});
+    //             //console.log("case 2");
+    //             break;
+    //         case myAge >=16 && myAge <18:
+    //             agecheck = everyProfile.filter((x)=>{return x.age >= 16 && x.age <18});
+    //             //console.log("case 3");
+    //             break;
+    //         default:
+    //             //console.log("nothing hitting");
+    //         }
+    //   }
+    //   //console.log(agecheck);
+
+    //     for (var i = 0; i < agecheck.length; i++) {
+    //       myMap.set(agecheck[i]._id, totalCount);
+    //     }
+    //     for (var x = 0; x < agecheck.length; x++){
+    //       for (var i = 0; i < currentProfile.interests.length; i++) {
+    //         for (var j = 0; j < agecheck[x].interests.length; j++) {
+    //            if (currentProfile.interests[i] == agecheck[x].interests[j]) {
+    //              var key = myMap.get(agecheck[x]._id);
+    //              myMap.set(agecheck[x]._id, key + 1);
+    //            }
+    //         }
+    //       }
+    //     }
+    //     for (var x = 0; x < agecheck.length; x++){
+    //       for (var i = 0; i < currentProfile.services.length; i++) {
+    //         for (var j = 0; j < agecheck[x].services.length; j++) {
+    //            if (currentProfile.services[i] == agecheck[x].services[j]) {
+    //              var key = myMap.get(agecheck[x]._id);
+    //              myMap.set(agecheck[x]._id, key + 1);
+    //            }
+    //         }
+    //       }
+    //     }
+    //     const mapSort = new Map([...myMap.entries()].sort((a, b) => a[1] - b[1]));
+
+    //     let keys = Array.from( mapSort.keys() );
+    //     //console.log(mapSort);
+    //     console.log(keys);
+    //     //console.log(myMap);
+    //     //User.SomeValue.find({},'profileId');
+    //     // User.$where('this.profileId == 5beb0b13b368373240d8c877').exec(function (err, user) {
+    //     //     if (err) return handleError(err);
+    //     //     console.log(user);
+    //     //   })
+    //     //User.where('profileId').in(keys).exec(callback);
+    //     // User.find({'profileId':{ $in: keys}}, function(err,res){
+    //     //     console.log(res);
+    //     //     var result =[keys,res];
+    //     //     console.log(result)
+    //     //     //return keys;
+    //     // });
+    //    // return keys
+    //    var arr = ["yo"];
+    //    return arr;
+    //   });
+    // }
+
+    async function matchingAlgorithm(currentProfile)
+    {
+      var everyProfile = [];
+      var totalCount = 0;
+      var myMap = new Map();
+
+      var everyProfile = await Profile.find({'_id': { $nin: currentProfile._id }})
+         
+      for (var i = 0; i < everyProfile.length; i++) {
+        //console.log(everyProfile[i]._id);
+        if(currentProfile.friendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+        if(currentProfile.sentPendingFriendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+        if(currentProfile.recvPendingFriendIds.includes(everyProfile[i]._id)){
+          everyProfile.splice(i, 0);
+          //console.log("hi");
+        }
+      }
+      //console.log(everyProfile);
+      var myAge = currentProfile.age;
+      var agecheck = [];
+      age(myAge);
+      function age(myAge){
+
+        switch (true) {
+
+            case (myAge >= 10 && myAge <=12):
+                agecheck = everyProfile.filter((x)=>{return x.age >= 10 && x.age <=12});
+                //console.log("case 1");
+            break;
+            case myAge >= 13 && myAge <= 15:
+                agecheck = everyProfile.filter((x)=>{return x.age >= 13 && x.age <=15});
+                //console.log("case 2");
+                break;
+            case myAge >=16 && myAge <18:
+                agecheck = everyProfile.filter((x)=>{return x.age >= 16 && x.age <18});
+                //console.log("case 3");
+                break;
+            default:
+                //console.log("nothing hitting");
+            }
+      }
+      //console.log(agecheck);
+
+        for (var i = 0; i < agecheck.length; i++) {
+          myMap.set(agecheck[i]._id, totalCount);
+        }
+        for (var x = 0; x < agecheck.length; x++){
+          for (var i = 0; i < currentProfile.interests.length; i++) {
+            for (var j = 0; j < agecheck[x].interests.length; j++) {
+               if (currentProfile.interests[i] == agecheck[x].interests[j]) {
+                 var key = myMap.get(agecheck[x]._id);
+                 myMap.set(agecheck[x]._id, key + 1);
+               }
+            }
+          }
+        }
+        for (var x = 0; x < agecheck.length; x++){
+          for (var i = 0; i < currentProfile.services.length; i++) {
+            for (var j = 0; j < agecheck[x].services.length; j++) {
+               if (currentProfile.services[i] == agecheck[x].services[j]) {
+                 var key = myMap.get(agecheck[x]._id);
+                 myMap.set(agecheck[x]._id, key + 1);
+               }
+            }
+          }
+        }
+        const mapSort = new Map([...myMap.entries()].sort((a, b) => a[1] - b[1]));
+
+        let keys = Array.from( mapSort.keys() );
+        //console.log(mapSort);
+        console.log(keys);
+        //console.log(myMap);
+    
+        var userMatches = await User.find({'profileId':{ $in: keys}})
+           
+        //console.log(userMatches)
+
+       var arr = [userMatches,keys];
+       return arr;
+     
+    }
     // matches routes
 
     app.get('/matches',
@@ -261,13 +555,14 @@ module.exports = function(app) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
                 if (req.user.profileId !== null) {
                     var profile;
-                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                    Profile.findById(req.user.profileId, async function (err, currentProfile) {
                         if (err) {
                             console.log('error finding profile');
                         } else {
                             var matches = [];
                             var matchProfileIds=[];
                             var matchProfiles = [];
+                            var matchArray =[];
                             var received = [];
                             var receivedPIds =[];
                             var receivedProfiles=[];
@@ -275,11 +570,12 @@ module.exports = function(app) {
                             var sentPIds = [];
                             var sentProfiles=[];
                             profile = currentProfile;
-                            User.find({
-                                '_id': { $in: profile.matchIds }
-                            }, function(err, users) {
-                                matches = users;
-                                matchProfileIds = matches.map((account)=>{return account.profileId});
+                            //matchingAlgorithm(currentProfile);
+                                matchArray = await matchingAlgorithm(currentProfile);
+                                matches = matchArray[0];
+                                //console.log(matches)
+                                matchProfileIds = matchArray[1];
+                                //console.log(matchProfileIds)
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -304,7 +600,7 @@ module.exports = function(app) {
                                         });
                                     });
                                 });
-                            });
+                           // });
                         }
                     }); 
                 } else {
@@ -319,26 +615,22 @@ module.exports = function(app) {
 
     app.post('/matches',
         require('connect-ensure-login').ensureLoggedIn(),
-        function(req, res) {
+        function(req, response) {
         var selectedUserId = req.body.userId;
         var selectedUserProfile = req.body.userProfileId;
 
             if(req.body.postType=="match"){
                 //matched user is added to logged in users sentPendingFriendsIds
-               // var matches=[];
+               
                 var removedMatch = [];
                 var addsentFriendIds =[];
-               // var selectedUserMatches=[];
+               
                 var selectedUserRemovedMatch = [];
                 var selectedUserRecvPending =[];
                 //find user profile
                 Profile.findById(req.user.profileId, function (err, currentProfile) {
-                    console.log(selectedUserId)
-                    console.log(currentProfile.matchIds)
                     //remove selected user from matches array
                     removedMatch = currentProfile.matchIds.filter((id)=>{return id != selectedUserId});
-                    console.log(removedMatch)
-
 
                     //add selected user to sentPendginFriendsIds array
                     addsentFriendIds = currentProfile.sentPendingFriendIds;
@@ -346,10 +638,7 @@ module.exports = function(app) {
 
                         //find match profile
                         Profile.findById(selectedUserProfile, function (err, matchProfile) {
-                            console.log(req.user._id)
-                            console.log(matchProfile.matchIds)
                             selectedUserRemovedMatch = matchProfile.matchIds.filter((id)=>{return id != req.user._id});
-                            console.log(selectedUserRemovedMatch)
                             
                             selectedUserRecvPending = matchProfile.recvPendingFriendIds;
                             selectedUserRecvPending.push(req.user._id)
@@ -364,7 +653,14 @@ module.exports = function(app) {
                                     Profile.findOneAndUpdate({_id: req.user.profileId},{"$set":{matchIds: removedMatch, sentPendingFriendIds: addsentFriendIds}},
                                     function(err,res){ 
                                         if(err){throw err;
-                                        }else{ console.log("Sent match request")};
+                                        }else{ console.log("Sent match request");
+                                        
+                                        var myUser;
+                                        User.findById(selectedUserId,function(err, user){
+                                            myUser = user;
+                                            response.send({matchProfile:matchProfile, myUser:myUser})
+                                        })
+                                        };
                                     });
 
                                 });
@@ -379,21 +675,17 @@ module.exports = function(app) {
                 
                 var removedPendingFriend = [];
                 var newfriendIds =[];
-                var sentIds=[];
                 var removedAcceptedSentIds = [];
                 var acceptedSentFriends = [];
-                Profile.findById(req.user.profileId, function (err, currentProfile) {//durian four
+                Profile.findById(req.user.profileId, function (err, currentProfile) {
                     removedPendingFriend = currentProfile.recvPendingFriendIds.filter((id)=>{return id != selectedUserId});
                     newfriendIds = currentProfile.friendIds;
                     newfriendIds.push(selectedUserId);
 
                     //find friend Profile
-                    Profile.findById(selectedUserProfile, function (err, friendProfile) {//apple one
-                        console.log(req.user._id);
-                        console.log(friendProfile.sentPendingFriendIds);
-                        sentIds = friendProfile.sentPendingFriendIds;
-                        removedAcceptedSentIds = sentIds.filter((id)=>{return id != req.user._id});
-                        console.log(removedAcceptedSentIds);
+                    Profile.findById(selectedUserProfile, function (err, friendProfile) {
+                        removedAcceptedSentIds = friendProfile.sentPendingFriendIds;
+                        removedAcceptedSentIds.splice(removedAcceptedSentIds.indexOf(req.user._id),1)
 
                         acceptedSentFriends = friendProfile.friendIds;
                         acceptedSentFriends.push(req.user._id);
@@ -408,6 +700,7 @@ module.exports = function(app) {
                             function(err,res){ if(err){throw err;
                             }else{ 
                                 console.log("Added new Friend!")};
+                                response.send({selectedUserProfile:selectedUserProfile})
                             });
                         });
                     });
