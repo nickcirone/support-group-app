@@ -94,10 +94,10 @@ var profileTwo = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Surgery'],
-    friendIds: [userThreeId, userFiveId, userSixId],
+    friendIds: [userFiveId],
     matchIds: [userFourId, userEightId],
-    sentPendingFriendIds: [userNineId, userSevenId, userTenId],
-    
+    sentPendingFriendIds: [userNineId, userSevenId],
+    recvPendingFriendIds:[userTenId, userSixId]
   }
 );
 
@@ -356,9 +356,8 @@ registerUser(banana_seven, 'banana_seven');
 registerUser(pear_eight, 'pear_eight');
 registerUser(tomato_nine, 'tomato_nine');
 registerUser(peach_ten, 'peach_ten');
-*/
 
-// registerUser(admin, 'admin');
+ registerUser(admin, 'admin');*/
 
 require('./routes')(app);
 
