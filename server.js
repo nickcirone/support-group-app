@@ -35,7 +35,7 @@ passport.deserializeUser(User.deserializeUser());
 
 // Connect to mongo !!!! USES MY (Nick's) mLAB info, so replace URI with your own development db. 
 //mongoose.connect("mongodb://ncirone:nRsoQloNthstY1@ds227853.mlab.com:27853/support_group_dev", { useNewUrlParser: true });
-mongoose.connect("mongodb://admin:admin1@ds125673.mlab.com:25673/support-app-test", { useNewUrlParser: true });
+mongoose.connect("mongodb://admin:admin1@ds035844.mlab.com:35844/support-app-test", { useNewUrlParser: true });
 
 var makeName = require('./helpers/nameGen.js');
 
@@ -78,9 +78,9 @@ var profileOne = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports', 'cooking', 'video games'],
     services: ['Burns'],
-    friendIds: [],
-    matchIds: [userThreeId, userFourId,userSixId, userSevenId],
-    sentPendingFriendIds: [userFiveId, userEightId, userTwoId],
+    friendIds: [userSevenId],
+    matchIds: [],
+    sentPendingFriendIds: [userFiveId, userEightId],
     recvPendingFriendIds: [userNineId, userTenId],
   }
 );
@@ -94,10 +94,10 @@ var profileTwo = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Surgery'],
-    friendIds: [userFiveId],
-    matchIds: [userOneId],
-    sentPendingFriendIds: [userThreeId, userFourId, userEightId, userNineId, userSevenId, userTenId, userSixId],
-    
+    friendIds: [userSixId],
+    matchIds: [],
+    sentPendingFriendIds: [userNineId, userSevenId],
+    recvPendingFriendIds:[userTenId]
   }
 );
 
@@ -110,8 +110,8 @@ var profileThree = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['GI'],
-    friendIds: [userTwoId, userFourId],
-    matchIds: [userEightId],
+    friendIds: [userFourId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
     recvPendingFriendIds: [userSixId],
   }
@@ -126,8 +126,8 @@ var profileFour = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Cardiology'],
-    friendIds: [userTwoId, userThreeId],
-    matchIds: [userSevenId],
+    friendIds: [userEightId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
     recvPendingFriendIds: [userSixId],
   }
@@ -142,7 +142,7 @@ var profileFive = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Neurosurgery'],
-    friendIds: [userFourId],
+    friendIds: [userEightId],
   }
 );
 var profileSix = new Profile(
@@ -154,8 +154,8 @@ var profileSix = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Neurosurgery'],
-    friendIds: [userTwoId],
-    matchIds: [userThreeId, userFourId, userSevenId],
+    friendIds: [userEightId,userSevenId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -169,8 +169,8 @@ var profileSeven = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userTwoId],
-    matchIds: [userThreeId, userSixId],
+    friendIds: [userSevenId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -184,8 +184,8 @@ var profileEight = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userTwoId],
-    matchIds: [userThreeId, userSixId],
+    friendIds: [userSevenId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -199,8 +199,8 @@ var profileNine = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userTwoId],
-    matchIds: [userThreeId, userSixId],
+    friendIds: [userSevenId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -215,7 +215,7 @@ var profileTen = new Profile(
     interests: ['sports'],
     services: ['Neurosurgery'],
     friendIds: [userSevenId],
-    matchIds: [userEightId, userNineId],
+    matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
 );
@@ -356,9 +356,8 @@ registerUser(banana_seven, 'banana_seven');
 registerUser(pear_eight, 'pear_eight');
 registerUser(tomato_nine, 'tomato_nine');
 registerUser(peach_ten, 'peach_ten');
-*/
 
-// registerUser(admin, 'admin');
+ registerUser(admin, 'admin');*/
 
 require('./routes')(app);
 
