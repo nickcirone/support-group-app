@@ -400,7 +400,7 @@ module.exports = function(app) {
         }
       }
 
-      console.log(everyProfile);
+     // console.log(everyProfile);
       var myAge = currentProfile.age;
       var agecheck = [];
       age(myAge);
@@ -424,7 +424,7 @@ module.exports = function(app) {
                 //console.log("nothing hitting");
             }
       }
-      console.log(agecheck);
+      //console.log(agecheck);
 
         for (var i = 0; i < agecheck.length; i++) {
           myMap.set(agecheck[i]._id, totalCount);
@@ -455,10 +455,9 @@ module.exports = function(app) {
         //console.log(mapSort);
         //console.log(keys);
         //console.log(myMap);
+        var userMatches=[];
 
-        var userMatches = await User.find({'profileId':{ $in: keys}})
-
-        //console.log(userMatches)
+        userMatches = await User.find({'profileId':{ $in: keys}});
 
        var arr = [userMatches,keys];
        return arr;
