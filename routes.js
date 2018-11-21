@@ -9,7 +9,11 @@ var nameGen = require('./helpers/nameGen');
 var passGen = require('./helpers/passGen');
 var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
 var transporter = nodemailer.createTransport(poolConfig);
+var multer = require('multer');
 
+var uploading = multer({
+    dest: __dirname + '/views/img/portfolio',
+  });
 function checkServices(body) {
     var newServices = [];
     if (body.Surgery) {
@@ -144,7 +148,30 @@ module.exports = function(app) {
                 res.render('createUser', {user: req.user});
             }
     });
+    app.get('/addPictures',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('addPictures', {user: req.user});
+            }
+    });
 
+    app.post('/addPictures',
+        require('connect-ensure-login').ensureLoggedIn(),uploading.single('image'),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                //let sampleFile = req.files.sampleFile;
+                // console.log(req.files.image);
+
+                res.send('file uploaded');
+            }
+    });
     app.post('/createUser',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
