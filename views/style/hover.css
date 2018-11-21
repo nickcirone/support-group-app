@@ -55,7 +55,7 @@
     width: 100%;
 }
 .img-thumbnail{
-    border-radius: 50%;
+    border-radius: 49%;
     padding: 0px;
 }
 #picdiv{
