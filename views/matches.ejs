@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %> 
+</head>
+<body>
+
+    <% include partials/navbar %>
+    <div class="container" style="padding-top: 10%; padding-bottom: 10%">
+        <h2>Matches for <%= user.username %></h2>
+        <br/>
+        <h3>Matches:</h3>
+        <% var matchbtnIds=[]; %>
+        <%  for(var j=1;j < 7;j++){ %>
+        <%  matchbtnIds[j-1] = "btn"+j; %>
+        <% } %>
+        <div class = "row">
+        <% for (var i = 0; i < matchProfiles.length; i++) { %>
+           <div class="col-lg-3">
+            <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
+                <div class="card-body text-center">
+                    <h3 class="card-header"> 
+                            <div class="dropdown">
+                                <img class="logo" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
+                                <div class="dropdown-content">
+                                    <div class="card-text">
+                                            <h4 >Age: <%= matchProfiles[i].age %> </h4>
+                                            <% for (var j = 0; j < matchProfiles[i].interests.length; j++) { %>
+                                            <h4> Interest: <%= matchProfiles[i].interests[j] %> </h4>
+                                            <% } %>
+                                            <h4> Services: <%= matchProfiles[i].services %> </h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="usernamesize"> <%= matches[i].username %> <br/> </div>
+                    </h3>
+                    <button id ="<%= matchbtnIds[i] %>" class= "btn-sm btn-primary btn-block" data-all ='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}' >Match!</button>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+                
+        <h3>Pending: </h3><br/>
+        <% if (received) { %>
+            <% var pending_btnIds=[]; %>
+            <%  for(var j=1;j < 13;j++){ %>
+            <%  pending_btnIds[j-1] = "pending_btn"+j; %>
+            <% } %>
+        
+            <!-- <div class = "sentCard"></div> -->
+            <div class = "row"> 
+        <% for (var i = 0; i < receivedProfiles.length; i++) { %>
+            <div class="col-lg-3">
+                <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
+                    <div class="card-body text-center">
+                        <h3 class="card-header">
+                            <div class="dropdown">
+                                <img class="logo" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
+                                <div class="dropdown-content"> 
+                                    <div class="card-text">
+                                            <h4 >Age: <%= receivedProfiles[i].age %> </h4>
+                                            <h4> Interest:</h4>
+                                            <% for (var j = 0; j < receivedProfiles[i].interests.length; j++) { %>
+                                                <h4> <%= receivedProfiles[i].interests[j] %></h4>
+                                            <% } %>
+                                            <h4> Services: <%= receivedProfiles[i].services %> </h4>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div id="usernamesize">  <%= received[i].username %><br/> </div>
+                        </h3>
+                        <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
+                    </div>
+                </div>
+            </div>
+            <% } %>  
+        <% } %>
+        
+       
+        <% if (sent) { %>
+        <% for (var i = 0; i < sentProfiles.length; i++) { %>
+            <div id = "sent" class="col-lg-3">
+            <!-- <div class = "sentCard"> -->
+            <div class="card" style="width: 15rem; margin: 15px 0;">
+                <div class="card-body text-center">
+                    <h3 class="card-header">
+                        <div class="dropdown">
+                            <img class="logo" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
+                            <div class="dropdown-content">
+                                <div class="card-text">
+                                        <h4 >Age: <%= sentProfiles[i].age %> </h4>
+                                        <h4> Interest: </h4>
+                                        <% for (var j = 0; j < sentProfiles[i].interests.length; j++) { %>
+                                            <h4> <%= sentProfiles[i].interests[j] %> </h4>
+                                        <% } %>
+                                        <h4> Services: <%= sentProfiles[i].services %> </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="usernamesize"> <%= sent[i].username %><br/> </div>
+                    </h3>
+                    <a class= "btn-sm btn-danger btn-block">Waiting</a>
+                </div>
+            </div>
+            <!-- </div> -->
+        </div>
+        <% } %>
+    
+        <% } %>
+    </div>
+    <!-- </div> -->
+</div>
+
+</body>
+<% include partials/script %>
+</html>
+
+<script>
+    $(()=>{
+        $('#btn1').click(()=>{
+            sendAjax("#btn1");
+        })
+        $('#btn2').click(()=>{
+            sendAjax("#btn2");
+        })
+        $('#btn3').click(()=>{
+            sendAjax("#btn3");
+        })
+        $('#btn4').click(()=>{
+            sendAjax("#btn4");
+        })
+        $('#btn5').click(()=>{
+            sendAjax("#btn5");
+        })
+        $('#btn6').click(()=>{
+            sendAjax("#btn6");
+        })
+        $('#pending_btn1').click(()=>{
+            sendAjax('#pending_btn1');
+        })
+        $('#pending_btn2').click(()=>{
+            sendAjax('#pending_btn2');
+        })
+        $('#pending_btn3').click(()=>{
+            sendAjax('#pending_btn3');
+        })
+        $('#pending_btn4').click(()=>{
+            sendAjax('#pending_btn4');
+        })
+        $('#pending_btn5').click(()=>{
+            sendAjax('#pending_btn5');
+        })
+        $('#pending_btn6').click(()=>{
+            sendAjax('#pending_btn6');
+        })
+        $('#pending_btn7').click(()=>{
+            sendAjax('#pending_btn7');
+        })
+        $('#pending_btn8').click(()=>{
+            sendAjax('#pending_btn8');
+        })
+        $('#pending_btn9').click(()=>{
+            sendAjax('#pending_btn9');
+        })
+        $('#pending_btn10').click(()=>{
+            sendAjax('#pending_btn10');
+        })
+        $('#pending_btn11').click(()=>{
+            sendAjax('#pending_btn11');
+        })
+        $('#pending_btn12').click(()=>{
+            sendAjax('#pending_btn12');
+        })
+    })
+
+    function sendAjax(button){
+        $.ajax({
+                url:"/matches",
+                type:"POST",
+                dataType: "json",
+                data:{
+                    postType: $(button).data("all").postType,
+                    userId: $(button).data("all").userId,
+                    userProfileId: $(button).data("all").userProfileId,
+                },
+                cache: false,
+                timeout: 10000,
+                success: function(res){
+
+                    if($(button).data("all").postType=="match"){
+                        var card_id = "#matchCard_"+button.slice(4);
+                        $(card_id).remove();
+                        
+                        var user = res.myUser;
+                        var profile = res.matchProfile;
+
+                        var interest_list='';
+                                profile.interests.forEach(function(interest){
+                                interest_list += '<h4>'+ interest +'</h4>';
+                            });
+                            var services_list='';
+                                profile.services.forEach(function(service){
+                                services_list += '<h4>'+ service +'</h4>';
+                            });
+                        var newCard = $(
+                            '<div class= "card" style="width: 15rem; margin: 15px 0;">' +
+                                '<div class ="card-body text-center">' +
+                                    '<h3 class="card-header">' +
+                                        '<div class="dropdown">' +
+                                            '<img class="logo" src="/img/portfolio/'+profile.avatar+'">' +
+                                            '<div class="dropdown-content">' + 
+                                                '<div class="card-text">' +
+                                                        '<h4 >Age: '+profile.age +'</h4>' +
+                                                        '<h4 id="interest"> Interest:</h4>' +
+                                                        interest_list+
+                                                        '<h4> Services:</h4>' +
+                                                        services_list+
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                        '<div id="usernamesize">'+user.username+'</div>' +
+                                    '</h3>' +
+                                    '<a class= "btn-sm btn-danger btn-block" >Waiting</a>' +
+                                '</div>' +
+                            '</div>');
+                            
+                    $("#sent").after(newCard)
+
+                    }else if($(button).data("all").postType=="accepted"){
+                        var card_id = "#pendingCard_"+button.slice(12);
+                        $(card_id).remove();                        
+                    }
+                    
+                },
+                error: function(result){
+                    alert("error "+ result)
+                }
+            })
+    }
+</script>
