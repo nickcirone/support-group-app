@@ -40,11 +40,34 @@
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
-img {
-    height: 150px;
-    width: 150px;
+#avatar {
+    height: 170px;
+    width: 100%;
+    object-fit: cover;
 }
 
 #usernamesize {
-    font-size: 18px;
+    font-size: 1.50em;
+    font-weight: bold;
+}
+
+.dropdown-content{
+    width: 100%;
+}
+.img-thumbnail{
+    border-radius: 49%;
+    padding: 0px;
+}
+#picdiv{
+    width:12em;
+    margin: 0 auto; /* Added */
+    float: none; 
+    padding-top: .7em;
+}
+.match-bg {
+    background-color: #6cd870;
+}
+#logo{
+    height: 170px;
+    width: 170px;
 }
