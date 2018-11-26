@@ -34,7 +34,9 @@
                             </div>
                             <div id="usernamesize"> <%= matches[i].username %> <br/> </div>
                     </h3>
+                    <% if (user.role !== 'parent') { %>
                     <button id ="<%= matchbtnIds[i] %>" class= "btn-sm btn-primary btn-block" data-all ='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}' >Match!</button>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -70,7 +72,9 @@
                             </div> 
                             <div id="usernamesize">  <%= received[i].username %><br/> </div>
                         </h3>
+                        <% if (user.role !== 'parent') { %>
                         <button id ="<%= pending_btnIds[i] %>" class= "btn-sm btn-success btn-block" data-all ='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}' >Accept</button>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -100,7 +104,9 @@
                         </div>
                         <div id="usernamesize"> <%= sent[i].username %><br/> </div>
                     </h3>
+                    <% if (user.role !== 'parent') { %>
                     <a class= "btn-sm btn-danger btn-block">Waiting</a>
+                    <% } %>
                 </div>
             </div>
             <!-- </div> -->
@@ -111,7 +117,7 @@
     </div>
     <!-- </div> -->
 </div>
-
+<% include partials/footer %>
 </body>
 <% include partials/script %>
 </html>

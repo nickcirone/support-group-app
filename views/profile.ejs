@@ -61,7 +61,9 @@
                 </li>
         </ul>
         <br/>
+        <% if (user.role != 'parent') { %>
         <a class="btn btn-primary" href='/profileEdit'>Edit Profile</a>
+        <% } %>
     </div>
     <br/>
 </body>
