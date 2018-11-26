@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include partials/head %> 
+</head>
+<body>
+	<% include partials/adminNav %> 
+    <div class="container" style="padding-top: 10%; padding-bottom: 10%">
+        <h2>Submit Picture</h2>
+        <br/>
+        <div class="alert alert-danger text-center" style="margin-right: 20%; margin-left: 20%">
+            <%= msg %> <br/>
+            <% if(msg2){ %>
+              <%=  msg2 %>
+            <% } %>
+        </div>
+        <div class = 'errorMsg'></div>
+    <form ref='uploadForm' 
+      id='uploadForm' 
+      action='/addPicture' 
+      method='post' 
+      encType="multipart/form-data">
+        <input type="file" name="myImage" />
+        <input type='submit' value='Upload!' />
+    </form>     
+    </div>
+
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small>Copyright &copy; Your Website 2018</small>
+      </div>
+    </div>
+<% include partials/script %>
+</html>

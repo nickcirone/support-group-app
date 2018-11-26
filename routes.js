@@ -10,10 +10,58 @@ var passGen = require('./helpers/passGen');
 var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
 var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
+var path = require('path');
 
-var uploading = multer({
-    dest: __dirname + '/views/img/portfolio',
+// const storage = multer.diskStorage({
+//     destination: __dirname + '/views/img/portfolio',
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname)
+//   }
+// });
+// const uploading = multer({
+//     storage:storage,
+//     fileFilter: function (req, file, callback) {
+//         var ext = path.extname(file.originalname);
+//         if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+//             return callback(new Error('Only images are allowed'))
+//         }
+//         callback(null, true)
+//     }
+// })
+
+// Set The Storage Engine
+const storage = multer.diskStorage({
+    destination: __dirname + '/views/img/portfolio',
+    filename: function(req, file, cb){
+      cb(null,file.originalname);
+    }
   });
+
+// Init Upload
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+    fileFilter: function(req, file, cb){
+      checkFileType(file, cb);
+    }
+  }).single('myImage');
+  
+// Check File Type
+function checkFileType(file, cb){
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if(mimetype && extname){
+      return cb(null,true);
+    } else {
+      cb('Please submit images files Only!');
+    }
+  }
+
 function checkServices(body) {
     var newServices = [];
     if (body.Surgery) {
@@ -112,7 +160,6 @@ function checkInterests(body) {
 }
 
 module.exports = function(app) {
-
     // homepage route (after logging in)
 
     app.get('/',
@@ -148,28 +195,38 @@ module.exports = function(app) {
                 res.render('createUser', {user: req.user});
             }
     });
-    app.get('/addPictures',
+    app.get('/addPicture',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role !== 'admin') {
                 console.log('Not an administrator.');
                 res.redirect('/');
             } else {
-                res.render('addPictures', {user: req.user});
+                res.render('addPicture', {user: req.user});
             }
     });
 
-    app.post('/addPictures',
-        require('connect-ensure-login').ensureLoggedIn(),uploading.single('image'),
+    app.post('/addPicture',
+        require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role !== 'admin') {
                 console.log('Not an administrator.');
                 res.redirect('/');
             } else {
-                //let sampleFile = req.files.sampleFile;
-                // console.log(req.files.image);
-
-                res.send('file uploaded');
+                upload(req,res,(err)=>{
+                    if(err){
+                        console.log(err);
+                        res.render('addPictureMsg',{msg:err, msg2: "Ex) .jpg, .jpeg, .png"})
+                    }else{
+                        if(req.file == undefined){
+                            console.log("undefinded in post")
+                            res.render('addPictureMsg',{msg:"File is Undefined"})
+                        }else{
+                            console.log(req.file.originalname)
+                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded"});
+                        }
+                    }
+                })                 
             }
     });
     app.post('/createUser',
