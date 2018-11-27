@@ -12,23 +12,6 @@ var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
 var path = require('path');
 
-// const storage = multer.diskStorage({
-//     destination: __dirname + '/views/img/portfolio',
-//     filename: function (req, file, cb) {
-//         cb(null, file.originalname)
-//   }
-// });
-// const uploading = multer({
-//     storage:storage,
-//     fileFilter: function (req, file, callback) {
-//         var ext = path.extname(file.originalname);
-//         if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-//             return callback(new Error('Only images are allowed'))
-//         }
-//         callback(null, true)
-//     }
-// })
-
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: __dirname + '/views/img/portfolio',
@@ -216,7 +199,8 @@ module.exports = function(app) {
                 upload(req,res,(err)=>{
                     if(err){
                         console.log(err);
-                        res.render('addPictureMsg',{msg:err, msg2: "Ex) .jpg, .jpeg, .png"})
+                        var msg2 ="ex) .jpg .jpeg .png";
+                        res.render('addPictureMsg',{msg:err, msg2: msg2})
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
@@ -408,32 +392,37 @@ module.exports = function(app) {
     app.post('/profileEdit',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            Profile.findById(req.user.profileId, function (err, profile) {
-                if (err) {
-                    console.log('Error finding profile to update.');
-                    res.redirect('/profile');
-                } else {
-                    var servicesArr = checkServices(req.body);
-                    var interestsArr = checkInterests(req.body);
-                    profile.set({ avatar: req.body.avatar });
-                    profile.set({ birthdate: req.body.birthdate });
-                    profile.set({ age: req.body.age });
-                    profile.set({ devAge: req.body.devAge });
-                    profile.set({ genderId: req.body.genderId });
-                    profile.set({ bio: req.body.bio });
-                    profile.set({ services: servicesArr });
-                    profile.set({ interests: interestsArr});
-                    profile.save(function (err) {
-                      if (err) {
-                          console.log('Error updating profile.')
-                          res.redirect('/profile');
-                      } else {
-                          res.redirect('/profile');
-                      }
-                    });
-                }
+            if (req.user.role === 'patient') {
+                Profile.findById(req.user.profileId, function (err, profile) {
+                    if (err) {
+                        console.log('Error finding profile to update.');
+                        res.redirect('/profile');
+                    } else {
+                        var servicesArr = checkServices(req.body);
+                        var interestsArr = checkInterests(req.body);
+                        profile.set({ avatar: req.body.avatar });
+                        profile.set({ birthdate: req.body.birthdate });
+                        profile.set({ age: req.body.age });
+                        profile.set({ devAge: req.body.devAge });
+                        profile.set({ genderId: req.body.genderId });
+                        profile.set({ bio: req.body.bio });
+                        profile.set({ services: servicesArr });
+                        profile.set({ interests: interestsArr});
+                        profile.save(function (err) {
+                        if (err) {
+                            console.log('Error updating profile.')
+                            res.redirect('/profile');
+                        } else {
+                            res.redirect('/profile');
+                        }
+                        });
+                    }
 
-            });
+                });
+            } else {
+                console.log("Not a patient");
+                res.redirect('/profile');
+            }
         }
     )
 

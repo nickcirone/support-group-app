@@ -4,10 +4,8 @@
  <% include partials/head %> 
 
 </head>
-<body>
+<body style="background-color:#023166;">
 <% include partials/navbar %>
-    
-    <body style="background-color:#023166;">
 	</div>
 	<br />
     <div class="container" style="padding-top: 2.5%; padding-bottom: 2.5%">
@@ -64,9 +62,12 @@
                 </li>
         </ul>
         <br/>
+        <% if (user.role != 'parent') { %>
         <a class="btn btn-primary" href='/profileEdit'>Edit Profile</a>
+        <% } %>
     </div>
     <br/>
+<% include partials/footer %>
 </body>
 <% include partials/script %>
 </html>

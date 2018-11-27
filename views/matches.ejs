@@ -8,7 +8,6 @@
 
 <body style="background-color:#023166;">
     <% include partials/navbar %>
-
     <br />
     <div class="container" style=" padding-top: 2.5%; padding-bottom: 2.5%">
         <h2 style="color:white">Matches for
@@ -30,7 +29,7 @@
                                 <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
                             </div>
                                 <div class="dropdown-content">
-                                    <div class="card-text">
+                                    <div class="card-text text-center">
                                         <h4>Age:
                                             <%= matchProfiles[i].age %>
                                         </h4>
@@ -50,7 +49,9 @@
                             <div id="usernamesize">
                                 <%= matches[i].username %> <br /> </div>
                         <!-- </h3> -->
+                        <% if (user.role !== 'parent') { %>
                         <button id="<%= matchbtnIds[i] %>" class="btn-sm btn-primary btn-block" data-all='{"postType":"match","userId":"<%= matches[i]._id %>","userProfileId":"<%= matchProfiles[i]._id %>"}'>Match!</button>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -73,7 +74,7 @@
                                 <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
                                 </div>
                                 <div class="dropdown-content">
-                                    <div class="card-text">
+                                    <div class="card-text text-center">
                                         <h4>Age:
                                             <%= receivedProfiles[i].age %>
                                         </h4>
@@ -91,7 +92,9 @@
                             <div class="card-body text-center">
                             <div id="usernamesize">
                                 <%= received[i].username %><br /> </div>
+                        <% if (user.role !== 'parent') { %>
                         <button id="<%= pending_btnIds[i] %>" class="btn-sm btn-success btn-block" data-all='{"postType":"accepted","userId":"<%= received[i]._id %>","userProfileId":"<%= receivedProfiles[i]._id %>"}'>Accept</button>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -108,7 +111,7 @@
                                 <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
                                 </div>
                                 <div class="dropdown-content">
-                                    <div class="card-text">
+                                    <div class="card-text text-center">
                                         <h4>Age:
                                             <%= sentProfiles[i].age %>
                                         </h4>
@@ -126,7 +129,9 @@
                             <div class="card-body text-center">
                             <div id="usernamesize">
                                 <%= sent[i].username %><br /> </div>
+                        <% if (user.role !== 'parent') { %>
                         <a class="btn-sm btn-danger btn-block">Waiting</a>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -135,8 +140,9 @@
             <% } %>
         </div>
     </div>
-
-
+    <!-- </div> -->
+</div>
+<% include partials/footer %>
 </body>
 <% include partials/script %>
 
@@ -233,7 +239,7 @@
                         '<div class="dropdown">' +
                         '<img class="logo" src="/img/portfolio/' + profile.avatar + '">' +
                         '<div class="dropdown-content">' +
-                        '<div class="card-text">' +
+                        '<div class="card-text text-center">' +
                         '<h4 >Age: ' + profile.age + '</h4>' +
                         '<h4 id="interest"> Interest:</h4>' +
                         interest_list +
