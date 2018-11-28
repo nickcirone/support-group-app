@@ -3,12 +3,59 @@ const nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
+var Picture = require('./models/picture');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var nameGen = require('./helpers/nameGen');
 var passGen = require('./helpers/passGen');
 var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
 var transporter = nodemailer.createTransport(poolConfig);
+var multer = require('multer');
+var path = require('path');
+
+var picArray = [];
+
+// Set The Storage Engine
+const storage = multer.diskStorage({
+    destination: __dirname + '/views/img/portfolio',
+    filename: function(req, file, cb){
+      cb(null,file.originalname);
+    }
+  });
+
+// Init Upload - file size in bytes 1MB max
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+    fileFilter: function(req, file, cb){
+      checkFileType(file, cb);
+    }
+  }).single('myImage');
+
+// Check File Type
+async function checkFileType(file, cb){
+    // Allowed ext
+    const filetypes = /jpeg|jpg|png/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+
+    //check if name is duplicated
+    var array = await Picture.find({});
+    var namesArray = array[0].names;
+
+    if (namesArray.includes(file.originalname)){
+        cb('Image name is already used. Please rename or select another image.');
+    }else{
+        //check file type
+        if(mimetype && extname){
+            return cb(null,true);
+          } else {
+            cb('Please submit images files Only!');
+          }
+    }
+  }
 
 function checkServices(body) {
     var newServices = [];
@@ -108,7 +155,6 @@ function checkInterests(body) {
 }
 
 module.exports = function(app) {
-
     // homepage route (after logging in)
 
     app.get('/',
@@ -144,7 +190,54 @@ module.exports = function(app) {
                 res.render('createUser', {user: req.user});
             }
     });
+    app.get('/addPicture',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                res.render('addPicture', {user: req.user});
+            }
+    });
 
+    app.post('/addPicture*',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role !== 'admin') {
+                console.log('Not an administrator.');
+                res.redirect('/');
+            } else {
+                upload(req,res, async function(err){
+                    var succsess = false;
+                    if(err){
+                        console.log(err);
+                        // msg2 ="ex) .jpg .jpeg .png";
+                        res.render('addPictureMsg',{msg:err,succsess:succsess})
+                    }else{
+                        if(req.file == undefined){
+                            console.log("undefinded in post")
+                            res.render('addPictureMsg',{msg:"File is Undefined",succsess:succsess})
+                        }else{
+                            var array = await Picture.find({});
+                            var namesArray = array[0].names;
+                            console.log(array)
+                            console.log("------------------")
+                            console.log(namesArray)
+
+                            namesArray.push(req.file.originalname);
+                            //5bfde974fe11f2057ce72a6e
+                            await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                                if (err){console.log(err)}
+                            })
+                            //check it name is already used in db
+                            console.log(req.file.originalname);
+                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
+                        }
+                    }
+                })
+            }
+    });
     app.post('/createUser',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
@@ -324,32 +417,37 @@ module.exports = function(app) {
     app.post('/profileEdit',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            Profile.findById(req.user.profileId, function (err, profile) {
-                if (err) {
-                    console.log('Error finding profile to update.');
-                    res.redirect('/profile');
-                } else {
-                    var servicesArr = checkServices(req.body);
-                    var interestsArr = checkInterests(req.body);
-                    profile.set({ avatar: req.body.avatar });
-                    profile.set({ birthdate: req.body.birthdate });
-                    profile.set({ age: req.body.age });
-                    profile.set({ devAge: req.body.devAge });
-                    profile.set({ genderId: req.body.genderId });
-                    profile.set({ bio: req.body.bio });
-                    profile.set({ services: servicesArr });
-                    profile.set({ interests: interestsArr});
-                    profile.save(function (err) {
-                      if (err) {
-                          console.log('Error updating profile.')
-                          res.redirect('/profile');
-                      } else {
-                          res.redirect('/profile');
-                      }
-                    });
-                }
+            if (req.user.role === 'patient') {
+                Profile.findById(req.user.profileId, function (err, profile) {
+                    if (err) {
+                        console.log('Error finding profile to update.');
+                        res.redirect('/profile');
+                    } else {
+                        var servicesArr = checkServices(req.body);
+                        var interestsArr = checkInterests(req.body);
+                        profile.set({ avatar: req.body.avatar });
+                        profile.set({ birthdate: req.body.birthdate });
+                        profile.set({ age: req.body.age });
+                        profile.set({ devAge: req.body.devAge });
+                        profile.set({ genderId: req.body.genderId });
+                        profile.set({ bio: req.body.bio });
+                        profile.set({ services: servicesArr });
+                        profile.set({ interests: interestsArr});
+                        profile.save(function (err) {
+                        if (err) {
+                            console.log('Error updating profile.')
+                            res.redirect('/profile');
+                        } else {
+                            res.redirect('/profile');
+                        }
+                        });
+                    }
 
-            });
+                });
+            } else {
+                console.log("Not a patient");
+                res.redirect('/profile');
+            }
         }
     )
 
@@ -454,10 +552,9 @@ module.exports = function(app) {
         //console.log(mapSort);
         //console.log(keys);
         //console.log(myMap);
+        var userMatches=[];
 
-        var userMatches = await User.find({'profileId':{ $in: keys}})
-
-        //console.log(userMatches)
+        userMatches = await User.find({'profileId':{ $in: keys}});
 
        var arr = [userMatches,keys];
        return arr;

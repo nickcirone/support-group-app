@@ -2,18 +2,19 @@
 <html lang="en">
 <head>
  <% include partials/head %> 
+
 </head>
-<body>
+<body style="background-color:#023166;">
 <% include partials/navbar %>
-    </br>
-    <div class="container" style="padding-top: 10%; padding-bottom: 10%">
-        <h2><%= user.username %>'s Profile</h2>
+	</div>
+	<br />
+    <div class="container" style="padding-top: 2.5%; padding-bottom: 2.5%">
+            <h2 style="color:white">apple one's Profile</h2>
         <br/>
         <ul class="list-group">
                 <li class="list-group-item"> Email: <%= user.email %></li>
-                <!---
-                <li class="list-group-item">Age: <%= profile.age %></li> 
-                !--->
+                <li class="list-group-item">Age: <%= profile.age %></li>
+
                 <li class="list-group-item">Birthdate: <% if (profile.birthdate) { %><%= profile.birthdate.toDateString() %><% } %></li>
                 <li class="list-group-item">Gender Identity: <%= profile.genderId %></li>
                 <li class="list-group-item">Bio: <%= profile.bio %></li>
@@ -33,37 +34,40 @@
                         <div class = "row">
                         <% for (var i = 0; i < friends.length; i++) { %>
                             <div class="col-lg-3">
-                            <div class="card" style="width: 15rem;">
-                                    <div class="card-body text-center">
-                                        <h3 class="card-header">
-                                            <div class="dropdown">
-                                            <img class="logo" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
+                            <div class="card" style="width: 15rem; margin: 15px 0;">
+                                        <div class="dropdown">
+                                            <div id = "picdiv">
+                                            <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
+                                            </div>
                                             <div class="dropdown-content">
                                                 <div class="card-text">
                                                         <h4 >Age: <%= friendProfiles[i].age %> </h4>
-                                                        <h4> Interest: </h4>
+                                                        <h4> Interest:
                                                         <% for (var j = 0; j < friendProfiles[i].interests.length; j++) { %>
-                                                            <h4> <%= friendProfiles[i].interests[j] %> </h4>
+                                                         <%= friendProfiles[i].interests[j] %> </h4>
                                                         <% } %>
                                                         <h4> Services: <%= friendProfiles[i].services %> </h4>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="card-body text-center">
                                         <div id="usernamesize">  <%= friends[i].username %><br/> </div>
-                                        </h3>
                                         <button class= "btn-sm btn-info btn-block">Message</button>
                                     </div>
                                 </div>
                             </div>
                         <% } %>
-                         </div>
+                    </div>
                     <!-- </h5> -->
                 </li>
         </ul>
         <br/>
+        <% if (user.role != 'parent') { %>
         <a class="btn btn-primary" href='/profileEdit'>Edit Profile</a>
+        <% } %>
     </div>
     <br/>
+<% include partials/footer %>
 </body>
 <% include partials/script %>
 </html>

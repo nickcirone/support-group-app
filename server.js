@@ -29,6 +29,7 @@ app.use(passport.session());
 // Configure the local strategy for use by Passport.
 var User = require('./models/users.js');
 var Profile = require('./models/profile.js');
+//var Picture = require('./models/picture.js');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -72,7 +73,7 @@ var registerProfile = require('./helpers/registerProfile');
 var profileOne = new Profile(
   {
     _id: profileOneId,
-    avatar: 'apple_one.jpg',
+    avatar: 'apple.png',
     age: 9,
     genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
@@ -88,7 +89,7 @@ var profileOne = new Profile(
 var profileTwo = new Profile(
   {
     _id: profileTwoId,
-    avatar: 'banana_two.jpg',
+    avatar: 'banana.png',
     age: 10,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -104,7 +105,7 @@ var profileTwo = new Profile(
 var profileThree = new Profile(
   {
     _id: profileThreeId,
-    avatar: 'cake.png',
+    avatar: 'coconut.png',
     age: 11,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -120,7 +121,7 @@ var profileThree = new Profile(
 var profileFour = new Profile(
   {
     _id: profileFourId,
-    avatar: 'circus.png',
+    avatar: 'car.jpg',
     age: 12,
     genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
@@ -136,8 +137,8 @@ var profileFour = new Profile(
 var profileFive = new Profile(
   {
     _id: profileFiveId,
-    avatar: 'game.png',
-    age: 13,
+    avatar: 'dog.png',
+    age: 12,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
@@ -148,7 +149,7 @@ var profileFive = new Profile(
 var profileSix = new Profile(
   {
     _id: profileSixId,
-    avatar: 'safe.png',
+    avatar: 'motorcycle.png',
     age: 14,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -163,7 +164,7 @@ var profileSix = new Profile(
 var profileSeven = new Profile(
   {
     _id: profileSevenId,
-    avatar: 'submarine.png',
+    avatar: 'cat.png',
     age: 15,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
@@ -193,7 +194,7 @@ var profileEight = new Profile(
 var profileNine = new Profile(
   {
     _id: profileNineId,
-    avatar: 'tomato.png',
+    avatar: 'cupcake.jpg',
     age: 17,
     genderId: 'female',
     bio: 'placeholder bio! thanks 4 reading',
