@@ -74,7 +74,7 @@ var profileOne = new Profile(
   {
     _id: profileOneId,
     avatar: 'apple.png',
-    age: 9,
+    age: 10,
     genderId: 'male',
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports', 'cooking', 'video games'],

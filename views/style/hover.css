@@ -71,3 +71,29 @@
     height: 170px;
     width: 170px;
 }
+
+.wrapper {
+    height: 300px;
+    width: 70%;
+    margin: 0;
+    display: flex;
+    align-items:center;
+    justify-content:left;
+  }
+  
+  .innerWrapper {
+    display: flex;
+    text-align: center;
+    width: fit-content;
+  }
+  
+  .box {
+    display: inline-block;
+    padding: 25px 25px;
+    opacity: 0.8;
+    background-color: clear;
+  }
+
+  .profile{
+      padding-top: 0px;
+  }
