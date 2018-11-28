@@ -3,7 +3,6 @@ const nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
-//var Picture = require('./models/picture');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var nameGen = require('./helpers/nameGen');
@@ -12,6 +11,8 @@ var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pa
 var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
 var path = require('path');
+
+var picArray = [];
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
@@ -207,33 +208,6 @@ module.exports = function(app) {
                             console.log("undefinded in post")
                             res.render('addPictureMsg',{msg:"File is Undefined"})
                         }else{
-                            var data = {name:req.file.originalname}
-                            var newPicture = new Picture();
-                            newPicture.init(data,{},function(err){
-                                newPicture.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                    
-                                    console.log("image saved");
-                                })
-                            })
-                            //var newPicture = new Picture({_id:mongoose.Types.ObjectId(),  name:req.file.originalname})
-                            // console.log(newPicture)
-                            // newPicture.isNew = false;
-                            // newPicture.save(function(err,res){
-                            //     if(err){
-                            //         console.log(err);
-                            //     }
-                            //     console.log(res);
-                            // })
-                            // Picture.create({name:req.file.originalname},function(err){
-                            //     if (err){
-                            //         console.log(err);
-                            //     }
-                            //     console.log("image saved");
-                            // })
-                            
                             //check it name is already used in db
                             console.log(req.file.originalname);
                             res.render('addPictureMsg',{msg:"Image Successfully Uploaded"});

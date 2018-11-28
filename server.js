@@ -29,7 +29,6 @@ app.use(passport.session());
 // Configure the local strategy for use by Passport.
 var User = require('./models/users.js');
 var Profile = require('./models/profile.js');
-//var Picture = require('./models/picture.js');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
