@@ -209,20 +209,22 @@ module.exports = function(app) {
                 res.redirect('/');
             } else {
                 upload(req,res, async function(err){
+                    var succsess = false;
                     if(err){
                         console.log(err);
                         // msg2 ="ex) .jpg .jpeg .png";
-                        res.render('addPictureMsg',{msg:err})
+                        res.render('addPictureMsg',{msg:err,succsess:succsess})
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
-                            res.render('addPictureMsg',{msg:"File is Undefined"})
+                            res.render('addPictureMsg',{msg:"File is Undefined",succsess:succsess})
                         }else{
                             var array = await Picture.find({});
                             var namesArray = array[0].names;
                             console.log(array)
                             console.log("------------------")
                             console.log(namesArray)
+                            
                             namesArray.push(req.file.originalname);
                             //5bfde974fe11f2057ce72a6e
                             await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
@@ -230,7 +232,7 @@ module.exports = function(app) {
                             })
                             //check it name is already used in db
                             console.log(req.file.originalname);
-                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded"});
+                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
                         }
                     }
                 })                 
