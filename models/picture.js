@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 // Schema for Picture
 var PictureSchema = new Schema ({
-    name: String
+    names: [String]
 });
 
 

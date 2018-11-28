@@ -3,7 +3,7 @@ const nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
-//var Picture = require('./models/picture');
+var Picture = require('./models/picture');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var nameGen = require('./helpers/nameGen');
@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     }
   });
 
-// Init Upload
+// Init Upload - file size in bytes 1MB max
 const upload = multer({
     storage: storage,
     limits:{fileSize: 1000000},
@@ -31,18 +31,27 @@ const upload = multer({
   }).single('myImage');
   
 // Check File Type
-function checkFileType(file, cb){
+async function checkFileType(file, cb){
     // Allowed ext
     const filetypes = /jpeg|jpg|png/;
     // Check ext
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime
     const mimetype = filetypes.test(file.mimetype);
-  
-    if(mimetype && extname){
-      return cb(null,true);
-    } else {
-      cb('Please submit images files Only!');
+
+    //check if name is duplicated
+    var array = await Picture.find({});
+    var namesArray = array[0].names;
+
+    if (namesArray.includes(file.originalname)){
+        cb('Image name is already used. Please rename or select another image.');
+    }else{
+        //check file type
+        if(mimetype && extname){
+            return cb(null,true);
+          } else {
+            cb('Please submit images files Only!');
+          }
     }
   }
 
@@ -190,14 +199,14 @@ module.exports = function(app) {
             }
     });
 
-    app.post('/addPicture',
+    app.post('/addPicture*',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role !== 'admin') {
                 console.log('Not an administrator.');
                 res.redirect('/');
             } else {
-                upload(req,res, function(err){
+                upload(req,res, async function(err){
                     if(err){
                         console.log(err);
                         // msg2 ="ex) .jpg .jpeg .png";
@@ -207,33 +216,16 @@ module.exports = function(app) {
                             console.log("undefinded in post")
                             res.render('addPictureMsg',{msg:"File is Undefined"})
                         }else{
-                            var data = {name:req.file.originalname}
-                            var newPicture = new Picture();
-                            newPicture.init(data,{},function(err){
-                                newPicture.save(function(err){
-                                    if(err){
-                                        console.log(err);
-                                    }
-                                    
-                                    console.log("image saved");
-                                })
+                            var array = await Picture.find({});
+                            var namesArray = array[0].names;
+                            console.log(array)
+                            console.log("------------------")
+                            console.log(namesArray)
+                            namesArray.push(req.file.originalname);
+                            //5bfde974fe11f2057ce72a6e
+                            await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                                if (err){console.log(err)}
                             })
-                            //var newPicture = new Picture({_id:mongoose.Types.ObjectId(),  name:req.file.originalname})
-                            // console.log(newPicture)
-                            // newPicture.isNew = false;
-                            // newPicture.save(function(err,res){
-                            //     if(err){
-                            //         console.log(err);
-                            //     }
-                            //     console.log(res);
-                            // })
-                            // Picture.create({name:req.file.originalname},function(err){
-                            //     if (err){
-                            //         console.log(err);
-                            //     }
-                            //     console.log("image saved");
-                            // })
-                            
                             //check it name is already used in db
                             console.log(req.file.originalname);
                             res.render('addPictureMsg',{msg:"Image Successfully Uploaded"});

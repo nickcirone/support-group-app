@@ -29,7 +29,7 @@ app.use(passport.session());
 // Configure the local strategy for use by Passport.
 var User = require('./models/users.js');
 var Profile = require('./models/profile.js');
-//var Picture = require('./models/picture.js');
+var Picture = require('./models/picture.js');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -67,6 +67,17 @@ var userTenId = mongoose.Types.ObjectId();
 // Helper functions for registering Users 
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
+
+// Create Picture array
+/*
+var newPicture = new Picture({names: ['apple.png']})
+
+newPicture.save(function(err,res){
+    if(err){
+        console.log(err);
+    }
+    console.log("array created");
+}) */
 
 // Dummy Profiles
 
