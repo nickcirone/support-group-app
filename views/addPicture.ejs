@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <% include partials/head %> 
+</head>
+<body>
+	<% include partials/adminNav %> 
+    <div class="container" style="padding-top: 10%; padding-bottom: 10%">
+        <h2>Submit Picture</h2>
+        <br/>
+    <form 
+      action='/addPicture' 
+      method='POST' 
+      encType="multipart/form-data">
+        <div class="form-group">
+        <input name="myImage" type="file" />
+         <br/><br/>
+        <button class="btn btn-primary" type='submit' value='Upload!'>Upload!</button>
+      </div>
+    </form>     
+    </div>
+
+    <div class="copyright py-4 text-center text-white">
+      <div class="container">
+        <small>Copyright &copy; Your Website 2018</small>
+      </div>
+    </div>
+<% include partials/script %>
+</html>
