@@ -373,7 +373,6 @@ module.exports = function(app) {
       var userFriends = await User.find({'_id': { $in: currentProfile.friendIds}})
       var userSent = await User.find({'_id': { $in: currentProfile.sentPendingFriendIds}})
       var userRecv = await User.find({'_id': { $in: currentProfile.recvPendingFriendIds}})
-      //console.log(userRecv);
 
       for (var j = 0; j < userFriends.length; j++){
         for (var i = 0; i < everyProfile.length; i++) {
@@ -400,7 +399,7 @@ module.exports = function(app) {
         }
       }
 
-      console.log(everyProfile);
+      //console.log(everyProfile);
       var myAge = currentProfile.age;
       var agecheck = [];
       age(myAge);
@@ -424,7 +423,7 @@ module.exports = function(app) {
                 //console.log("nothing hitting");
             }
       }
-      console.log(agecheck);
+      //console.log(agecheck);
 
         for (var i = 0; i < agecheck.length; i++) {
           myMap.set(agecheck[i]._id, totalCount);
