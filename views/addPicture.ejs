@@ -8,13 +8,17 @@
     <div class="container" style="padding-top: 10%; padding-bottom: 10%">
         <h2>Submit Picture</h2>
         <br/>
-    <form ref='uploadForm' 
-      id='uploadForm' 
+    <form 
       action='/addPicture' 
-      method='post' 
+      method='POST' 
       encType="multipart/form-data">
-        <input type="file" name="myImage" />
-        <input type='submit' value='Upload!' />
+        <div class="form-group">
+        <!-- <div class="btn btn-primary"> -->
+        <input name="myImage" type="file" />
+        <!-- </div> -->
+         <br/><br/>
+        <button class="btn btn-primary" type='submit' value='Upload!'>Upload!</button>
+      </div>
     </form>     
     </div>
 

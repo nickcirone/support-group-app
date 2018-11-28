@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
+//var Picture = require('./models/picture');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var nameGen = require('./helpers/nameGen');
@@ -196,17 +197,45 @@ module.exports = function(app) {
                 console.log('Not an administrator.');
                 res.redirect('/');
             } else {
-                upload(req,res,(err)=>{
+                upload(req,res, function(err){
                     if(err){
                         console.log(err);
-                        var msg2 ="ex) .jpg .jpeg .png";
-                        res.render('addPictureMsg',{msg:err, msg2: msg2})
+                        // msg2 ="ex) .jpg .jpeg .png";
+                        res.render('addPictureMsg',{msg:err})
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
                             res.render('addPictureMsg',{msg:"File is Undefined"})
                         }else{
-                            console.log(req.file.originalname)
+                            var data = {name:req.file.originalname}
+                            var newPicture = new Picture();
+                            newPicture.init(data,{},function(err){
+                                newPicture.save(function(err){
+                                    if(err){
+                                        console.log(err);
+                                    }
+                                    
+                                    console.log("image saved");
+                                })
+                            })
+                            //var newPicture = new Picture({_id:mongoose.Types.ObjectId(),  name:req.file.originalname})
+                            // console.log(newPicture)
+                            // newPicture.isNew = false;
+                            // newPicture.save(function(err,res){
+                            //     if(err){
+                            //         console.log(err);
+                            //     }
+                            //     console.log(res);
+                            // })
+                            // Picture.create({name:req.file.originalname},function(err){
+                            //     if (err){
+                            //         console.log(err);
+                            //     }
+                            //     console.log("image saved");
+                            // })
+                            
+                            //check it name is already used in db
+                            console.log(req.file.originalname);
                             res.render('addPictureMsg',{msg:"Image Successfully Uploaded"});
                         }
                     }
