@@ -231,6 +231,7 @@
                         services_list += '<h4>' + service + '</h4>';
                     });
                     var newCard = $(
+                        '<div class="col-lg-3">'+
                         '<div class= "card" style="width: 15rem; margin: 15px 0;">' +                        
                         '<div class="dropdown">' +
                        '<div id = "picdiv">' +
@@ -253,6 +254,7 @@
                         '<button class= "btn-sm btn-danger btn-block" >Waiting</button>' +
                         ' <% } %>' +
                         '</div>' +
+                        '</div>'+
                         '</div>');
 
                     $(".sentCards").append(newCard)
