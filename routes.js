@@ -539,7 +539,7 @@ module.exports = function(app) {
                if (currentProfile.services[i] == agecheck[x].services[j]) {
                  var key = myMap.get(agecheck[x]._id);
                  myMap.set(agecheck[x]._id, key + 1);
-               }
+               
               }
             }
           }
