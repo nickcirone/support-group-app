@@ -97,3 +97,7 @@
   .profile{
       padding-top: 0px;
   }
+
+  .card{
+      border-radius: 1.5rem;
+  }
