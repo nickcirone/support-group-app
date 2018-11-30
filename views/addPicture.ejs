@@ -2,22 +2,32 @@
 <html lang="en">
 <head>
   <% include partials/head %> 
+  <script type="text/javascript" src="js/bootstrap-filestyle.min.js"> </script>
+
 </head>
 <body>
 	<% include partials/adminNav %> 
     <div class="container" style="padding-top: 10%; padding-bottom: 10%">
         <h2>Submit Picture</h2>
         <br/>
-    <form 
-      action='/addPicture' 
+        <!-- action='/test' 
       method='POST' 
-      encType="multipart/form-data">
-        <div class="form-group">
-        <input name="myImage" type="file" />
+      encType="multipart/form-data"> --> 
+    <!-- <form > -->
+        <!-- <div class="form-group">
+        <button id="selectBtn">Select Image</button>
+        <input id ="input">
+        <input id = "browse" name="myImage" type="file" style="display: none" />
+
          <br/><br/>
-        <button class="btn btn-primary" type='submit' value='Upload!'>Upload!</button>
-      </div>
-    </form>     
+        <button id= "upload" class="btn btn-primary" type='submit' value='Upload!'>Upload!</button>
+      </div> -->
+    <!-- </form>      -->
+
+    <form id="file-form" action="/addPicture" method="POST">
+      <input type="file" id="file-select" name="photo"/>
+      <button type="submit" id="upload-button">Upload boi</button>
+    </form>
     </div>
 
     <div class="copyright py-4 text-center text-white">
@@ -27,3 +37,61 @@
     </div>
 <% include partials/script %>
 </html>
+<script>
+  $(()=>{
+    // $(":file").filestyle();
+    
+
+
+    $("#selectBtn").click(()=>{
+      console.log('boi');
+      $("#browse").trigger("click");
+    });
+    $("#browse").change(()=>{
+      console.log('input');
+      $("#input").val($(this).val());
+    });
+
+    $('#upload-button').click(function(event){
+      event.preventDefault();
+      
+    
+    var form = $('#file-form');
+    var fileSelect = $('#file-select');
+    var uploadButton = $('#upload-button');
+   // uploadButton.innerHTML = 'Uploading...';
+
+
+    var files = fileSelect.prop("files");
+    //var files = $.map(files, function(val) { return val.name; });
+    //console.log(files[0])
+    var formData = new FormData();
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+
+        // Check the file type.
+        // if (!file.type.match('image.*')) {
+        //   continue;
+        // }
+          console.log(file)
+          console.log(file.name)
+        // Add the file to the request.
+        formData.append('photo', file, file.name);
+      }
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', '/addPicture', true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // File(s) uploaded.
+          //uploadButton.innerHTML = 'Upload';
+          alert('we did it');
+        } else {
+          alert('An error occurred!');
+        }
+      };
+      xhr.send(formData);
+
+        });
+  });
+</script>

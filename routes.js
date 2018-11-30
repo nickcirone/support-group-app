@@ -13,8 +13,6 @@ var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
 var path = require('path');
 
-var picArray = [];
-
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: __dirname + '/views/img/portfolio',
@@ -30,7 +28,7 @@ const upload = multer({
     fileFilter: function(req, file, cb){
       checkFileType(file, cb);
     }
-  }).single('myImage');
+  }).single('photo');
 
 // Check File Type
 async function checkFileType(file, cb){
@@ -722,4 +720,11 @@ module.exports = function(app) {
             }
 
         });
+
+        // app.post('/test',
+        // require('connect-ensure-login').ensureLoggedIn(),
+        // function(req, res) {
+        //     console.log(req.body);
+        //     res.send(200);
+        // })
 };
