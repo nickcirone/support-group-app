@@ -9,29 +9,19 @@
         <h2>Submit Picture</h2>
         <br/>
         
-          <div id="fail" class="alert alert-danger text-center" style="margin-right: 20%; margin-left: 20%; display: none;">
-             
-          </div>
-          <div id ="success" class="alert alert-success text-center" style="margin-right: 20%; margin-left: 20%; display: none;">
-            
-          </div>
-        <!-- action='/test' 
-      method='POST' 
-      encType="multipart/form-data"> --> 
-    <!-- <form > -->
-        <!-- <div class="form-group">
-        <button id="selectBtn">Select Image</button>
-        <input id ="input">
-        <input id = "browse" name="myImage" type="file" style="display: none" />
-
-         <br/><br/>
-        <button id= "upload" class="btn btn-primary" type='submit' value='Upload!'>Upload!</button>
-      </div> -->
-    <!-- </form>      -->
+          <div id="fail" class="alert alert-danger text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
+          <div id ="success" class="alert alert-success text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
 
     <form id="file-form" action="/addPicture" method="POST">
-      <input type="file" id="file-select" name="photo"/>
-      <button type="submit" id="upload-button">Upload boi</button>
+      <!-- <input type="file" id="file-select" name="photo"/> -->
+      <button class="btn btn-primary" id="select-image">Select Image</button>
+      <input type="file" id="file-select" name="photo" style="display: none" />
+
+      <input  id="filler"/>
+      <!-- <label id="filler"></label> -->
+      <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
+      
+
     </form>
     </div>
 
@@ -48,18 +38,24 @@
     
 
 
-    $("#selectBtn").click(()=>{
-      console.log('boi');
-      $("#browse").trigger("click");
+    $("#select-image").click((event)=>{
+      event.preventDefault();
+      console.log('button select image');
+      $("#file-select").trigger("click");
     });
-    $("#browse").change(()=>{
-      console.log('input');
-      $("#input").val($(this).val());
+
+    $("#file-select").change(()=>{
+      //console.log('input');
+      var str = $("#file-select").val();
+      //console.log(str.substring(12));
+      $("#filler").val(str.substring(12));
     });
 
     $('#upload-button').click(function(event){
       event.preventDefault();
-      
+      if($("#filler").val()== ""){
+            alert("Please select image");
+      }else{
     
     var form = $('#file-form');
     var fileSelect = $('#file-select');
@@ -68,14 +64,15 @@
 
 
     var files = fileSelect.prop("files");
+    var changed_name = $("#filler").val();
     var formData = new FormData();
-    //for (var i = 0; i < files.length; i++) {
         var file = files[0];
+          console.log('---'+file);
+          console.log('---'+file.name);
 
-          console.log(file)
-          console.log(file.name)
-        // Add the file to the request.
-        formData.append('photo', file, file.name);
+          formData.append('photo', file, changed_name);
+          
+          console.log('---'+formData)
       //}
       $.ajax({
             url: "/addPicture",
@@ -90,18 +87,19 @@
                 if(res.success){
                   $("#success").show();
                   $("#success").html(res.msg);
+                  $('#file-select').val('');
+                  $("#filler").val('');
                 }else{
                   $("#fail").show();
                   $("#fail").html(res.msg);
                 }
-
 
             },
             error: function (result) {
                 alert("error " + result)
             }
         })
-
+      }
         });
   });
 </script>

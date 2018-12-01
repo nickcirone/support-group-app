@@ -17,6 +17,7 @@ var path = require('path');
 const storage = multer.diskStorage({
     destination: __dirname + '/views/img/portfolio',
     filename: function(req, file, cb){
+        console.log(file);
       cb(null,file.originalname);
     }
   });
@@ -40,20 +41,20 @@ async function checkFileType(file, cb){
     const mimetype = filetypes.test(file.mimetype);
 
     //check if name is duplicated
-    var array = await Picture.find({});
-    var namesArray = array[0].names;
+    // var array = await Picture.find({});
+    // var namesArray = array[0].names;
 
-    if (namesArray.includes(file.originalname)){
-        cb('Image name is already used. Please rename or select another image.');
-    }else{
-        //check file type
-        if(mimetype && extname){
-            return cb(null,true);
-          } else {
-            cb('Please submit images files Only!');
-          }
-    }
-    //return cb(null,true);
+    // if (namesArray.includes(file.originalname)){
+    //     cb('Image name is already used. Please rename or select another image.');
+    // }else{
+    //     //check file type
+    //     if(mimetype && extname){
+    //         return cb(null,true);
+    //       } else {
+    //         cb('Please submit images files Only!');
+    //       }
+    // }
+    return cb(null,true);
   }
 
 function checkServices(body) {
@@ -219,19 +220,19 @@ module.exports = function(app) {
                             //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
                             res.send({msg:"File is Undefined",success:false});
                         }else{
-                            var array = await Picture.find({});
-                            var namesArray = array[0].names;
+                            // var array = await Picture.find({});
+                            // var namesArray = array[0].names;
 
+                            //console.log(req.file.originalname)
                             //console.log(array)
                             //console.log(namesArray)
-                            namesArray.splice(16,19);
-                            namesArray.push(req.file.originalname);
-                            await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
-                                if (err){console.log(err)}
-                            })
+                            // namesArray.push(req.file.originalname);
+                            // await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                            //     if (err){console.log(err)}
+                            // })
                             //console.log(req.file.originalname);
                             //res.render('addPicture',{msg:"Image Successfully Uploaded", succsess: true});
-                            res.send({msg:"Image Successfully Uploaded", success: true});
+                            res.send({msg:"Image '"+req.file.originalname+"' was Successfully Uploaded", success: true});
                         }
                     }
                 })
