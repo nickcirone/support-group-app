@@ -53,6 +53,7 @@ async function checkFileType(file, cb){
             cb('Please submit images files Only!');
           }
     }
+    //return cb(null,true);
   }
 
 function checkServices(body) {
@@ -207,27 +208,30 @@ module.exports = function(app) {
                 res.redirect('/');
             } else {
                 upload(req,res, async function(err){
-                    var succsess = false;
                     if(err){
                         console.log(err);
                         // msg2 ="ex) .jpg .jpeg .png";
-                        res.render('addPictureMsg',{msg:err,succsess:succsess})
+                        //res.render('addPicture',{msg:err,succsess:succsess})
+                        res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
-                            res.render('addPictureMsg',{msg:"File is Undefined",succsess:succsess})
+                            //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
+                            res.send({msg:"File is Undefined",success:false});
                         }else{
                             var array = await Picture.find({});
                             var namesArray = array[0].names;
+
                             //console.log(array)
                             //console.log(namesArray)
-                            
+                            namesArray.splice(16,19);
                             namesArray.push(req.file.originalname);
                             await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
                                 if (err){console.log(err)}
                             })
                             //console.log(req.file.originalname);
-                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
+                            //res.render('addPicture',{msg:"Image Successfully Uploaded", succsess: true});
+                            res.send({msg:"Image Successfully Uploaded", success: true});
                         }
                     }
                 })
