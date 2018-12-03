@@ -453,7 +453,11 @@ module.exports = function(app) {
     app.get('/messages',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('messages');
+            if (req.user.role === "patient" || req.user.role === "parent") {
+                res.render('messages');
+            } else {
+                res.redirect('/admin');
+            } 
     });
 
     //matches algorithm
