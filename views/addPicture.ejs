@@ -9,16 +9,14 @@
         <h2>Submit Picture</h2>
         <br/>
         
-          <div id="fail" class="alert alert-danger text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
-          <div id ="success" class="alert alert-success text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
+      <div id="fail" class="alert alert-danger text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
+      <div id ="success" class="alert alert-success text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
 
-    <form id="file-form" action="/addPicture" method="POST">
-      <!-- <input type="file" id="file-select" name="photo"/> -->
+      <form id="file-form" action="/addPicture" method="POST">
       <button class="btn btn-primary" id="select-image">Select Image</button>
       <input type="file" id="file-select" name="photo" style="display: none" />
 
       <input  id="filler"/>
-      <!-- <label id="filler"></label> -->
       <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
       
 
@@ -34,9 +32,6 @@
 </html>
 <script>
   $(()=>{
-    // $(":file").filestyle();
-    
-
 
     $("#select-image").click((event)=>{
       event.preventDefault();
@@ -60,20 +55,16 @@
     var form = $('#file-form');
     var fileSelect = $('#file-select');
     var uploadButton = $('#upload-button');
-   // uploadButton.innerHTML = 'Uploading...';
 
 
     var files = fileSelect.prop("files");
     var changed_name = $("#filler").val();
     var formData = new FormData();
         var file = files[0];
-          console.log('---'+file);
-          console.log('---'+file.name);
+          // console.log('---'+file);
+          // console.log('---'+file.name);
 
           formData.append('photo', file, changed_name);
-          
-          console.log('---'+formData)
-      //}
       $.ajax({
             url: "/addPicture",
             type: "POST",

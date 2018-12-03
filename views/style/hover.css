@@ -41,9 +41,17 @@
 .dropdown:hover .dropbtn {background-color: #3e8e41;}
 
 #avatar {
-    height: 170px;
-    width: 100%;
-    object-fit: cover;
+    width: 11em;
+    height: 11em;
+    position: absolute;
+    margin: auto; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-color: #e0e2e4;
+    border-radius: 10%;
+    object-fit: contain;
 }
 
 #usernamesize {
@@ -54,22 +62,18 @@
 .dropdown-content{
     width: 100%;
 }
-.img-thumbnail{
-    border-radius: 49%;
-    padding: 0px;
-}
 #picdiv{
-    width:12em;
-    margin: 0 auto; /* Added */
+    width:13em;
+    height: 13rem;
+    margin: 0 auto;
     float: none; 
-    padding-top: .7em;
+    padding: 1.2rem;
+    border-style: solid;
+    border-radius: 3.5rem;
+    border-color:#e0e2e4;
 }
 .match-bg {
     background-color: #6cd870;
-}
-#logo{
-    height: 170px;
-    width: 170px;
 }
 
 .wrapper {
@@ -100,4 +104,5 @@
 
   .card{
       border-radius: 1.5rem;
+      background-color: #e0e2e4;
   }
