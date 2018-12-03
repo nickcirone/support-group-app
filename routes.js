@@ -382,10 +382,10 @@ module.exports = function(app) {
             var prom = new Promise((resolve, reject)=> {
                 if (convos.length === 0) {
                     resolve();
-                }
+                } else {
                 convos.forEach(function (item, index, array) {
                     Convo.findById(item, function (err, curr) {
-                        if (err) {console.log('error finding conversation.')};
+                        if (err || curr === null) {console.log('error finding conversation.')};
                         if (curr.userOne === recipient) {
                             convoExists = true;
                             console.log("convo already exists.");
@@ -397,6 +397,7 @@ module.exports = function(app) {
                         if (index === array.length - 1) resolve();
                     });
                 });
+                }
             });
 
             prom.then(()=> {
@@ -433,7 +434,7 @@ module.exports = function(app) {
                         }
                     });
                 }
-                res.redirect('/messages');
+                setTimeout(function() {res.redirect('/messages')}, 1000);
             });
         }
     );
@@ -517,10 +518,10 @@ module.exports = function(app) {
                 var sender = req.user;
                 var formatConvos = [];
                 var convos = sender.conversations;
-                if (convos.length === 0) {
-                    res.render('messages', { user: sender, convos: formatConvos });
-                }
                 var prom = new Promise((resolve, reject)=> {
+                    if (convos.length === 0) {
+                        res.render('messages', { user: sender, convos: formatConvos });
+                    }
                     convos.forEach(function(item, index, array) {
                         Convo.findById(item, function (err, curr) {
                             if (err) {console.log('error finding conversation.')};
@@ -540,7 +541,6 @@ module.exports = function(app) {
                     });
                 })
                 prom.then(() => {
-                    console.log('formatConvos: ' + formatConvos);
                     setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos })}, 2000);
                 });
                 
