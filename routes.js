@@ -503,7 +503,7 @@ module.exports = function(app) {
                 res.redirect('/profile');
             }
         }
-    )
+    );
 
     // messaging routes
 
@@ -542,6 +542,52 @@ module.exports = function(app) {
                 res.redirect('/admin');
             } 
     });
+
+    app.get('/conversation', 
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                var convoId = req.query.convoId;
+                Convo.findById(convoId, function(err, curr) {
+                    if (err) {console.log('error finding conversation.')};
+                    var recipient = '';
+                    if (curr.userOne === req.user.username) {
+                        recipient = curr.userTwo;
+                    }
+                    if (curr.userTwo === req.user.username) {
+                        recipient = curr.userOne;
+                    }
+                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient });
+                });
+            } else {
+                res.redirect('/admin');
+            }
+        }
+    );
+
+    app.post('/conversation', 
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                var convoId = req.body.convoId;
+                var msg = req.user.username + ": " + req.body.newMessage;
+                Convo.findById(convoId, function(err, curr) {
+                    var newArr = curr.messages;
+                    if (newArr.length === 50) {
+                        newArr = newArr.shift();
+                    }
+                    newArr.push(msg);
+                    curr.messages = newArr;
+                    curr.save(function(err, newCurr) {
+                        if (err) { "error appending message" };
+                        res.render('conversation', { convo: newCurr, messages: newCurr.messages, recp: req.body.recp });
+                    });
+                })
+            } else {
+                res.redirect('/admin');
+            }
+        }
+    );
 
     //matches algorithm
 
