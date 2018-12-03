@@ -12,12 +12,17 @@
         <form method="POST" action="" style="background-color: #ffffff; padding: 15px; border-radius: 5px;">
                     <div class="form-group">
                         <label for="avatar">Avatar </label>
-                        <select class="image-picker show-labels show-html">
-                          <option data-img-src="/img/portfolio/apple.png" value="apple">Apple</option>
-                          <option data-img-src="/img/portfolio/banana.png" value="banana">Banana</option>
+
+                        <select class="image-picker">
+                          <option value ="">
+                          <% for (var i = 0; i < namesArray.length; i++) { %>
+                          <option data-img-src="/img/portfolio/<%= namesArray[i] %>" value="<%= i %>"><%= namesArray[i]%></option>
+                          <% } %>
+                          <!-- <option data-img-src="/img/portfolio/ladybug.png" value="logo">Logo</option>
                           <option data-img-src="/img/portfolio/car.jpg" value="cabin">Cabin</option>
-                          <option data-img-src="/img/portfolio/cupcake.jpg" value="cake">Cake</option>
+                          <option data-img-src="/img/portfolio/cupcake.jpg" value="cake">Cake</option> -->
                       </select>
+
                     </div>
                     <!---
                     <div class="form-group">
@@ -135,6 +140,8 @@
 <script>
 $("select").imagepicker({
           hide_select : false,
-          show_label  : true
+          show_label  : true,
+          limit: 1
         })
+$("select").data('picker');
 </script>

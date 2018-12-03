@@ -6,6 +6,7 @@ var Profile = require('./models/profile');
 var Picture = require('./models/picture');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
+var birthdatetoAge = require('./helpers/birthdatetoAge');
 var nameGen = require('./helpers/nameGen');
 var passGen = require('./helpers/passGen');
 var poolConfig = { service: 'gmail', auth: { user: 'catdoge484848@gmail.com', pass: 'uncuncunc7#' }};
@@ -330,6 +331,14 @@ module.exports = function(app) {
             if (req.user.role === 'admin') {
                 res.redirect('/admin');
             } else {
+                Profile.findById(req.user.profileId, function(err, currentProfile) {
+                  if (err) {
+                    console.log("error updating age");
+                  } else {
+                    birthdatetoAge(currentProfile);
+                    console.log(currentProfile.age);
+                  }
+                });
                 res.redirect('/');
             }
     });
@@ -389,17 +398,19 @@ module.exports = function(app) {
             if (req.user.role === 'patient') {
                 if (req.user.profileId !== null) {
                     var profile;
-                    Profile.findById(req.user.profileId, function (err, currentProfile) {
+                    Profile.findById(req.user.profileId, async function (err, currentProfile) {
                         if (err) {
                             console.log('error finding profile');
                         } else {
+                          var array = await Picture.find({});
+                          var namesArray = array[0].names;
                             var friends = [];
                             profile = currentProfile;
                             User.find({
                                 '_id': { $in: profile.friendIds }
                             }, function(err, users) {
                                 friends = users;
-                                res.render('profileEdit', { user: req.user, profile: profile, friends: friends });
+                                res.render('profileEdit', { user: req.user, profile: profile, friends: friends, array: array, namesArray: namesArray});
                             });
                         }
                     });
