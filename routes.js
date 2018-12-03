@@ -380,6 +380,9 @@ module.exports = function(app) {
             var convos = req.user.conversations;
             var convoExists = false;
             var prom = new Promise((resolve, reject)=> {
+                if (convos.length === 0) {
+                    resolve();
+                }
                 convos.forEach(function (item, index, array) {
                     Convo.findById(item, function (err, curr) {
                         if (err) {console.log('error finding conversation.')};
