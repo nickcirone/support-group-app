@@ -64,7 +64,11 @@
                                         </div>
                                         <div class="card-body text-center">
                                         <div id="usernamesize">  <%= friends[i].username %><br/> </div>
-                                        <button class= "btn-sm btn-info btn-block">Message</button>
+                                        <form method="POST" action="">
+                                            <input type="hidden" id="" name="recpUser" value="<%= friends[i].username %>">
+                                            <input type="hidden" id="" name="recpId" value="<%= friends[i]._id %>">
+                                            <input class="btn-sm btn-info btn-block" type="submit" value="Message">
+                                        </form>
                                     </div>
                                 </div>
                             </div>

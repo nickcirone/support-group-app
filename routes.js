@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
 var Picture = require('./models/picture');
+var Convo = require('./models/convo');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var nameGen = require('./helpers/nameGen');
@@ -295,14 +296,6 @@ module.exports = function(app) {
                     };
                     transporter.sendMail(parentMessage);
                     transporter.sendMail(patientMessage);
-                    /*
-                    console.log('Parent User Created: ');
-                    console.log('username: ' + parentName);
-                    console.log('password: ' + parentPass);
-                    console.log('Patient User Created: ');
-                    console.log('username: ' + patientName);
-                    console.log('password: ' + patientPass);
-                    */
                     res.render('createSuccess', { parentName: parentName, patientName: patientName });
                 }
             }
@@ -377,6 +370,70 @@ module.exports = function(app) {
                 res.redirect('/');
             }
     });
+
+    app.post('/profile',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            var sender = req.user.username;
+            var recipient = req.body.recpUser;
+            var recpId = req.body.recpId;
+            var convos = req.user.conversations;
+            var convoExists = false;
+            var prom = new Promise((resolve, reject)=> {
+                convos.forEach(function (item, index, array) {
+                    Convo.findById(item, function (err, curr) {
+                        if (err) {console.log('error finding conversation.')};
+                        if (curr.userOne === recipient) {
+                            convoExists = true;
+                            console.log("convo already exists.");
+                        }
+                        if (curr.userTwo === recipient) {
+                            convoExists = true;
+                            console.log("convo already exists.");
+                        }
+                        if (index === array.length - 1) resolve();
+                    });
+                });
+            });
+
+            prom.then(()=> {
+                var msgs = ['Start the conversation!'];
+                if (convoExists === false) {
+                    var convoId = mongoose.Types.ObjectId();
+                    var newConvo = new Convo({
+                        _id: convoId,
+                        userOne: sender,
+                        userTwo: recipient,
+                        messages: msgs,
+                    });
+                    newConvo.save(function(err, convo) {
+                        if (err) {
+                            console.log('error creating conversation');
+                        } else {
+                            console.log('conversation created!');
+                            User.findById(recpId, function(err, recp) {
+                                var newArr = recp.conversations;
+                                newArr.push(convoId);
+                                recp.conversations = newArr;
+                                recp.save(function(err) {
+                                    if (err) {
+                                        console.log('error saving convo.');
+                                    }
+                                });
+                            });
+                            req.user.conversations.push(convoId);
+                            req.user.save(function(err) {
+                                if (err) {
+                                    console.log('error saving convo.');
+                                }
+                            });
+                        }
+                    });
+                }
+                res.redirect('/messages');
+            });
+        }
+    );
 
     // profile edit routes
 
@@ -454,7 +511,33 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
-                res.render('messages');
+                var sender = req.user;
+                var formatConvos = [];
+                var convos = sender.conversations;
+                var prom = new Promise((resolve, reject)=> {
+                    convos.forEach(function(item, index, array) {
+                        Convo.findById(item, function (err, curr) {
+                            if (err) {console.log('error finding conversation.')};
+                            var recipient = '';
+                            if (curr.userOne === sender.username) {
+                                recipient = curr.userTwo;
+                            }
+                            if (curr.userTwo === sender.username) {
+                                recipient = curr.userOne;
+                            }
+                            var latest = curr.messages[(curr.messages.length - 1)];
+                            var formattedConvo = {recp: recipient, msg: latest, convoId: item};
+                            console.log(formattedConvo);
+                            formatConvos.push(formattedConvo);
+                            if (index === array.length - 1) resolve();
+                        });
+                    });
+                })
+                prom.then(() => {
+                    console.log('formatConvos: ' + formatConvos);
+                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos })}, 2000);
+                });
+                
             } else {
                 res.redirect('/admin');
             } 
