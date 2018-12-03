@@ -514,6 +514,9 @@ module.exports = function(app) {
                 var sender = req.user;
                 var formatConvos = [];
                 var convos = sender.conversations;
+                if (convos.length === 0) {
+                    res.render('messages', { user: sender, convos: formatConvos });
+                }
                 var prom = new Promise((resolve, reject)=> {
                     convos.forEach(function(item, index, array) {
                         Convo.findById(item, function (err, curr) {
