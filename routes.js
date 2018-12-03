@@ -222,17 +222,14 @@ module.exports = function(app) {
                         }else{
                             var array = await Picture.find({});
                             var namesArray = array[0].names;
-                            console.log(array)
-                            console.log("------------------")
-                            console.log(namesArray)
-
+                            //console.log(array)
+                            //console.log(namesArray)
+                            
                             namesArray.push(req.file.originalname);
-                            //5bfde974fe11f2057ce72a6e
                             await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
                                 if (err){console.log(err)}
                             })
-                            //check it name is already used in db
-                            console.log(req.file.originalname);
+                            //console.log(req.file.originalname);
                             res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
                         }
                     }
@@ -467,7 +464,11 @@ module.exports = function(app) {
     app.get('/messages',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
-            res.render('messages');
+            if (req.user.role === "patient" || req.user.role === "parent") {
+                res.render('messages');
+            } else {
+                res.redirect('/admin');
+            } 
     });
 
     //matches algorithm
@@ -597,7 +598,7 @@ module.exports = function(app) {
                             //matchingAlgorithm(currentProfile);
                                 matchArray = await matchingAlgorithm(currentProfile);
                                 matches = matchArray[0];
-                                //console.log(matches)
+                                console.log(matches)
                                 matchProfileIds = matchArray[1];
                                 //console.log(matchProfileIds)
                                 User.find({

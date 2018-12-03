@@ -8,9 +8,21 @@
 <% include partials/navbar %>
 	</div>
 	<br />
-    <div class="container" style="padding-top: 2.5%; padding-bottom: 2.5%">
-            <h2 style="color:white">apple one's Profile</h2>
-        <br/>
+    <div class="container" style="padding-top: .5%; padding-bottom: .5%">
+        <div class= "wrapper">
+            <div class = "innerwrapper">
+                    <div class="card box" style="width: 15rem; margin: 0 auto; float: none; background-color:#023166; border-color:#023166;">
+                                    <div id = "picdiv">
+                                    <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= profile.avatar %>"><br/>
+                                    </div>
+                    </div>
+                    
+            </div>
+            <div class="box">
+                <h2 style="color:white"><%= user.username %>'s Profile</h2>
+            </div>
+        </div>   
+    
         <ul class="list-group">
                 <li class="list-group-item"> Email: <%= user.email %></li>
                 <li class="list-group-item">Age: <%= profile.age %></li>
@@ -34,7 +46,7 @@
                         <div class = "row">
                         <% for (var i = 0; i < friends.length; i++) { %>
                             <div class="col-lg-3">
-                            <div class="card" style="width: 15rem; margin: 15px 0;">
+                            <div class="card" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
                                         <div class="dropdown">
                                             <div id = "picdiv">
                                             <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
