@@ -22,7 +22,7 @@
         <div class="row">
             <% for (var i = 0; i < matchProfiles.length; i++) { %>
             <div class="col-lg-3">
-                <div class="card" id="matchCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
+                <div class="card" id="matchCard_<%= i+1 %>" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
                         <!-- <h3 class="card-header"> -->
                             <div class="dropdown">
                                 <div id = "picdiv">
@@ -68,7 +68,7 @@
         <div class="row">
             <% for (var i = 0; i < receivedProfiles.length; i++) { %>
             <div class="col-lg-3">
-                <div class="card" id="pendingCard_<%= i+1 %>" style="width: 15rem; margin: 15px 0;">
+                <div class="card" id="pendingCard_<%= i+1 %>" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
                             <div class="dropdown">
                                 <div id = "picdiv">
                                 <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
@@ -105,7 +105,7 @@
             <% if (sent) { %>
             <% for (var i = 0; i < sentProfiles.length; i++) { %>
             <div class="col-lg-3">
-                <div class="card" style="width: 15rem; margin: 15px 0;">
+                <div class="card" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
                             <div class="dropdown">
                                 <div id = "picdiv">
                                 <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
@@ -130,7 +130,9 @@
                             <div id="usernamesize">
                                 <%= sent[i].username %><br /> </div>
                         <% if (user.role !== 'parent') { %>
-                        <a class="btn-sm btn-danger btn-block">Waiting</a>
+                        <a class="btn-sm btn-danger btn-block" style="color: #ffffff; ">Waiting</a> 
+                        
+                        
                         <% } %>
                     </div>
                 </div>
