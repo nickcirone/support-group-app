@@ -52,6 +52,7 @@
     border-color: #e0e2e4;
     border-radius: 10%;
     object-fit: contain;
+    background-color: white;
 }
 
 #usernamesize {
@@ -99,10 +100,10 @@
   }
 
   .profile{
-      padding-top: 0px;
+    padding-top: 0px;
   }
 
   .card{
-      border-radius: 1.5rem;
-      background-color: #e0e2e4;
+    border-radius: 1.5rem;
+    background-color: #e0e2e4;
   }

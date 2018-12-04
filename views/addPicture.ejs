@@ -14,10 +14,12 @@
       <div id ="success" class="alert alert-success text-center" style="margin-right: 20%; margin-left: 20%; display: none;"> </div>
 
       <form id="file-form" action="/addPicture" method="POST">
-      <button class="btn btn-primary" id="select-image">Select Image</button>
+      <button class="btn btn-basic" id="select-image">Select Image</button>
       <input type="file" id="file-select" name="photo" style="display: none" />
 
       <input  id="filler"/>
+      <br/>
+      <br/>
       <button type="submit" class="btn btn-primary" id="upload-button">Upload</button>
       
 
@@ -46,9 +48,9 @@
 
     $('#upload-button').click(function(event){
       event.preventDefault();
-      if($("#filler").val()== ""){
-            alert("Please select image");
-      }else{
+      // if($("#filler").val()== ""){
+      //       alert("Please select image");
+      // }else{
     
     var form = $('#file-form');
     var fileSelect = $('#file-select');
@@ -74,13 +76,16 @@
             success: function (res) {
                    console.log(res);
                 if(res.success){
+                  $("#fail").hide();
                   $("#success").show();
                   $("#success").html(res.msg);
                   $('#file-select').val('');
                   $("#filler").val('');
                 }else{
+                  $("#success").hide();
                   $("#fail").show();
                   $("#fail").html(res.msg);
+                  
                 }
 
             },
@@ -88,7 +93,7 @@
                 alert("error " + result)
             }
         })
-      }
+      //}
         });
   });
 </script>

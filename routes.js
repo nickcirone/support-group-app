@@ -42,20 +42,19 @@ async function checkFileType(file, cb){
     const mimetype = filetypes.test(file.mimetype);
 
     //check if name is duplicated
-    // var array = await Picture.find({});
-    // var namesArray = array[0].names;
+    var array = await Picture.find({});
+    var namesArray = array[0].names;
 
-    // if (namesArray.includes(file.originalname)){
-    //     cb('Image name is already used. Please rename or select another image.');
-    // }else{
-    //     //check file type
-    //     if(mimetype && extname){
-    //         return cb(null,true);
-    //       } else {
-    //         cb('Please submit images files Only!');
-    //       }
-    // }
-    return cb(null,true);
+    if (namesArray.includes(file.originalname)){
+        cb('Image name is already used. Please rename or select another image.');
+    }else{
+        //check file type
+        if(mimetype && extname){
+            return cb(null,true);
+          } else {
+            cb("'"+file.originalname+"' is not an image."+"<br/>"+"Please submit image files Only!"+"<br/>"+"ex) .jpg .jpeg .png");
+          }
+    }
   }
 
 function checkServices(body) {
@@ -202,7 +201,7 @@ module.exports = function(app) {
             }
     });
 
-    app.post('/addPicture*',
+    app.post('/addPicture',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role !== 'admin') {
@@ -212,27 +211,25 @@ module.exports = function(app) {
                 upload(req,res, async function(err){
                     if(err){
                         console.log(err);
-                        // msg2 ="ex) .jpg .jpeg .png";
-                        //res.render('addPicture',{msg:err,succsess:succsess})
                         res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
                             //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
-                            res.send({msg:"File is Undefined",success:false});
+                            res.send({msg:"File is Undefined."+"<br/>"+" Please select an image.",success:false});
                         }else{
-                            // var array = await Picture.find({});
-                            // var namesArray = array[0].names;
+                            var array = await Picture.find({});
+                            var namesArray = array[0].names;
 
-                            //console.log(req.file.originalname)
-                            //console.log(array)
-                            //console.log(namesArray)
-                            // namesArray.push(req.file.originalname);
-                            // await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
-                            //     if (err){console.log(err)}
-                            // })
-                            //console.log(req.file.originalname);
-                            //res.render('addPicture',{msg:"Image Successfully Uploaded", succsess: true});
+                            console.log(req.file.originalname)
+                           // console.log(array)
+                            console.log(namesArray.length)
+                            namesArray.push(req.file.originalname);
+                            console.log(namesArray.length)
+                            await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                                if (err){console.log(err)}
+                            })
+                            console.log(req.file.originalname);
                             res.send({msg:"Image '"+req.file.originalname+"' was Successfully Uploaded", success: true});
                         }
                     }
