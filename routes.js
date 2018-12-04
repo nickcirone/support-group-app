@@ -14,12 +14,11 @@ var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
 var path = require('path');
 
-var picArray = [];
-
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: __dirname + '/views/img/portfolio',
     filename: function(req, file, cb){
+        console.log(file);
       cb(null,file.originalname);
     }
   });
@@ -31,7 +30,7 @@ const upload = multer({
     fileFilter: function(req, file, cb){
       checkFileType(file, cb);
     }
-  }).single('myImage');
+  }).single('photo');
 
 // Check File Type
 async function checkFileType(file, cb){
@@ -43,19 +42,20 @@ async function checkFileType(file, cb){
     const mimetype = filetypes.test(file.mimetype);
 
     //check if name is duplicated
-    var array = await Picture.find({});
-    var namesArray = array[0].names;
+    // var array = await Picture.find({});
+    // var namesArray = array[0].names;
 
-    if (namesArray.includes(file.originalname)){
-        cb('Image name is already used. Please rename or select another image.');
-    }else{
-        //check file type
-        if(mimetype && extname){
-            return cb(null,true);
-          } else {
-            cb('Please submit images files Only!');
-          }
-    }
+    // if (namesArray.includes(file.originalname)){
+    //     cb('Image name is already used. Please rename or select another image.');
+    // }else{
+    //     //check file type
+    //     if(mimetype && extname){
+    //         return cb(null,true);
+    //       } else {
+    //         cb('Please submit images files Only!');
+    //       }
+    // }
+    return cb(null,true);
   }
 
 function checkServices(body) {
@@ -210,27 +210,30 @@ module.exports = function(app) {
                 res.redirect('/');
             } else {
                 upload(req,res, async function(err){
-                    var succsess = false;
                     if(err){
                         console.log(err);
                         // msg2 ="ex) .jpg .jpeg .png";
-                        res.render('addPictureMsg',{msg:err,succsess:succsess})
+                        //res.render('addPicture',{msg:err,succsess:succsess})
+                        res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
-                            res.render('addPictureMsg',{msg:"File is Undefined",succsess:succsess})
+                            //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
+                            res.send({msg:"File is Undefined",success:false});
                         }else{
-                            var array = await Picture.find({});
-                            var namesArray = array[0].names;
+                            // var array = await Picture.find({});
+                            // var namesArray = array[0].names;
+
+                            //console.log(req.file.originalname)
                             //console.log(array)
                             //console.log(namesArray)
-                            
-                            namesArray.push(req.file.originalname);
-                            await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
-                                if (err){console.log(err)}
-                            })
+                            // namesArray.push(req.file.originalname);
+                            // await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                            //     if (err){console.log(err)}
+                            // })
                             //console.log(req.file.originalname);
-                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
+                            //res.render('addPicture',{msg:"Image Successfully Uploaded", succsess: true});
+                            res.send({msg:"Image '"+req.file.originalname+"' was Successfully Uploaded", success: true});
                         }
                     }
                 })
@@ -678,21 +681,31 @@ module.exports = function(app) {
                if (currentProfile.services[i] == agecheck[x].services[j]) {
                  var key = myMap.get(agecheck[x]._id);
                  myMap.set(agecheck[x]._id, key + 1);
-               }
+               
+              }
             }
           }
         }
-        const mapSort = new Map([...myMap.entries()].sort((a, b) => a[1] - b[1]));
-
+        //for (var x = 0; x < agecheck.length; x++){}
+        const mapSort = new Map([...myMap.entries()].sort((a, b) => b[1] - a[1]));
+        //console.log(mapSort)
         let keys = Array.from( mapSort.keys() );
-        //console.log(mapSort);
-        //console.log(keys);
-        //console.log(myMap);
+        //console.log(keys)
         var userMatches=[];
+        var profileMatches=[];
 
-        userMatches = await User.find({'profileId':{ $in: keys}});
+        for(var j = 0;j<keys.length;j++){
+            user = await User.find({'profileId':keys[j]});
+            userMatches.push(user[0]);
+            profile = await Profile.find({'_id':user[0].profileId});
+            profileMatches.push(profile[0]);
+        }
+        // console.log("======================");
+        // console.log(userMatches);
+        // console.log("======================");
+        // console.log(profileMatches);
 
-       var arr = [userMatches,keys];
+       var arr = [userMatches,profileMatches];
        return arr;
 
     }
@@ -709,7 +722,6 @@ module.exports = function(app) {
                             console.log('error finding profile');
                         } else {
                             var matches = [];
-                            var matchProfileIds=[];
                             var matchProfiles = [];
                             var matchArray =[];
                             var received = [];
@@ -719,12 +731,11 @@ module.exports = function(app) {
                             var sentPIds = [];
                             var sentProfiles=[];
                             profile = currentProfile;
-                            //matchingAlgorithm(currentProfile);
+
                                 matchArray = await matchingAlgorithm(currentProfile);
                                 matches = matchArray[0];
-                                console.log(matches)
-                                matchProfileIds = matchArray[1];
-                                //console.log(matchProfileIds)
+                                matchProfiles = matchArray[1];
+
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -735,21 +746,17 @@ module.exports = function(app) {
                                     }, function(err, recvPending) {
                                         received = recvPending;
                                         receivedPIds = received.map((account)=>{return account.profileId});
-                                        Profile.find({'_id':{$in: matchProfileIds}}, function(err,match_Profiles){
-                                            matchProfiles = match_Profiles;
-                                            Profile.find({'_id':{$in: receivedPIds}},function(err,recProfiles){
-                                                receivedProfiles = recProfiles;
-                                                Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
-                                                    sentProfiles = sent_Profiles;
-                                                    res.render('matches', { user: req.user, profile: profile, matches: matches,
-                                                        sent: sent, received: received, matchProfiles: matchProfiles,
-                                                        receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
-                                                });
+                                        Profile.find({'_id':{$in: receivedPIds}},function(err,recProfiles){
+                                            receivedProfiles = recProfiles;
+                                            Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
+                                                sentProfiles = sent_Profiles;
+                                                res.render('matches', { user: req.user, profile: profile, matches: matches,
+                                                    sent: sent, received: received, matchProfiles: matchProfiles,
+                                                    receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
                                             });
                                         });
                                     });
                                 });
-                           // });
                         }
                     });
                 } else {

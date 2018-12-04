@@ -22,12 +22,12 @@
         <div class="row">
             <% for (var i = 0; i < matchProfiles.length; i++) { %>
             <div class="col-lg-3">
-                <div class="card" id="matchCard_<%= i+1 %>" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
+                <div class="card" id="matchCard_<%= i+1 %>">
                         <!-- <h3 class="card-header"> -->
                             <div class="dropdown">
                                 <div id = "picdiv">
-                                <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
-                            </div>
+                                <img id="avatar" src="/img/portfolio/<%= matchProfiles[i].avatar %>">
+                                </div>
                                 <div class="dropdown-content">
                                     <div class="card-text text-center">
                                         <h4>Age:
@@ -43,6 +43,7 @@
                                         </h4>
                                     </div>
                                 </div>
+
                                 </div>
                             
                             <div class="card-body text-center">
@@ -64,14 +65,14 @@
         <%  for(var j=1;j < 13;j++){ %>
         <%  pending_btnIds[j-1] = "pending_btn"+j; %>
         <% } %>
-
-        <div class="row">
+        
+        <div class="row sentCards">
             <% for (var i = 0; i < receivedProfiles.length; i++) { %>
             <div class="col-lg-3">
-                <div class="card" id="pendingCard_<%= i+1 %>" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
+                <div class="card" id="pendingCard_<%= i+1 %>" >
                             <div class="dropdown">
                                 <div id = "picdiv">
-                                <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
+                                <img id="avatar" src="/img/portfolio/<%= receivedProfiles[i].avatar %>">
                                 </div>
                                 <div class="dropdown-content">
                                     <div class="card-text text-center">
@@ -101,14 +102,14 @@
             <% } %>
             <% } %>
 
-
+            
             <% if (sent) { %>
-            <% for (var i = 0; i < sentProfiles.length; i++) { %>
-            <div class="col-lg-3">
-                <div class="card" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
+                <% for (var i = 0; i < sentProfiles.length; i++) { %>
+                <div class="col-lg-3">
+                <div class="card " style="width: 15rem; margin: 15px 0;">
                             <div class="dropdown">
                                 <div id = "picdiv">
-                                <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
+                                <img id="avatar" src="/img/portfolio/<%= sentProfiles[i].avatar %>">
                                 </div>
                                 <div class="dropdown-content">
                                     <div class="card-text text-center">
@@ -137,12 +138,10 @@
                     </div>
                 </div>
             </div>
-            <% } %>
+                <% } %>
 
             <% } %>
         </div>
-    </div>
-    <!-- </div> -->
 </div>
 <% include partials/footer %>
 </body>
@@ -232,11 +231,12 @@
                         services_list += '<h4>' + service + '</h4>';
                     });
                     var newCard = $(
-                        '<div class= "card" style="width: 15rem;">' +
-                        '<div class ="card-body text-center">' +
-                        '<h3 class="card-header">' +
+                        '<div class="col-lg-3">'+
+                        '<div class= "card" style="width: 15rem; margin: 15px 0;">' +                        
                         '<div class="dropdown">' +
-                        '<img class="logo" src="/img/portfolio/' + profile.avatar + '">' +
+                       '<div id = "picdiv">' +
+                        '<img id="avatar" src="/img/portfolio/' + profile.avatar + '">' +
+                        '</div>' +
                         '<div class="dropdown-content">' +
                         '<div class="card-text text-center">' +
                         '<h4 >Age: ' + profile.age + '</h4>' +
@@ -247,10 +247,14 @@
                         '</div>' +
                         '</div>' +
                         '</div>' +
-                        ' ' + user.username + ' <br/> ' +
-                        '</h3>' +
+                        '<div class="card-body text-center">' +
+                        '<div id="usernamesize">'+
+                        ' ' + user.username + ' <br/> ' + '</div>'+
+                        '<% if (user.role !== "parent") { %>' +
                         '<button class= "btn-sm btn-danger btn-block" >Waiting</button>' +
+                        ' <% } %>' +
                         '</div>' +
+                        '</div>'+
                         '</div>');
 
                     $(".sentCards").append(newCard)
