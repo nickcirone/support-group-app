@@ -579,15 +579,8 @@ module.exports = function(app) {
                 var convoId = req.query.convoId;
                 Convo.findById(convoId, function(err, curr) {
                     if (err) {console.log('error finding conversation.')};
-                    var recipient = '';
                     console.log(curr);
-                    // if (curr.userOne === req.user.username) {
-                    //     recipient = curr.userTwo;
-                    // }
-                    // if (curr.userTwo === req.user.username) {
-                    //     recipient = curr.userOne;
-                    // }
-                    res.send({ convo: curr, messages: curr.messages, recp: recipient });
+                    res.send({messages: curr.messages});
                 });
             } else {
                 res.redirect('/admin');
