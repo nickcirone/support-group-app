@@ -594,6 +594,7 @@ module.exports = function(app) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
                 var convoId = req.body.convoId;
                 var msg = req.user.username + ": " + req.body.newMessage;
+                console.log(req.body);
                 Convo.findById(convoId, function(err, curr) {
                     var newArr = curr.messages;
                     if (newArr.length === 50) {
@@ -603,7 +604,7 @@ module.exports = function(app) {
                     curr.messages = newArr;
                     curr.save(function(err, newCurr) {
                         if (err) { "error appending message" };
-                        res.render('conversation', { convo: newCurr, messages: newCurr.messages, recp: req.body.recp });
+                        res.send({ convo: newCurr, messages: newCurr.messages, recp: req.body.recp });
                     });
                 })
             } else {

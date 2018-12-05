@@ -21,7 +21,7 @@
                 <form class="form-inline" action="" method="POST">
                     <input class="col-10" style="margin-left: 3px; width: auto" type="text" id="newMessage" name="newMessage" maxlength="280" placeholder="Message">
                     <input type="hidden" id="convo" name="convoId" value="<%= convo._id %>">
-                    <input type="hidden" name="recp" value="<%= recp %>">
+                    <input type="hidden" id ="recp" name="recp" value="<%= recp %>">
                     <input id = 'btn'style="margin-left: 3px; width: fixed" class="col-1 btn-sm btn-primary" type="submit" value="Send">
                 </form>
             </li>
@@ -34,7 +34,35 @@
 <% include partials/script %>
 <script>
 $(()=>{
-    setInterval(ajax_get_call,1000*15);
+    $('#btn').click(function(event){
+        event.preventDefault();
+        var convo = $("#convo").val();
+        var recp = $("#recp").val();
+        var newMessage = $("#newMessage").val();
+        var data = {convoId:convo, recp:recp, newMessage:newMessage}
+        $.ajax({
+            url: "/conversation",
+            type: "POST",
+            data: data,
+            cache: false,
+            timeout: 10000,
+            success: function (res) {
+                   //console.log("success post");
+            var newMsg = '';
+            $('#msglog').empty();
+            $('#newMessage').val('');
+            for(var i = 0; i < res.messages.length; i++){
+                 newMsg +='<li class="list-group-item">'+res.messages[i]+'</li>';
+            }
+        //console.log(newMsg)
+        $('#msglog').html(newMsg);
+            },
+            error: function (result) {
+                alert("error " + result)
+            }
+        })
+    })
+    setInterval(ajax_get_call,1000*3);
     
     function ajax_get_call(){
         var convoId = {convoId:$("#convo").val()}
