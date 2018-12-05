@@ -202,7 +202,7 @@ var profileNine = new Profile(
     services: ['Neurosurgery'],
     friendIds: [userSevenId],
     matchIds: [],
-    sentPendingFriendIds: [userNineId],
+    sentPendingFriendIds: [userFiveId],
   }
 );
 

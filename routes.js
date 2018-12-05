@@ -500,7 +500,6 @@ module.exports = function(app) {
                         var servicesArr = checkServices(req.body);
                         var interestsArr = checkInterests(req.body);
                         profile.set({ avatar: req.body.avatar });
-                        profile.set({ age: req.body.age });
                         profile.set({ devAge: req.body.devAge });
                         profile.set({ genderId: req.body.genderId });
                         profile.set({ bio: req.body.bio });
