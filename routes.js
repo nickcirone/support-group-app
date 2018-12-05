@@ -501,10 +501,8 @@ module.exports = function(app) {
                         console.log('Error finding profile to update.');
                         res.redirect('/profile');
                     } else {
-                        var servicesArr = checkServices(req.body);
                         var interestsArr = checkInterests(req.body);
                         profile.set({ avatar: req.body.avatar });
-                        profile.set({ devAge: req.body.devAge });
                         profile.set({ genderId: req.body.genderId });
                         profile.set({ bio: req.body.bio });
                         profile.set({ interests: interestsArr});

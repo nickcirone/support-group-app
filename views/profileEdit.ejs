@@ -13,31 +13,14 @@
                     <div class="form-group">
                         <label for="avatar">Avatar </label>
 
-                        <select class="image-picker">
+                        <select name="avatar" class="image-picker">
                           <option value ="">
                           <% for (var i = 0; i < namesArray.length; i++) { %>
-                          <option data-img-src="/img/portfolio/<%= namesArray[i] %>" value="<%= i %>"><%= namesArray[i]%></option>
+                            <option data-img-src="/img/portfolio/<%= namesArray[i] %>" value="<%= namesArray[i]%>"><%= namesArray[i]%></option>
                           <% } %>
-                          <!-- <option data-img-src="/img/portfolio/ladybug.png" value="logo">Logo</option>
-                          <option data-img-src="/img/portfolio/car.jpg" value="cabin">Cabin</option>
-                          <option data-img-src="/img/portfolio/cupcake.jpg" value="cake">Cake</option> -->
-                      </select>
+                        </select>
 
                     </div>
-                    <!---
-                    <div class="form-group">
-                        <label for="age">Age </label>
-                        <input class="form-control" type="text" id="age" name="age" value="<%= profile.age %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="birthdate">Birthdate </label>
-                        <input class="form-control" id="birthdate" type="date" name="birthdate" value="<%= profile.birthdate %>">
-                    </div>
-                    <div class="form-group">
-                        <label for="devAge">Developmental Age </label>
-                        <input class="form-control" id="devAge" type="text" name="devAge" value="<%= profile.devAge %>">
-                    </div>
-                    !--->
                     <div class="form-group">
                         <label for="genderId">Gender Identity </label>
                         <input class="form-control" id="genderId" type="text" name="genderId" value="<%= profile.genderId %>">
@@ -142,6 +125,5 @@ $("select").imagepicker({
           hide_select : false,
           show_label  : true,
           limit: 1
-        })
-$("select").data('picker');
+})
 </script>
