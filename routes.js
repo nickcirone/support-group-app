@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var User = require('./models/users');
 var Profile = require('./models/profile');
 var Picture = require('./models/picture');
+var Convo = require('./models/convo');
 var registerUser = require('./helpers/registerUser');
 var registerProfile = require('./helpers/registerProfile');
 var birthdatetoAge = require('./helpers/birthdatetoAge');
@@ -14,12 +15,11 @@ var transporter = nodemailer.createTransport(poolConfig);
 var multer = require('multer');
 var path = require('path');
 
-var picArray = [];
-
 // Set The Storage Engine
 const storage = multer.diskStorage({
     destination: __dirname + '/views/img/portfolio',
     filename: function(req, file, cb){
+        console.log(file);
       cb(null,file.originalname);
     }
   });
@@ -31,7 +31,7 @@ const upload = multer({
     fileFilter: function(req, file, cb){
       checkFileType(file, cb);
     }
-  }).single('myImage');
+  }).single('photo');
 
 // Check File Type
 async function checkFileType(file, cb){
@@ -53,7 +53,7 @@ async function checkFileType(file, cb){
         if(mimetype && extname){
             return cb(null,true);
           } else {
-            cb('Please submit images files Only!');
+            cb("'"+file.originalname+"' is not an image."+"<br/>"+"Please submit image files Only!"+"<br/>"+"ex) .jpg .jpeg .png");
           }
     }
   }
@@ -181,16 +181,6 @@ module.exports = function(app) {
             }
     });
 
-    app.get('/createUser',
-        require('connect-ensure-login').ensureLoggedIn(),
-        function(req, res) {
-            if (req.user.role !== 'admin') {
-                console.log('Not an administrator.');
-                res.redirect('/');
-            } else {
-                res.render('createUser', {user: req.user});
-            }
-    });
     app.get('/addPicture',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
@@ -202,7 +192,7 @@ module.exports = function(app) {
             }
     });
 
-    app.post('/addPicture*',
+    app.post('/addPicture',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role !== 'admin') {
@@ -210,32 +200,44 @@ module.exports = function(app) {
                 res.redirect('/');
             } else {
                 upload(req,res, async function(err){
-                    var succsess = false;
                     if(err){
                         console.log(err);
-                        // msg2 ="ex) .jpg .jpeg .png";
-                        res.render('addPictureMsg',{msg:err,succsess:succsess})
+                        res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
-                            res.render('addPictureMsg',{msg:"File is Undefined",succsess:succsess})
+                            //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
+                            res.send({msg:"File is Undefined."+"<br/>"+" Please select an image.",success:false});
                         }else{
                             var array = await Picture.find({});
                             var namesArray = array[0].names;
-                            //console.log(array)
-                            //console.log(namesArray)
-                            
+
+                            console.log(req.file.originalname)
+                           // console.log(array)
+                            console.log(namesArray.length)
                             namesArray.push(req.file.originalname);
+                            console.log(namesArray.length)
                             await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
                                 if (err){console.log(err)}
                             })
-                            //console.log(req.file.originalname);
-                            res.render('addPictureMsg',{msg:"Image Successfully Uploaded", succsess: true});
+                            console.log(req.file.originalname);
+                            res.send({msg:"Image '"+req.file.originalname+"' was Successfully Uploaded", success: true});
                         }
                     }
                 })
             }
     });
+    app.get('/createUser',
+    require('connect-ensure-login').ensureLoggedIn(),
+    function(req, res) {
+        if (req.user.role !== 'admin') {
+            console.log('Not an administrator.');
+            res.redirect('/');
+        } else {
+            res.render('createUser', {user: req.user});
+        }
+    });
+
     app.post('/createUser',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
@@ -296,14 +298,6 @@ module.exports = function(app) {
                     };
                     transporter.sendMail(parentMessage);
                     transporter.sendMail(patientMessage);
-                    /*
-                    console.log('Parent User Created: ');
-                    console.log('username: ' + parentName);
-                    console.log('password: ' + parentPass);
-                    console.log('Patient User Created: ');
-                    console.log('username: ' + patientName);
-                    console.log('password: ' + patientPass);
-                    */
                     res.render('createSuccess', { parentName: parentName, patientName: patientName });
                 }
             }
@@ -387,6 +381,74 @@ module.exports = function(app) {
             }
     });
 
+    app.post('/profile',
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            var sender = req.user.username;
+            var recipient = req.body.recpUser;
+            var recpId = req.body.recpId;
+            var convos = req.user.conversations;
+            var convoExists = false;
+            var prom = new Promise((resolve, reject)=> {
+                if (convos.length === 0) {
+                    resolve();
+                } else {
+                convos.forEach(function (item, index, array) {
+                    Convo.findById(item, function (err, curr) {
+                        if (err || curr === null) {console.log('error finding conversation.')};
+                        if (curr.userOne === recipient) {
+                            convoExists = true;
+                            console.log("convo already exists.");
+                        }
+                        if (curr.userTwo === recipient) {
+                            convoExists = true;
+                            console.log("convo already exists.");
+                        }
+                        if (index === array.length - 1) resolve();
+                    });
+                });
+                }
+            });
+
+            prom.then(()=> {
+                var msgs = ['Start the conversation!'];
+                if (convoExists === false) {
+                    var convoId = mongoose.Types.ObjectId();
+                    var newConvo = new Convo({
+                        _id: convoId,
+                        userOne: sender,
+                        userTwo: recipient,
+                        messages: msgs,
+                    });
+                    newConvo.save(function(err, convo) {
+                        if (err) {
+                            console.log('error creating conversation');
+                        } else {
+                            console.log('conversation created!');
+                            User.findById(recpId, function(err, recp) {
+                                var newArr = recp.conversations;
+                                newArr.push(convoId);
+                                recp.conversations = newArr;
+                                recp.save(function(err) {
+                                    if (err) {
+                                        console.log('error saving convo.');
+                                    }
+                                });
+                            });
+                            req.user.conversations.push(convoId);
+                            req.user.save(function(err) {
+                                if (err) {
+                                    console.log('error saving convo.');
+                                }
+                            });
+                        }
+                    });
+                }
+                setTimeout(function() {res.redirect('/messages')}, 1000);
+            });
+        }
+    );
+
     // profile edit routes
 
     app.get('/profileEdit',
@@ -457,7 +519,7 @@ module.exports = function(app) {
                 res.redirect('/profile');
             }
         }
-    )
+    );
 
     // messaging routes
 
@@ -465,11 +527,101 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
-                res.render('messages');
+                var sender = req.user;
+                var formatConvos = [];
+                var convos = sender.conversations;
+                var prom = new Promise((resolve, reject)=> {
+                    if (convos.length === 0) {
+                        res.render('messages', { user: sender, convos: formatConvos });
+                    }
+                    convos.forEach(function(item, index, array) {
+                        Convo.findById(item, function (err, curr) {
+                            if (err) {console.log('error finding conversation.')};
+                            var recipient = '';
+                            if (curr.userOne === sender.username) {
+                                recipient = curr.userTwo;
+                            }
+                            if (curr.userTwo === sender.username) {
+                                recipient = curr.userOne;
+                            }
+                            var latest = curr.messages[(curr.messages.length - 1)];
+                            var formattedConvo = {recp: recipient, msg: latest, convoId: item};
+                            console.log(formattedConvo);
+                            formatConvos.push(formattedConvo);
+                            if (index === array.length - 1) resolve();
+                        });
+                    });
+                })
+                prom.then(() => {
+                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos })}, 2000);
+                });
+                
             } else {
                 res.redirect('/admin');
             } 
     });
+
+    app.get('/conversation', 
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                var convoId = req.query.convoId;
+                Convo.findById(convoId, function(err, curr) {
+                    if (err) {console.log('error finding conversation.')};
+                    var recipient = '';
+                    if (curr.userOne === req.user.username) {
+                        recipient = curr.userTwo;
+                    }
+                    if (curr.userTwo === req.user.username) {
+                        recipient = curr.userOne;
+                    }
+                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient });
+                });
+            } else {
+                res.redirect('/admin');
+            }
+        }
+    );
+
+    app.get('/refreshedConvos', 
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                var convoId = req.query.convoId;
+                Convo.findById(convoId, function(err, curr) {
+                    if (err) {console.log('error finding conversation.')};
+                    console.log(curr);
+                    res.send({messages: curr.messages});
+                });
+            } else {
+                res.redirect('/admin');
+            }
+        }
+    );
+
+    app.post('/conversation', 
+        require('connect-ensure-login').ensureLoggedIn(),
+        function(req, res) {
+            if (req.user.role === 'patient' || req.user.role === 'parent') {
+                var convoId = req.body.convoId;
+                var msg = req.user.username + ": " + req.body.newMessage;
+                Convo.findById(convoId, function(err, curr) {
+                    var newArr = curr.messages;
+                    if (newArr.length === 50) {
+                        newArr = newArr.shift();
+                    }
+                    newArr.push(msg);
+                    curr.messages = newArr;
+                    curr.save(function(err, newCurr) {
+                        if (err) { "error appending message" };
+                        res.render('conversation', { convo: newCurr, messages: newCurr.messages, recp: req.body.recp });
+                    });
+                })
+            } else {
+                res.redirect('/admin');
+            }
+        }
+    );
 
     //matches algorithm
 
@@ -554,21 +706,31 @@ module.exports = function(app) {
                if (currentProfile.services[i] == agecheck[x].services[j]) {
                  var key = myMap.get(agecheck[x]._id);
                  myMap.set(agecheck[x]._id, key + 1);
-               }
+               
+              }
             }
           }
         }
-        const mapSort = new Map([...myMap.entries()].sort((a, b) => a[1] - b[1]));
-
+        //for (var x = 0; x < agecheck.length; x++){}
+        const mapSort = new Map([...myMap.entries()].sort((a, b) => b[1] - a[1]));
+        //console.log(mapSort)
         let keys = Array.from( mapSort.keys() );
-        //console.log(mapSort);
-        //console.log(keys);
-        //console.log(myMap);
+        //console.log(keys)
         var userMatches=[];
+        var profileMatches=[];
 
-        userMatches = await User.find({'profileId':{ $in: keys}});
+        for(var j = 0;j<keys.length;j++){
+            user = await User.find({'profileId':keys[j]});
+            userMatches.push(user[0]);
+            profile = await Profile.find({'_id':user[0].profileId});
+            profileMatches.push(profile[0]);
+        }
+        // console.log("======================");
+        // console.log(userMatches);
+        // console.log("======================");
+        // console.log(profileMatches);
 
-       var arr = [userMatches,keys];
+       var arr = [userMatches,profileMatches];
        return arr;
 
     }
@@ -585,7 +747,6 @@ module.exports = function(app) {
                             console.log('error finding profile');
                         } else {
                             var matches = [];
-                            var matchProfileIds=[];
                             var matchProfiles = [];
                             var matchArray =[];
                             var received = [];
@@ -595,12 +756,11 @@ module.exports = function(app) {
                             var sentPIds = [];
                             var sentProfiles=[];
                             profile = currentProfile;
-                            //matchingAlgorithm(currentProfile);
+
                                 matchArray = await matchingAlgorithm(currentProfile);
                                 matches = matchArray[0];
-                                console.log(matches)
-                                matchProfileIds = matchArray[1];
-                                //console.log(matchProfileIds)
+                                matchProfiles = matchArray[1];
+
                                 User.find({
                                     '_id': { $in: profile.sentPendingFriendIds}
                                 }, function(err, sentPending) {
@@ -611,21 +771,17 @@ module.exports = function(app) {
                                     }, function(err, recvPending) {
                                         received = recvPending;
                                         receivedPIds = received.map((account)=>{return account.profileId});
-                                        Profile.find({'_id':{$in: matchProfileIds}}, function(err,match_Profiles){
-                                            matchProfiles = match_Profiles;
-                                            Profile.find({'_id':{$in: receivedPIds}},function(err,recProfiles){
-                                                receivedProfiles = recProfiles;
-                                                Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
-                                                    sentProfiles = sent_Profiles;
-                                                    res.render('matches', { user: req.user, profile: profile, matches: matches,
-                                                        sent: sent, received: received, matchProfiles: matchProfiles,
-                                                        receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
-                                                });
+                                        Profile.find({'_id':{$in: receivedPIds}},function(err,recProfiles){
+                                            receivedProfiles = recProfiles;
+                                            Profile.find({'_id':{$in: sentPIds}},function(err,sent_Profiles){
+                                                sentProfiles = sent_Profiles;
+                                                res.render('matches', { user: req.user, profile: profile, matches: matches,
+                                                    sent: sent, received: received, matchProfiles: matchProfiles,
+                                                    receivedProfiles: receivedProfiles, sentProfiles: sentProfiles });
                                             });
                                         });
                                     });
                                 });
-                           // });
                         }
                     });
                 } else {

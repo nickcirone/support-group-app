@@ -10,6 +10,7 @@ var User = new Schema ({
   parentId: {type: ObjectId, required: false},
   childId: {type: ObjectId, required: false},
   profileId: {type: ObjectId, required: false},
+  conversations: {type: [ObjectId], required: false},
 });
 
 User.plugin(passportLocalMongoose);

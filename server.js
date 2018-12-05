@@ -81,7 +81,7 @@ var profileOne = new Profile(
     services: ['Burns'],
     friendIds: [userSevenId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId, userEightId],
+    sentPendingFriendIds: [userEightId],
     recvPendingFriendIds: [userNineId, userTenId],
   }
 );
@@ -113,7 +113,7 @@ var profileThree = new Profile(
     services: ['GI'],
     friendIds: [userFourId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId],
+    sentPendingFriendIds: [],
     recvPendingFriendIds: [userSixId],
   }
 );
@@ -129,7 +129,7 @@ var profileFour = new Profile(
     services: ['Cardiology'],
     friendIds: [userEightId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId],
+    sentPendingFriendIds: [],
     recvPendingFriendIds: [userSixId],
   }
 );
@@ -187,7 +187,7 @@ var profileEight = new Profile(
     services: ['Neurosurgery'],
     friendIds: [userSevenId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId],
+    sentPendingFriendIds: [userNineId],
   }
 );
 
@@ -202,7 +202,7 @@ var profileNine = new Profile(
     services: ['Neurosurgery'],
     friendIds: [userSevenId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId],
+    sentPendingFriendIds: [userNineId],
   }
 );
 
@@ -217,7 +217,7 @@ var profileTen = new Profile(
     services: ['Neurosurgery'],
     friendIds: [userSevenId],
     matchIds: [],
-    sentPendingFriendIds: [userFiveId],
+    sentPendingFriendIds: [userNineId],
   }
 );
 

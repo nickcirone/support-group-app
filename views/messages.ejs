@@ -6,8 +6,19 @@
 <body style="background-color:#023166;">
 <% include partials/navbar %>
 <div>
-    <div class="container">
-        <h2 class='text-primary'>Messages Page</h2>
+    <div class="container" style="padding-top: .5%; padding-bottom: .5%">
+        <div class="box">
+            <h2 style="color:white"><%= user.username %>'s conversations</h2>
+        </div> 
+    
+        <ul class="list-group">
+            <% for (var i = 0; i < convos.length; i++) { %>
+                <% console.log(convos.length) %>
+                <% console.log(convos[i].msg) %>
+                <li class="list-group-item"><h4><%= convos[i].recp %></h4> Last Message: <%= convos[i].msg %> <form method="GET" action="/conversation"><input type="hidden" id="" name="convoId" value="<%= convos[i].convoId %>"><input class="btn-sm btn-info btn-block" type="submit" value="Message"></form></li>
+            <% } %>
+        </ul>
+        <br/>
     </div>
 </div>
 <% include partials/footer %>

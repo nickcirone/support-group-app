@@ -12,9 +12,7 @@
         <div class= "wrapper">
             <div class = "innerwrapper">
                     <div class="card box" style="width: 15rem; margin: 0 auto; float: none; background-color:#023166; border-color:#023166;">
-                                    <div id = "picdiv">
-                                    <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= profile.avatar %>"><br/>
-                                    </div>
+                                    <img  id="avatar" src="/img/portfolio/<%= profile.avatar %>"><br/>
                     </div>
                     
             </div>
@@ -42,11 +40,10 @@
                 </li>
                 <li class="list-group-item">
                 Friends:
-                    <!-- <h5 class="text-success"> -->
                         <div class = "row">
                         <% for (var i = 0; i < friends.length; i++) { %>
                             <div class="col-lg-3">
-                            <div class="card" style="background-color: #f75f00; width: 15rem; margin: 15px 0;">
+                            <div class="card" style="width: 15rem; margin: 15px 0;">
                                         <div class="dropdown">
                                             <div id = "picdiv">
                                             <img class="img-thumbnail" id="avatar" src="/img/portfolio/<%= friendProfiles[i].avatar %>"><br/>
@@ -64,13 +61,16 @@
                                         </div>
                                         <div class="card-body text-center">
                                         <div id="usernamesize">  <%= friends[i].username %><br/> </div>
-                                        <button class= "btn-sm btn-info btn-block">Message</button>
+                                        <form method="POST" action="">
+                                            <input type="hidden" id="" name="recpUser" value="<%= friends[i].username %>">
+                                            <input type="hidden" id="" name="recpId" value="<%= friends[i]._id %>">
+                                            <input class="btn-sm btn-info btn-block" type="submit" value="Message">
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         <% } %>
                     </div>
-                    <!-- </h5> -->
                 </li>
         </ul>
         <br/>

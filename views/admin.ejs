@@ -18,7 +18,7 @@
                     	<% if (user.role != 'admin') { %>
 							You do not have admin permission! Please <a href="/login">log in as an administrator.</a>
 				    	<% } else { %>
-							<p>Hello, <%= user.username %>. You have reached the admin route.</p>
+							<p>Hello, <%= user.username %>. This is the administrator dashboard, here you can create users and upload images for use in patient profiles.</p>
 						<% } %>
                   		</h3>
       				</div>
