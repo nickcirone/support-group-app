@@ -35,14 +35,9 @@
 <script>
 $(()=>{
     setInterval(ajax_get_call,1000*15);
-
-    function myFunction() {
-    console.log('yoo boi')
-    }
+    
     function ajax_get_call(){
-        //console.log('inside func')
         var convoId = {convoId:$("#convo").val()}
-        //console.log(convoId)
 
         $.get( '/refreshedConvos',convoId, function(data) {    
         console.log("refreshed messages"); 
