@@ -9,4 +9,9 @@ module.exports = function(profile) {
     return Math.abs(age_dt.getUTCFullYear() - 1970);
 }
   profile.age = calculate_age(profile.birthdate);
+  profile.save(function(err) {
+    if (err) {
+      console.log('error changing age of profile');
+    }
+  });
 }
