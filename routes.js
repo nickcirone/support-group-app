@@ -249,6 +249,10 @@ module.exports = function(app) {
                     console.log('Email is required');
                     res.render('createUser', {user: req.user});
                 } else {
+                    if (!req.body.birthdate) {
+                        console.log('Birthdate is required');
+                        res.render('createUser', {user: req.user});
+                    }
                     var patientProfileId = mongoose.Types.ObjectId();
                     var parentName = nameGen();
                     var patientName = nameGen();
