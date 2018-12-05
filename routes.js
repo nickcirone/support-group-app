@@ -259,10 +259,14 @@ module.exports = function(app) {
                     var parentPass = passGen();
                     var patientPass = passGen();
                     var servicesArr = checkServices(req.body);
+                    if (servicesArr.length === 0) {
+                        console.log('At least one service is required');
+                        res.render('createUser', {user: req.user});
+                    }
                     var patientProfile = new Profile(
                         {
                         _id: patientProfileId,
-                        avatar: 'apple_one.jpg',
+                        avatar: 'apple.png',
                         birthdate: req.body.birthdate,
                         services: servicesArr,
                         }
