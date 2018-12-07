@@ -79,7 +79,7 @@ var profileOne = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports', 'cooking', 'video games'],
     services: ['Burns'],
-    friendIds: [userSevenId],
+    friendIds: [],
     matchIds: [],
     sentPendingFriendIds: [userEightId],
     recvPendingFriendIds: [userNineId, userTenId],
@@ -155,7 +155,7 @@ var profileSix = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['fishing'],
     services: ['Neurosurgery'],
-    friendIds: [userEightId,userSevenId],
+    friendIds: [userEightId,],
     matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
@@ -170,7 +170,7 @@ var profileSeven = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userSevenId],
+    friendIds: [],
     matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
@@ -185,7 +185,7 @@ var profileEight = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userSevenId],
+    friendIds: [],
     matchIds: [],
     sentPendingFriendIds: [userNineId],
   }
@@ -200,7 +200,7 @@ var profileNine = new Profile(
     bio: 'placeholder bio! thanks 4 reading',
     interests: ['sports'],
     services: ['Neurosurgery'],
-    friendIds: [userSevenId],
+    friendIds: [],
     matchIds: [],
     sentPendingFriendIds: [userFiveId],
   }
