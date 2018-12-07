@@ -201,7 +201,10 @@ module.exports = function(app) {
             } else {
                 upload(req,res, async function(err){
                     if(err){
-                        console.log(err);
+                        console.log();
+                        if(err.name == "MulterError"){
+                            res.send({msg:err.message+"<br/>"+"Select an image under 1MB",success:false});
+                        }
                         res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
