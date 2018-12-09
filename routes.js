@@ -559,7 +559,7 @@ module.exports = function(app) {
                     });
                 })
                 prom.then(() => {
-                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos })}, 2000);
+                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos, user:req.user })}, 2000);
                 });
                 
             } else {
@@ -581,7 +581,7 @@ module.exports = function(app) {
                     if (curr.userTwo === req.user.username) {
                         recipient = curr.userOne;
                     }
-                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient });
+                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient, user:req.user });
                 });
             } else {
                 res.redirect('/admin');
@@ -597,7 +597,7 @@ module.exports = function(app) {
                 Convo.findById(convoId, function(err, curr) {
                     if (err) {console.log('error finding conversation.')};
                     console.log(curr);
-                    res.send({messages: curr.messages});
+                    res.send({messages: curr.messages, user:req.user});
                 });
             } else {
                 res.redirect('/admin');
