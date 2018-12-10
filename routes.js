@@ -209,7 +209,16 @@ module.exports = function(app) {
                     }else{
                         if(req.file == undefined){
                             console.log("undefinded in post")
-                            //res.render('addPicture',{msg:"File is Undefined",succsess:succsess})
+                        //     var array = await Picture.find({});
+                        //     var namesArray = array[0].names;
+
+                        //    // console.log(array)
+                        //     console.log(namesArray.length)
+                        //     namesArray.splice(17,1)
+                        //     console.log(namesArray.length)
+                        //     await Picture.updateOne({_id:"5bfde974fe11f2057ce72a6e"},{$set:{names:namesArray}},(err)=>{
+                        //         if (err){console.log(err)}
+                        //     })
                             res.send({msg:"File is Undefined."+"<br/>"+" Please select an image.",success:false});
                         }else{
                             var array = await Picture.find({});
