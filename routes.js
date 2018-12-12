@@ -266,6 +266,8 @@ module.exports = function(app) {
                         res.render('createUser', {user: req.user});
                     }
                     var patientProfileId = mongoose.Types.ObjectId();
+                    var parentUserId = mongoose.Types.ObjectId();
+                    var patientUserId = mongoose.Types.ObjectId();
                     var parentName = nameGen();
                     var patientName = nameGen();
                     var parentPass = passGen();
@@ -285,20 +287,22 @@ module.exports = function(app) {
                     );
                     var parentUser = new User(
                         {
-                        _id: mongoose.Types.ObjectId(),
+                        _id: parentUserId,
                         username: parentName,
                         email: req.body.pEmail,
                         role: 'parent',
                         profileId: patientProfileId,
+                        childId: patientUserId,
                         }
                     );
                     var patientUser = new User(
                         {
-                        _id: mongoose.Types.ObjectId(),
+                        _id: patientUserId,
                         username: patientName,
                         email: req.body.cEmail,
                         role: 'patient',
                         profileId: patientProfileId,
+                        childId: parentUserId,
                         }
                     );
                     registerProfile(patientProfile);
@@ -455,6 +459,16 @@ module.exports = function(app) {
                                     }
                                 });
                             });
+                            User.findById(req.user.parentId, function(err, par) {
+                                var newArr = par.conversations;
+                                newArr.push(convoId);
+                                par.conversations = newArr;
+                                par.save(function(err) {
+                                    if (err) {
+                                        console.log('error saving convo.');
+                                    }
+                                });
+                            });
                             req.user.conversations.push(convoId);
                             req.user.save(function(err) {
                                 if (err) {
@@ -542,7 +556,15 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
-                var sender = req.user;
+                var sender;
+                if (req.user.role === "patient") {
+                    sender = req.user;
+                } else {
+                    User.findById(req.user.childId, function(err, usr) {
+                        if (err) {console.log('error finding child user.')};
+                        sender = usr;
+                    });
+                }
                 var formatConvos = [];
                 var convos = sender.conversations;
                 var prom = new Promise((resolve, reject)=> {
@@ -568,26 +590,35 @@ module.exports = function(app) {
                     });
                 })
                 prom.then(() => {
-                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos, user:req.user })}, 2000);
+                    setTimeout(function() {res.render('messages', { sender: sender, convos: formatConvos, user:req.user })}, 2000);
                 });
-                
+
             } else {
                 res.redirect('/admin');
-            } 
+            }
     });
 
-    app.get('/conversation', 
+    app.get('/conversation',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
                 var convoId = req.query.convoId;
+                var sender;
+                if (req.user.role === "patient") {
+                    sender = req.user;
+                } else {
+                    User.findById(req.user.childId, function(err, usr) {
+                        if (err) {console.log('error finding child user.')};
+                        sender = usr;
+                    });
+                }
                 Convo.findById(convoId, function(err, curr) {
                     if (err) {console.log('error finding conversation.')};
                     var recipient = '';
-                    if (curr.userOne === req.user.username) {
+                    if (curr.userOne === sender.username) {
                         recipient = curr.userTwo;
                     }
-                    if (curr.userTwo === req.user.username) {
+                    if (curr.userTwo === sender.username) {
                         recipient = curr.userOne;
                     }
                     res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient, user:req.user });
@@ -598,7 +629,7 @@ module.exports = function(app) {
         }
     );
 
-    app.get('/refreshedConvos', 
+    app.get('/refreshedConvos',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
@@ -614,7 +645,7 @@ module.exports = function(app) {
         }
     );
 
-    app.post('/conversation', 
+    app.post('/conversation',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
@@ -623,7 +654,7 @@ module.exports = function(app) {
                 console.log(req.body);
                 Convo.findById(convoId, function(err, curr) {
                     var newArr = curr.messages;
-                    while (newArr.length > 20) {
+                    while (newArr.length > 40) {
                         newArr.shift();
                     }
                     newArr.push(msg);
@@ -651,6 +682,8 @@ module.exports = function(app) {
       var userFriends = await User.find({'_id': { $in: currentProfile.friendIds}})
       var userSent = await User.find({'_id': { $in: currentProfile.sentPendingFriendIds}})
       var userRecv = await User.find({'_id': { $in: currentProfile.recvPendingFriendIds}})
+
+
 
       for (var j = 0; j < userFriends.length; j++){
         for (var i = 0; i < everyProfile.length; i++) {
@@ -722,7 +755,7 @@ module.exports = function(app) {
                if (currentProfile.services[i] == agecheck[x].services[j]) {
                  var key = myMap.get(agecheck[x]._id);
                  myMap.set(agecheck[x]._id, key + 1);
-               
+
               }
             }
           }
@@ -737,7 +770,11 @@ module.exports = function(app) {
 
         for(var j = 0;j<keys.length;j++){
             user = await User.find({'profileId':keys[j]});
-            userMatches.push(user[0]);
+            for(var i=0; i<user.length; i++){
+                if(user[i].role=="patient"){
+                    userMatches.push(user[i]);
+                }
+            }
             profile = await Profile.find({'_id':user[0].profileId});
             profileMatches.push(profile[0]);
         }

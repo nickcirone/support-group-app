@@ -12,11 +12,12 @@
         </div> 
     
         <ul class="list-group">
-            <div id="msglog">
+            <div id="msglog" style="max-height: 475px; overflow: scroll; -webkit-overflow-scrolling: touch;">
             <% for (var i = 0; i < messages.length; i++) { %>
                 <li class="list-group-item"><%= messages[i] %></li>
             <% } %>
             </div>
+            <% if (user.role === 'patient') { %>
             <li class="list-group-item">
                 <form class="form-inline" action="" method="POST">
                     <input class="col-10" style="margin-left: 3px; width: auto" type="text" id="newMessage" name="newMessage" maxlength="280" placeholder="Message">
@@ -25,6 +26,7 @@
                     <input id = 'btn'style="margin-left: 3px; width: fixed" class="col-1 btn-sm btn-primary" type="submit" value="Send">
                 </form>
             </li>
+            <% } %>
         </ul>
         <br/>
     </div>
@@ -39,6 +41,7 @@ $(()=>{
         var convo = $("#convo").val();
         var recp = $("#recp").val();
         var newMessage = $("#newMessage").val();
+        if (!newMessage) { return; };
         var data = {convoId:convo, recp:recp, newMessage:newMessage}
         $.ajax({
             url: "/conversation",
