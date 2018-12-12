@@ -557,19 +557,21 @@ module.exports = function(app) {
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
                 var sender;
+                var convos;
                 if (req.user.role === "patient") {
                     sender = req.user;
+                    convos = sender.conversations;
                 } else {
                     User.findById(req.user.childId, function(err, usr) {
                         if (err) {console.log('error finding child user.')};
                         sender = usr;
+                        convos = sender.conversations;
                     });
                 }
                 var formatConvos = [];
-                var convos = sender.conversations;
                 var prom = new Promise((resolve, reject)=> {
                     if (convos.length === 0) {
-                        res.render('messages', { user: sender, convos: formatConvos });
+                        res.render('messages', { sender: sender, user: req.user, convos: formatConvos });
                     }
                     convos.forEach(function(item, index, array) {
                         Convo.findById(item, function (err, curr) {
