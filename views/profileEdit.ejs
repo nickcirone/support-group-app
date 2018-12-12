@@ -14,9 +14,8 @@
                         <label for="avatar">Avatar </label>
 
                         <select name="avatar" class="image-picker">
-                          <option value ="">
                           <% for (var i = 0; i < namesArray.length; i++) { %>
-                            <option data-img-src="/img/portfolio/<%= namesArray[i] %>" value="<%= namesArray[i]%>"><%= namesArray[i]%></option>
+                            <option data-img-src="/img/portfolio/<%= namesArray[i] %>" value="<%= namesArray[i]%>" ><%= namesArray[i]%></option>
                           <% } %>
                         </select>
 
