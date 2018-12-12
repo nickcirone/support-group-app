@@ -557,21 +557,19 @@ module.exports = function(app) {
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
                 var sender;
-                var convos;
                 if (req.user.role === "patient") {
                     sender = req.user;
-                    convos = sender.conversations;
                 } else {
                     User.findById(req.user.childId, function(err, usr) {
                         if (err) {console.log('error finding child user.')};
                         sender = usr;
-                        convos = sender.conversations;
                     });
                 }
                 var formatConvos = [];
+                var convos = sender.conversations;
                 var prom = new Promise((resolve, reject)=> {
                     if (convos.length === 0) {
-                        res.render('messages', { sender: sender, user: req.user, convos: formatConvos });
+                        res.render('messages', { user: sender, convos: formatConvos });
                     }
                     convos.forEach(function(item, index, array) {
                         Convo.findById(item, function (err, curr) {
@@ -773,10 +771,14 @@ module.exports = function(app) {
         for(var j = 0;j<keys.length;j++){
             user = await User.find({'profileId':keys[j]});
             for(var i=0; i<user.length; i++){
-                if(user[i].role=="patient"){
-                    userMatches.push(user[i]);
-                }
+                console.log(user[i].role)
+            // if(user.length > 0){
+            if(user[i].role==='patient'){
+                    console.log("ye")
+                userMatches.push(user[i]);
             }
+            }
+           //userMatches.push(user[i]);
             profile = await Profile.find({'_id':user[0].profileId});
             profileMatches.push(profile[0]);
         }
