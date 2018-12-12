@@ -40,8 +40,8 @@ mongoose.connect("mongodb://admin:admin1@ds035844.mlab.com:35844/support-app-tes
 
 // Config: Decide whether you want to register dummy users / admin user upon server start
 // Always change to false when deploying
-const REGISTER_DUMMIES = true;
-const REGISTER_ADMIN = true;
+const REGISTER_DUMMIES = false;
+const REGISTER_ADMIN = false;
 
 // Helper functions for registering Users 
 var registerUser = require('./helpers/registerUser');
