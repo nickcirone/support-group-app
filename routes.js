@@ -547,7 +547,15 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
-                var sender = req.user;
+                var sender;
+                if (req.user.role === "patient") {
+                    sender = req.user;
+                } else {
+                    User.findById(req.user.childId, function(err, usr) {
+                        if (err) {console.log('error finding child user.')};
+                        sender = usr;
+                    });
+                }
                 var formatConvos = [];
                 var convos = sender.conversations;
                 var prom = new Promise((resolve, reject)=> {
@@ -573,7 +581,7 @@ module.exports = function(app) {
                     });
                 })
                 prom.then(() => {
-                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos, user:req.user })}, 2000);
+                    setTimeout(function() {res.render('messages', { sender: sender, convos: formatConvos, user:req.user })}, 2000);
                 });
 
             } else {
@@ -586,13 +594,22 @@ module.exports = function(app) {
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
                 var convoId = req.query.convoId;
+                var sender;
+                if (req.user.role === "patient") {
+                    sender = req.user;
+                } else {
+                    User.findById(req.user.childId, function(err, usr) {
+                        if (err) {console.log('error finding child user.')};
+                        sender = usr;
+                    });
+                }
                 Convo.findById(convoId, function(err, curr) {
                     if (err) {console.log('error finding conversation.')};
                     var recipient = '';
-                    if (curr.userOne === req.user.username) {
+                    if (curr.userOne === sender.username) {
                         recipient = curr.userTwo;
                     }
-                    if (curr.userTwo === req.user.username) {
+                    if (curr.userTwo === sender.username) {
                         recipient = curr.userOne;
                     }
                     res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient, user:req.user });

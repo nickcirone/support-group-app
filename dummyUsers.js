@@ -35,7 +35,7 @@ module.exports = function() {
     var userEightId = mongoose.Types.ObjectId();
     var parentEightId = mongoose.Types.ObjectId();
     var userNineId = mongoose.Types.ObjectId();
-    var pNineId = mongoose.Types.ObjectId();
+    var parentNineId = mongoose.Types.ObjectId();
     var userTenId = mongoose.Types.ObjectId();
     var parentTenId = mongoose.Types.ObjectId();
 
