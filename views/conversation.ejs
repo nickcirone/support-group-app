@@ -12,7 +12,7 @@
         </div> 
     
         <ul class="list-group">
-            <div id="msglog">
+            <div id="msglog" style="max-height: 475px; overflow: scroll; -webkit-overflow-scrolling: touch;">
             <% for (var i = 0; i < messages.length; i++) { %>
                 <li class="list-group-item"><%= messages[i] %></li>
             <% } %>
@@ -39,6 +39,7 @@ $(()=>{
         var convo = $("#convo").val();
         var recp = $("#recp").val();
         var newMessage = $("#newMessage").val();
+        if (!newMessage) { return; };
         var data = {convoId:convo, recp:recp, newMessage:newMessage}
         $.ajax({
             url: "/conversation",

@@ -611,7 +611,7 @@ module.exports = function(app) {
                 console.log(req.body);
                 Convo.findById(convoId, function(err, curr) {
                     var newArr = curr.messages;
-                    while (newArr.length > 20) {
+                    while (newArr.length > 40) {
                         newArr.shift();
                     }
                     newArr.push(msg);
