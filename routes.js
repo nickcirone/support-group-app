@@ -257,6 +257,8 @@ module.exports = function(app) {
                         res.render('createUser', {user: req.user});
                     }
                     var patientProfileId = mongoose.Types.ObjectId();
+                    var parentUserId = mongoose.Types.ObjectId();
+                    var patientUserId = mongoose.Types.ObjectId();
                     var parentName = nameGen();
                     var patientName = nameGen();
                     var parentPass = passGen();
@@ -276,20 +278,22 @@ module.exports = function(app) {
                     );
                     var parentUser = new User(
                         {
-                        _id: mongoose.Types.ObjectId(),
+                        _id: parentUserId,
                         username: parentName,
                         email: req.body.pEmail,
                         role: 'parent',
                         profileId: patientProfileId,
+                        childId: patientUserId,
                         }
                     );
                     var patientUser = new User(
                         {
-                        _id: mongoose.Types.ObjectId(),
+                        _id: patientUserId,
                         username: patientName,
                         email: req.body.cEmail,
                         role: 'patient',
                         profileId: patientProfileId,
+                        childId: parentUserId,
                         }
                     );
                     registerProfile(patientProfile);
@@ -441,6 +445,16 @@ module.exports = function(app) {
                                 newArr.push(convoId);
                                 recp.conversations = newArr;
                                 recp.save(function(err) {
+                                    if (err) {
+                                        console.log('error saving convo.');
+                                    }
+                                });
+                            });
+                            User.findById(req.user.parentId, function(err, par) {
+                                var newArr = par.conversations;
+                                newArr.push(convoId);
+                                par.conversations = newArr;
+                                par.save(function(err) {
                                     if (err) {
                                         console.log('error saving convo.');
                                     }
