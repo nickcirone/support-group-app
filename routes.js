@@ -201,7 +201,10 @@ module.exports = function(app) {
             } else {
                 upload(req,res, async function(err){
                     if(err){
-                        console.log(err);
+                        console.log();
+                        if(err.name == "MulterError"){
+                            res.send({msg:err.message+"<br/>"+"Select an image under 1MB",success:false});
+                        }
                         res.send({msg:err,success:false});
                     }else{
                         if(req.file == undefined){
@@ -556,15 +559,15 @@ module.exports = function(app) {
                     });
                 })
                 prom.then(() => {
-                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos })}, 2000);
+                    setTimeout(function() {res.render('messages', { user: sender, convos: formatConvos, user:req.user })}, 2000);
                 });
-                
+
             } else {
                 res.redirect('/admin');
-            } 
+            }
     });
 
-    app.get('/conversation', 
+    app.get('/conversation',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
@@ -578,7 +581,7 @@ module.exports = function(app) {
                     if (curr.userTwo === req.user.username) {
                         recipient = curr.userOne;
                     }
-                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient });
+                    res.render('conversation', { convo: curr, messages: curr.messages, recp: recipient, user:req.user });
                 });
             } else {
                 res.redirect('/admin');
@@ -586,7 +589,7 @@ module.exports = function(app) {
         }
     );
 
-    app.get('/refreshedConvos', 
+    app.get('/refreshedConvos',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
@@ -594,7 +597,7 @@ module.exports = function(app) {
                 Convo.findById(convoId, function(err, curr) {
                     if (err) {console.log('error finding conversation.')};
                     console.log(curr);
-                    res.send({messages: curr.messages});
+                    res.send({messages: curr.messages, user:req.user});
                 });
             } else {
                 res.redirect('/admin');
@@ -602,7 +605,7 @@ module.exports = function(app) {
         }
     );
 
-    app.post('/conversation', 
+    app.post('/conversation',
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === 'patient' || req.user.role === 'parent') {
@@ -710,7 +713,7 @@ module.exports = function(app) {
                if (currentProfile.services[i] == agecheck[x].services[j]) {
                  var key = myMap.get(agecheck[x]._id);
                  myMap.set(agecheck[x]._id, key + 1);
-               
+
               }
             }
           }
