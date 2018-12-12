@@ -556,17 +556,12 @@ module.exports = function(app) {
         require('connect-ensure-login').ensureLoggedIn(),
         function(req, res) {
             if (req.user.role === "patient" || req.user.role === "parent") {
-                var sender;
-                if (req.user.role === "patient") {
-                    sender = req.user;
-                } else {
-                    User.findById(req.user.childId, function(err, usr) {
-                        if (err) {console.log('error finding child user.')};
-                        sender = usr;
-                    });
-                }
-                var formatConvos = [];
+                var sender = req.user;
                 var convos = sender.conversations;
+                if (req.user.role === "parent") {
+                    res.redirect('/');
+                } 
+                var formatConvos = [];
                 var prom = new Promise((resolve, reject)=> {
                     if (convos.length === 0) {
                         res.render('messages', { user: req.user, convos: formatConvos, sender: sender});

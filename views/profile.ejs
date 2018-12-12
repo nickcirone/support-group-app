@@ -17,7 +17,12 @@
                     
             </div>
             <div class="box">
+                <% if (user.role === 'patient') { %>
                 <h2 style="color:white"><%= user.username %>'s Profile</h2>
+                <% } %>
+                <% if (user.role === 'parent') { %>
+                <h2 style="color:white">Your Child's Profile</h2>
+                <% } %>
             </div>
         </div>   
     
